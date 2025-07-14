@@ -1,0 +1,14 @@
+[
+  {
+    "filepath": "java-sqli/BenchmarkTest00008.java",
+    "lines": [52]
+  },
+  {
+    "filepath": "java-sqli/BenchmarkTest00018.java",
+    "lines": [54, 59]
+  },
+  {
+    "filepath": "java-sqli/BenchmarkTest00115.java",
+    "lines": [72, 77]
+  }
+]
