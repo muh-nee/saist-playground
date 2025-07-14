@@ -1,14 +1,838 @@
 [
   {
     "filepath": "java-sqli/BenchmarkTest00008.java",
-    "lines": [52]
+    "lines": [
+      52
+    ]
   },
   {
     "filepath": "java-sqli/BenchmarkTest00018.java",
-    "lines": [54, 59]
+    "lines": [
+      54,
+      59
+    ]
   },
   {
     "filepath": "java-sqli/BenchmarkTest00115.java",
-    "lines": [72, 77]
+    "lines": [
+      72,
+      77
+    ]
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00008.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00018.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00024.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00025.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00026.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00027.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00032.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00033.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00034.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00037.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00038.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00039.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00043.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00100.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00101.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00102.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00103.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00106.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00108.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00109.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00111.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00112.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00115.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00192.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00193.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00194.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00195.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00196.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00198.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00199.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00203.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00204.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00328.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00335.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00337.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00339.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00341.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00342.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00428.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00429.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00431.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00433.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00434.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00435.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00438.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00439.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00441.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00510.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00512.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00515.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00516.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00518.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00590.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00591.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00593.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00594.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00595.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00596.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00597.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00598.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00600.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00603.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00604.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00606.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00673.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00677.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00678.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00679.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00681.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00760.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00761.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00762.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00764.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00765.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00767.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00768.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00769.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00770.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00771.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00839.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00840.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00841.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00842.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00843.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00845.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00846.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00847.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00848.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00849.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00850.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00996.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00997.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest00998.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01000.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01002.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01003.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01004.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01005.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01006.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01007.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01008.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01009.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01011.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01083.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01084.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01087.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01088.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01090.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01091.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01093.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01094.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01097.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01208.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01209.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01210.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01211.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01214.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01221.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01222.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01302.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01304.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01306.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01308.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01311.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01312.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01313.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01314.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01379.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01381.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01382.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01383.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01384.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01388.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01390.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01391.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01394.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01395.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01396.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01460.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01462.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01463.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01464.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01465.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01466.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01470.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01471.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01473.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01474.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01475.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01476.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01477.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01552.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01554.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01557.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01558.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01559.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01560.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01620.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01621.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01623.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01624.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01625.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01626.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01627.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01630.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01631.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01712.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01715.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01716.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01718.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01720.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01721.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01723.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01724.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01725.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01726.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01727.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01728.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01730.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01731.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01733.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01881.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01882.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01883.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01887.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01888.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01889.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01890.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01891.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01962.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01963.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01964.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01970.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01971.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest01972.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02087.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02088.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02090.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02091.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02092.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02094.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02096.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02099.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02169.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02170.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02171.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02177.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02178.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02179.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02181.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02182.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02186.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02187.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02264.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02269.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02270.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02272.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02273.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02275.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02277.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02281.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02284.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02286.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02287.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02288.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02354.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02355.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02356.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02357.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02358.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02359.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02360.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02362.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02364.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02369.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02449.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02451.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02453.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02454.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02455.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02528.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02530.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02531.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02532.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02533.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02534.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02535.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02537.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02542.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02543.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02545.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02625.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02627.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02628.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02630.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02632.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02635.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02638.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02641.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02642.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02643.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02644.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02645.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02646.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02647.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02649.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02650.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02651.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02653.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02654.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02655.java"
+  },
+  {
+    "filepath": "sqli/BenchmarkTest02656.java"
   }
 ]
