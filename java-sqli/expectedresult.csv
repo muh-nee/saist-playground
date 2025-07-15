@@ -1,0 +1,6 @@
+test_name,vuln_type,is_vulnerable,line_number
+BenchmarkTest00008,sqli,true,52
+BenchmarkTest00018,sqli,true,54
+BenchmarkTest00018,sqli,true,59
+BenchmarkTest00115,sqli,true,72
+BenchmarkTest00115,sqli,true,77
