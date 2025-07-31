@@ -11,8 +11,8 @@ import (
 )
 
 type UserDirectory struct {
-	XMLName xml.Name    `xml:"users"`
-	Users   []UserInfo  `xml:"user"`
+	XMLName xml.Name   `xml:"users"`
+	Users   []UserInfo `xml:"user"`
 }
 
 type UserInfo struct {
@@ -25,8 +25,8 @@ type UserInfo struct {
 }
 
 type RolePermissions struct {
-	XMLName     xml.Name     `xml:"permissions"`
-	Roles       []RoleInfo   `xml:"role"`
+	XMLName xml.Name   `xml:"permissions"`
+	Roles   []RoleInfo `xml:"role"`
 }
 
 type RoleInfo struct {
@@ -135,28 +135,28 @@ func validateUsername(username string) (string, error) {
 	if len(username) == 0 {
 		return "", fmt.Errorf("username cannot be empty")
 	}
-	
+
 	if len(username) > 30 {
 		return "", fmt.Errorf("username too long")
 	}
-	
+
 	validPattern := regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
 	if !validPattern.MatchString(username) {
 		return "", fmt.Errorf("username contains invalid characters")
 	}
-	
+
 	blacklistPatterns := []string{
 		"'", "\"", "or", "and", "=", "<", ">", "(", ")", "[", "]",
 		"union", "select", "drop", "insert", "update", "delete", "*", "/",
 	}
-	
+
 	lowerUsername := strings.ToLower(username)
 	for _, pattern := range blacklistPatterns {
 		if strings.Contains(lowerUsername, pattern) {
 			return "", fmt.Errorf("username contains invalid content")
 		}
 	}
-	
+
 	return strings.TrimSpace(username), nil
 }
 
@@ -164,16 +164,16 @@ func validateRole(role string) (string, error) {
 	if len(role) == 0 {
 		return "", fmt.Errorf("role cannot be empty")
 	}
-	
+
 	if len(role) > 20 {
 		return "", fmt.Errorf("role name too long")
 	}
-	
+
 	validPattern := regexp.MustCompile(`^[a-z]+$`)
 	if !validPattern.MatchString(role) {
 		return "", fmt.Errorf("role must contain only lowercase letters")
 	}
-	
+
 	return strings.TrimSpace(role), nil
 }
 
@@ -184,13 +184,13 @@ func secureStringCompare(a, b string) bool {
 func authenticateSecure(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("username")
 	role := r.URL.Query().Get("role")
-	
+
 	validUsername, err := validateUsername(username)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Invalid username: %v", err), http.StatusBadRequest)
 		return
 	}
-	
+
 	validRole, err := validateRole(role)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Invalid role: %v", err), http.StatusBadRequest)
@@ -211,14 +211,14 @@ func authenticateSecure(w http.ResponseWriter, r *http.Request) {
 
 	var authenticatedUser *UserInfo
 	for _, user := range userDirectory.Users {
-		if secureStringCompare(user.Username, validUsername) && 
-		   secureStringCompare(user.Role, validRole) &&
-		   user.Status == "active" {
+		if secureStringCompare(user.Username, validUsername) &&
+			secureStringCompare(user.Role, validRole) &&
+			user.Status == "active" {
 			authenticatedUser = &user
 			break
 		}
 	}
-	
+
 	if authenticatedUser == nil {
 		time.Sleep(100 * time.Millisecond)
 		http.Error(w, "Authentication failed", http.StatusUnauthorized)
@@ -245,7 +245,7 @@ func authenticateSecure(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Role: %s\n", authenticatedUser.Role)
 	fmt.Fprintf(w, "Email: %s\n", authenticatedUser.Email)
 	fmt.Fprintf(w, "Account Created: %s\n", authenticatedUser.Created)
-	
+
 	if userRole != nil {
 		fmt.Fprintf(w, "\nRole Permissions:\n")
 		fmt.Fprintf(w, "Access Level: %s\n", userRole.Access)
@@ -257,12 +257,12 @@ func authenticateSecure(w http.ResponseWriter, r *http.Request) {
 func checkAccessSecure(w http.ResponseWriter, r *http.Request) {
 	resource := r.URL.Query().Get("resource")
 	minRole := r.URL.Query().Get("minRole")
-	
+
 	if resource == "" {
 		http.Error(w, "Resource parameter required", http.StatusBadRequest)
 		return
 	}
-	
+
 	validRole, err := validateRole(minRole)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Invalid role: %v", err), http.StatusBadRequest)
@@ -281,8 +281,6 @@ func checkAccessSecure(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "Access check for resource '%s' with minimum role '%s':\n", resource, validRole)
-	
 	accessGranted := false
 	for _, role := range rolePermissions.Roles {
 		if role.Name == validRole {
@@ -299,10 +297,9 @@ func checkAccessSecure(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
-	
+
 	if !accessGranted {
 		fmt.Fprintf(w, "Access: DENIED\n")
-		fmt.Fprintf(w, "Resource '%s' not accessible with role '%s'\n", resource, validRole)
 	}
 }
 
@@ -313,13 +310,13 @@ func listValidOptions(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "- manager1 (manager)\n")
 	fmt.Fprintf(w, "- employee1 (employee)\n")
 	fmt.Fprintf(w, "- guest (guest)\n")
-	
+
 	fmt.Fprintf(w, "\nRoles:\n")
 	fmt.Fprintf(w, "- administrator (full access)\n")
 	fmt.Fprintf(w, "- manager (limited access)\n")
 	fmt.Fprintf(w, "- employee (basic access)\n")
 	fmt.Fprintf(w, "- guest (read-only access)\n")
-	
+
 	fmt.Fprintf(w, "\nResources:\n")
 	fmt.Fprintf(w, "- system\n")
 	fmt.Fprintf(w, "- users\n")

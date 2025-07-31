@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"golang.org/x/net/html"
 	"github.com/antchfx/htmlquery"
+	"golang.org/x/net/html"
 )
 
 var htmlData = `<!DOCTYPE html>
@@ -40,7 +40,7 @@ var htmlData = `<!DOCTYPE html>
 
 func searchUsers(w http.ResponseWriter, r *http.Request) {
 	role := r.URL.Query().Get("role")
-	
+
 	if role == "" {
 		http.Error(w, "Role parameter required", http.StatusBadRequest)
 		return
@@ -53,21 +53,19 @@ func searchUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	xpathQuery := fmt.Sprintf("//div[@class='user' and @data-role='%s']", role)
-	
+
 	users := htmlquery.Find(doc, xpathQuery)
-	
+
 	if len(users) == 0 {
-		fmt.Fprintf(w, "No users found with role: %s", role)
 		return
 	}
 
-	fmt.Fprintf(w, "Users with role '%s':\n", role)
 	for _, user := range users {
 		username := htmlquery.FindOne(user, ".//span[@class='username']")
 		email := htmlquery.FindOne(user, ".//span[@class='email']")
 		phone := htmlquery.FindOne(user, ".//span[@class='phone']")
 		secret := htmlquery.FindOne(user, ".//span[@class='secret']")
-		
+
 		if username != nil && email != nil {
 			fmt.Fprintf(w, "Username: %s, Email: %s", htmlquery.InnerText(username), htmlquery.InnerText(email))
 			if phone != nil {

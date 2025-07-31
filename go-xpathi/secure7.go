@@ -54,16 +54,16 @@ func validateAccountType(accountType string) (string, error) {
 	if len(accountType) == 0 {
 		return "", fmt.Errorf("account type cannot be empty")
 	}
-	
+
 	if len(accountType) > 10 {
 		return "", fmt.Errorf("account type too long")
 	}
-	
+
 	validPattern := regexp.MustCompile(`^[a-z]+$`)
 	if !validPattern.MatchString(accountType) {
 		return "", fmt.Errorf("account type must contain only lowercase letters")
 	}
-	
+
 	return strings.TrimSpace(accountType), nil
 }
 
@@ -71,21 +71,21 @@ func validateAccountNumber(accountNum string) (string, error) {
 	if len(accountNum) == 0 {
 		return "", fmt.Errorf("account number cannot be empty")
 	}
-	
+
 	if len(accountNum) != 5 {
 		return "", fmt.Errorf("account number must be exactly 5 digits")
 	}
-	
+
 	if _, err := strconv.Atoi(accountNum); err != nil {
 		return "", fmt.Errorf("account number must contain only digits")
 	}
-	
+
 	return accountNum, nil
 }
 
 func searchAccountsSecure(w http.ResponseWriter, r *http.Request) {
 	accountType := r.URL.Query().Get("type")
-	
+
 	validType, err := validateAccountType(accountType)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Invalid account type: %v", err), http.StatusBadRequest)
@@ -106,13 +106,13 @@ func searchAccountsSecure(w http.ResponseWriter, r *http.Request) {
 
 	accounts := doc.FindElements("//account")
 	var matchingAccounts []*etree.Element
-	
+
 	for _, account := range accounts {
 		if account.SelectAttrValue("type", "") == validType {
 			matchingAccounts = append(matchingAccounts, account)
 		}
 	}
-	
+
 	if len(matchingAccounts) == 0 {
 		fmt.Fprintf(w, "No accounts found of type: %s", validType)
 		return
@@ -125,7 +125,7 @@ func searchAccountsSecure(w http.ResponseWriter, r *http.Request) {
 		status := account.SelectElement("status")
 		openedDate := account.SelectElement("opened_date")
 		branch := account.SelectElement("branch")
-		
+
 		fmt.Fprintf(w, "Account #%s", number)
 		if owner != nil {
 			fmt.Fprintf(w, ", Owner: %s", owner.Text())
@@ -145,7 +145,7 @@ func searchAccountsSecure(w http.ResponseWriter, r *http.Request) {
 
 func getAccountDetails(w http.ResponseWriter, r *http.Request) {
 	accountNumber := r.URL.Query().Get("number")
-	
+
 	validNumber, err := validateAccountNumber(accountNumber)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Invalid account number: %v", err), http.StatusBadRequest)
@@ -160,40 +160,19 @@ func getAccountDetails(w http.ResponseWriter, r *http.Request) {
 
 	accounts := doc.FindElements("//account")
 	var targetAccount *etree.Element
-	
+
 	for _, account := range accounts {
 		if account.SelectAttrValue("number", "") == validNumber {
 			targetAccount = account
 			break
 		}
 	}
-	
+
 	if targetAccount == nil {
 		fmt.Fprintf(w, "Account not found: %s", validNumber)
 		return
 	}
 
-	accountType := targetAccount.SelectAttrValue("type", "")
-	owner := targetAccount.SelectElement("owner")
-	status := targetAccount.SelectElement("status")
-	openedDate := targetAccount.SelectElement("opened_date")
-	branch := targetAccount.SelectElement("branch")
-	
-	fmt.Fprintf(w, "Account Details:\n")
-	fmt.Fprintf(w, "Number: %s\n", validNumber)
-	fmt.Fprintf(w, "Type: %s\n", accountType)
-	if owner != nil {
-		fmt.Fprintf(w, "Owner: %s\n", owner.Text())
-	}
-	if status != nil {
-		fmt.Fprintf(w, "Status: %s\n", status.Text())
-	}
-	if openedDate != nil {
-		fmt.Fprintf(w, "Opened: %s\n", openedDate.Text())
-	}
-	if branch != nil {
-		fmt.Fprintf(w, "Branch: %s\n", branch.Text())
-	}
 }
 
 func listAccountTypes(w http.ResponseWriter, r *http.Request) {

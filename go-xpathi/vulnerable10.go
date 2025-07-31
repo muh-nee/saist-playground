@@ -52,7 +52,7 @@ var xmlData = `<?xml version="1.0" encoding="UTF-8"?>
 func authenticate(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("username")
 	role := r.URL.Query().Get("role")
-	
+
 	if username == "" || role == "" {
 		http.Error(w, "Username and role parameters required", http.StatusBadRequest)
 		return
@@ -65,9 +65,9 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	userQuery := fmt.Sprintf("//user[username='%s' and @role='%s']", username, role)
-	
+
 	users := xmlquery.Find(doc, userQuery)
-	
+
 	if len(users) == 0 {
 		http.Error(w, "Authentication failed", http.StatusUnauthorized)
 		return
@@ -81,11 +81,9 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 
 	roleQuery := fmt.Sprintf("//role[@name='%s']", userRole)
 	roles := xmlquery.Find(doc, roleQuery)
-	
+
 	fmt.Fprintf(w, "Authentication successful!\n")
-	fmt.Fprintf(w, "User: %s\n", username)
-	fmt.Fprintf(w, "Role: %s\n", userRole)
-	
+
 	if email != nil {
 		fmt.Fprintf(w, "Email: %s\n", email.InnerText())
 	}
@@ -95,12 +93,12 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	if twoFactorSecret != nil {
 		fmt.Fprintf(w, "2FA Secret: %s\n", twoFactorSecret.InnerText())
 	}
-	
+
 	if len(roles) > 0 {
 		access := xmlquery.FindOne(roles[0], "access")
 		resources := xmlquery.FindOne(roles[0], "resources")
 		password := xmlquery.FindOne(roles[0], "password")
-		
+
 		if access != nil {
 			fmt.Fprintf(w, "Access Level: %s\n", access.InnerText())
 		}
@@ -116,7 +114,7 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 func checkAccess(w http.ResponseWriter, r *http.Request) {
 	resource := r.URL.Query().Get("resource")
 	minRole := r.URL.Query().Get("minRole")
-	
+
 	if resource == "" || minRole == "" {
 		http.Error(w, "Resource and minRole parameters required", http.StatusBadRequest)
 		return
@@ -129,11 +127,9 @@ func checkAccess(w http.ResponseWriter, r *http.Request) {
 	}
 
 	accessQuery := fmt.Sprintf("//role[@name='%s' or resources='*' or contains(resources,'%s')]", minRole, resource)
-	
+
 	roles := xmlquery.Find(doc, accessQuery)
-	
-	fmt.Fprintf(w, "Access check for resource '%s' with minimum role '%s':\n", resource, minRole)
-	
+
 	if len(roles) == 0 {
 		fmt.Fprintf(w, "No roles found with access\n")
 		return
@@ -144,10 +140,10 @@ func checkAccess(w http.ResponseWriter, r *http.Request) {
 		access := xmlquery.FindOne(role, "access")
 		resources := xmlquery.FindOne(role, "resources")
 		password := xmlquery.FindOne(role, "password")
-		
-		fmt.Fprintf(w, "Role: %s, Access: %s, Resources: %s", 
+
+		fmt.Fprintf(w, "Role: %s, Access: %s, Resources: %s",
 			roleName, access.InnerText(), resources.InnerText())
-		
+
 		if password != nil {
 			fmt.Fprintf(w, ", Password: %s", password.InnerText())
 		}

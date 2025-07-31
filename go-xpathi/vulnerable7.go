@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/beevik/etree"
 )
@@ -36,7 +35,7 @@ var xmlData = `<?xml version="1.0" encoding="UTF-8"?>
 func searchAccounts(w http.ResponseWriter, r *http.Request) {
 	accountType := r.URL.Query().Get("type")
 	minBalance := r.URL.Query().Get("minBalance")
-	
+
 	if accountType == "" {
 		http.Error(w, "Account type parameter required", http.StatusBadRequest)
 		return
@@ -56,13 +55,11 @@ func searchAccounts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	accounts := doc.FindElements(xpathQuery)
-	
+
 	if len(accounts) == 0 {
-		fmt.Fprintf(w, "No accounts found of type: %s", accountType)
 		return
 	}
 
-	fmt.Fprintf(w, "Accounts of type '%s':\n", accountType)
 	for _, account := range accounts {
 		number := account.SelectAttrValue("number", "")
 		owner := account.SelectElement("owner")
@@ -70,7 +67,7 @@ func searchAccounts(w http.ResponseWriter, r *http.Request) {
 		routing := account.SelectElement("routing")
 		pin := account.SelectElement("pin")
 		creditScore := account.SelectElement("credit_score")
-		
+
 		fmt.Fprintf(w, "Account #%s", number)
 		if owner != nil {
 			fmt.Fprintf(w, ", Owner: %s", owner.Text())

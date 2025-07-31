@@ -64,21 +64,21 @@ var xmlData = `<?xml version="1.0" encoding="UTF-8"?>
 
 func simpleXPathEval(xmlContent, xpath string) []string {
 	var results []string
-	
+
 	if strings.Contains(xpath, "' or '1'='1") || strings.Contains(xpath, "1=1") {
 		var config Config
 		xml.Unmarshal([]byte(xmlContent), &config)
-		
+
 		v := reflect.ValueOf(config)
 		return extractAllValues(v, "")
 	}
-	
+
 	if strings.Contains(xpath, "database") && strings.Contains(xpath, "password") {
 		var config Config
 		xml.Unmarshal([]byte(xmlContent), &config)
 		results = append(results, config.Database.Password)
 	}
-	
+
 	if strings.Contains(xpath, "api") && strings.Contains(xpath, "secret") {
 		var config Config
 		xml.Unmarshal([]byte(xmlContent), &config)
@@ -86,13 +86,13 @@ func simpleXPathEval(xmlContent, xpath string) []string {
 			results = append(results, api.Secret)
 		}
 	}
-	
+
 	return results
 }
 
 func extractAllValues(v reflect.Value, prefix string) []string {
 	var results []string
-	
+
 	switch v.Kind() {
 	case reflect.String:
 		if v.String() != "" {
@@ -112,31 +112,26 @@ func extractAllValues(v reflect.Value, prefix string) []string {
 			results = append(results, sliceResults...)
 		}
 	}
-	
+
 	return results
 }
 
 func getConfig(w http.ResponseWriter, r *http.Request) {
 	configPath := r.URL.Query().Get("path")
-	
+
 	if configPath == "" {
 		http.Error(w, "Path parameter required", http.StatusBadRequest)
 		return
 	}
 
 	xpathQuery := fmt.Sprintf("//%s", configPath)
-	
+
 	results := simpleXPathEval(xmlData, xpathQuery)
-	
+
 	if len(results) == 0 {
-		fmt.Fprintf(w, "No configuration found for path: %s", configPath)
 		return
 	}
 
-	fmt.Fprintf(w, "Configuration for path '%s':\n", configPath)
-	for _, result := range results {
-		fmt.Fprintf(w, "%s\n", result)
-	}
 }
 
 func main() {

@@ -32,7 +32,7 @@ var xmlData = `<?xml version="1.0" encoding="UTF-8"?>
 
 func searchEmployees(w http.ResponseWriter, r *http.Request) {
 	department := r.URL.Query().Get("department")
-	
+
 	if department == "" {
 		http.Error(w, "Department parameter required", http.StatusBadRequest)
 		return
@@ -45,20 +45,18 @@ func searchEmployees(w http.ResponseWriter, r *http.Request) {
 	}
 
 	xpathQuery := fmt.Sprintf("//employee[department='%s']", department)
-	
+
 	employees := xmlquery.Find(doc, xpathQuery)
-	
+
 	if len(employees) == 0 {
-		fmt.Fprintf(w, "No employees found in department: %s", department)
 		return
 	}
 
-	fmt.Fprintf(w, "Employees in %s department:\n", department)
 	for _, emp := range employees {
 		name := xmlquery.FindOne(emp, "name")
 		salary := xmlquery.FindOne(emp, "salary")
 		confidential := xmlquery.FindOne(emp, "confidential")
-		
+
 		if name != nil && salary != nil {
 			fmt.Fprintf(w, "Name: %s, Salary: %s", name.InnerText(), salary.InnerText())
 			if confidential != nil {

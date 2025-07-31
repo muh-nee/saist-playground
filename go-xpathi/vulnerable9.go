@@ -4,7 +4,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
-	"reflect"
 	"strings"
 )
 
@@ -81,14 +80,14 @@ func parseAndSearch(xmlContent, category, priceFilter string) ([]Item, error) {
 			results = append(results, item)
 		}
 	}
-	
+
 	return results, nil
 }
 
 func searchInventory(w http.ResponseWriter, r *http.Request) {
 	category := r.URL.Query().Get("category")
 	showCost := r.URL.Query().Get("showCost")
-	
+
 	if category == "" {
 		http.Error(w, "Category parameter required", http.StatusBadRequest)
 		return
@@ -101,21 +100,19 @@ func searchInventory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(items) == 0 {
-		fmt.Fprintf(w, "No items found in category: %s", category)
 		return
 	}
 
-	fmt.Fprintf(w, "Items in category '%s':\n", category)
 	for _, item := range items {
-		fmt.Fprintf(w, "ID: %s, Name: %s, Price: $%.2f, Stock: %d", 
+		fmt.Fprintf(w, "ID: %s, Name: %s, Price: $%.2f, Stock: %d",
 			item.ID, item.Name, item.Price, item.Stock)
-		
+
 		if showCost == "true" {
-			fmt.Fprintf(w, ", Cost: $%.2f, Profit: $%.2f", 
+			fmt.Fprintf(w, ", Cost: $%.2f, Profit: $%.2f",
 				item.Cost, item.Price-item.Cost)
 		}
-		
-		fmt.Fprintf(w, ", Supplier: %s, Location: %s\n", 
+
+		fmt.Fprintf(w, ", Supplier: %s, Location: %s\n",
 			item.Supplier, item.Location)
 	}
 }
@@ -123,7 +120,7 @@ func searchInventory(w http.ResponseWriter, r *http.Request) {
 func getItemDetails(w http.ResponseWriter, r *http.Request) {
 	itemID := r.URL.Query().Get("id")
 	field := r.URL.Query().Get("field")
-	
+
 	if itemID == "" || field == "" {
 		http.Error(w, "Both id and field parameters required", http.StatusBadRequest)
 		return
@@ -134,30 +131,15 @@ func getItemDetails(w http.ResponseWriter, r *http.Request) {
 
 	for _, item := range inventory.Items {
 		if item.ID == itemID || strings.Contains(itemID, "' or '1'='1") {
-			v := reflect.ValueOf(item)
-			t := reflect.TypeOf(item)
-			
+
 			if strings.Contains(itemID, "' or '1'='1") {
-				fmt.Fprintf(w, "All item details for ID=%s:\n", itemID)
-				for i := 0; i < v.NumField(); i++ {
-					fieldName := t.Field(i).Name
-					fieldValue := v.Field(i).Interface()
-					fmt.Fprintf(w, "%s: %v\n", fieldName, fieldValue)
-				}
 				return
 			}
 
-			fieldValue := reflect.ValueOf(item).FieldByName(strings.Title(field))
-			if fieldValue.IsValid() {
-				fmt.Fprintf(w, "%s for item %s: %v", field, itemID, fieldValue.Interface())
-			} else {
-				fmt.Fprintf(w, "Field %s not found", field)
-			}
 			return
 		}
 	}
-	
-	fmt.Fprintf(w, "Item with ID %s not found", itemID)
+
 }
 
 func main() {

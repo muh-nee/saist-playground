@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/lestrrat-go/libxml2"
 	"github.com/lestrrat-go/libxml2/xpath"
@@ -36,7 +35,7 @@ var xmlData = `<?xml version="1.0" encoding="UTF-8"?>
 func searchProducts(w http.ResponseWriter, r *http.Request) {
 	category := r.URL.Query().Get("category")
 	maxPrice := r.URL.Query().Get("maxPrice")
-	
+
 	if category == "" {
 		http.Error(w, "Category parameter required", http.StatusBadRequest)
 		return
@@ -72,19 +71,17 @@ func searchProducts(w http.ResponseWriter, r *http.Request) {
 
 	nodeList := result.NodeList()
 	if nodeList.Len() == 0 {
-		fmt.Fprintf(w, "No products found in category: %s", category)
 		return
 	}
 
-	fmt.Fprintf(w, "Products in category '%s':\n", category)
 	for i := 0; i < nodeList.Len(); i++ {
 		node := nodeList.Item(i)
 		name := node.FindString("name")
 		price := node.GetAttribute("price")
 		inventory := node.FindString("inventory")
 		cost := node.FindString("cost")
-		
-		fmt.Fprintf(w, "Name: %s, Price: $%s, Inventory: %s, Cost: $%s\n", 
+
+		fmt.Fprintf(w, "Name: %s, Price: $%s, Inventory: %s, Cost: $%s\n",
 			name, price, inventory, cost)
 	}
 }

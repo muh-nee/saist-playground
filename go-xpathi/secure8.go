@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/antchfx/xpath"
 	"github.com/antchfx/xmlquery"
+	"github.com/antchfx/xpath"
 )
 
 var xmlData = `<?xml version="1.0" encoding="UTF-8"?>
@@ -76,16 +76,16 @@ func validateSeverity(severity string) (string, error) {
 	if len(severity) == 0 {
 		return "", fmt.Errorf("severity cannot be empty")
 	}
-	
+
 	if len(severity) > 10 {
 		return "", fmt.Errorf("severity too long")
 	}
-	
+
 	validPattern := regexp.MustCompile(`^[a-z]+$`)
 	if !validPattern.MatchString(severity) {
 		return "", fmt.Errorf("severity must contain only lowercase letters")
 	}
-	
+
 	return strings.TrimSpace(severity), nil
 }
 
@@ -93,16 +93,16 @@ func validateUsername(username string) (string, error) {
 	if len(username) == 0 {
 		return "", fmt.Errorf("username cannot be empty")
 	}
-	
+
 	if len(username) > 20 {
 		return "", fmt.Errorf("username too long")
 	}
-	
+
 	validPattern := regexp.MustCompile(`^[a-zA-Z0-9_]+$`)
 	if !validPattern.MatchString(username) {
 		return "", fmt.Errorf("username must contain only alphanumeric characters and underscores")
 	}
-	
+
 	return strings.TrimSpace(username), nil
 }
 
@@ -110,16 +110,16 @@ func validateLimit(limitStr string) (int, error) {
 	if len(limitStr) == 0 {
 		return 10, nil
 	}
-	
+
 	limit, err := strconv.Atoi(limitStr)
 	if err != nil {
 		return 0, fmt.Errorf("limit must be a number")
 	}
-	
+
 	if limit < 1 || limit > 100 {
 		return 0, fmt.Errorf("limit must be between 1 and 100")
 	}
-	
+
 	return limit, nil
 }
 
@@ -135,17 +135,17 @@ func initPreparedQueries() error {
 	if err != nil {
 		return err
 	}
-	
+
 	preparedQueries["by_user"], err = xpath.Compile("//event[user=$user]")
 	if err != nil {
 		return err
 	}
-	
+
 	preparedQueries["all_events"], err = xpath.Compile("//event")
 	if err != nil {
 		return err
 	}
-	
+
 	return nil
 }
 
@@ -153,7 +153,7 @@ func searchAuditLogsSecure(w http.ResponseWriter, r *http.Request) {
 	severity := r.URL.Query().Get("severity")
 	user := r.URL.Query().Get("user")
 	limitStr := r.URL.Query().Get("limit")
-	
+
 	limit, err := validateLimit(limitStr)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Invalid limit: %v", err), http.StatusBadRequest)
@@ -161,7 +161,7 @@ func searchAuditLogsSecure(w http.ResponseWriter, r *http.Request) {
 	}
 
 	validator := NewLogQueryValidator()
-	
+
 	var validSeverity, validUser string
 	if severity != "" {
 		validSeverity, err = validateSeverity(severity)
@@ -169,13 +169,13 @@ func searchAuditLogsSecure(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("Invalid severity: %v", err), http.StatusBadRequest)
 			return
 		}
-		
+
 		if !validator.IsValidSeverity(validSeverity) {
 			http.Error(w, "Severity level not recognized", http.StatusBadRequest)
 			return
 		}
 	}
-	
+
 	if user != "" {
 		validUser, err = validateUsername(user)
 		if err != nil {
@@ -191,7 +191,7 @@ func searchAuditLogsSecure(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var events []*xmlquery.Node
-	
+
 	if validSeverity != "" {
 		events = xmlquery.Find(doc, "//event")
 		var filteredEvents []*xmlquery.Node
@@ -214,7 +214,7 @@ func searchAuditLogsSecure(w http.ResponseWriter, r *http.Request) {
 	} else {
 		events = xmlquery.Find(doc, "//event")
 	}
-	
+
 	if len(events) == 0 {
 		fmt.Fprintf(w, "No audit log entries found matching criteria")
 		return
@@ -224,34 +224,6 @@ func searchAuditLogsSecure(w http.ResponseWriter, r *http.Request) {
 		events = events[:limit]
 	}
 
-	fmt.Fprintf(w, "Audit Log Entries (limited to %d):\n", limit)
-	for _, event := range events {
-		timestamp := event.SelectAttr("timestamp")
-		severity := event.SelectAttr("severity")
-		eventType := xmlquery.FindOne(event, "type")
-		user := xmlquery.FindOne(event, "user")
-		ip := xmlquery.FindOne(event, "ip")
-		status := xmlquery.FindOne(event, "status")
-		message := xmlquery.FindOne(event, "message")
-		
-		fmt.Fprintf(w, "Time: %s, Severity: %s", timestamp, severity)
-		if eventType != nil {
-			fmt.Fprintf(w, ", Type: %s", eventType.InnerText())
-		}
-		if user != nil {
-			fmt.Fprintf(w, ", User: %s", user.InnerText())
-		}
-		if ip != nil {
-			fmt.Fprintf(w, ", IP: %s", ip.InnerText())
-		}
-		if status != nil {
-			fmt.Fprintf(w, ", Status: %s", status.InnerText())
-		}
-		if message != nil {
-			fmt.Fprintf(w, ", Message: %s", message.InnerText())
-		}
-		fmt.Fprintf(w, "\n")
-	}
 }
 
 func listLogOptions(w http.ResponseWriter, r *http.Request) {
@@ -269,7 +241,7 @@ func main() {
 	if err := initPreparedQueries(); err != nil {
 		panic(fmt.Sprintf("Failed to initialize prepared queries: %v", err))
 	}
-	
+
 	http.HandleFunc("/logs", searchAuditLogsSecure)
 	http.HandleFunc("/logs/options", listLogOptions)
 	fmt.Println("Server starting on :9087")

@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/moovweb/gokogiri"
-	"github.com/moovweb/gokogiri/xml"
 )
 
 var xmlData = `<?xml version="1.0" encoding="UTF-8"?>
@@ -42,11 +41,11 @@ type MedicalDepartmentValidator struct {
 func NewMedicalDepartmentValidator() *MedicalDepartmentValidator {
 	return &MedicalDepartmentValidator{
 		ValidDepartments: map[string]bool{
-			"Cardiology":     true,
-			"Endocrinology":  true,
-			"Psychiatry":     true,
-			"Orthopedics":    true,
-			"Dermatology":    true,
+			"Cardiology":    true,
+			"Endocrinology": true,
+			"Psychiatry":    true,
+			"Orthopedics":   true,
+			"Dermatology":   true,
 		},
 	}
 }
@@ -66,34 +65,34 @@ func validateDepartmentInput(department string) (string, error) {
 	if len(department) == 0 {
 		return "", fmt.Errorf("department cannot be empty")
 	}
-	
+
 	if len(department) > 30 {
 		return "", fmt.Errorf("department name too long")
 	}
-	
+
 	validPattern := regexp.MustCompile(`^[a-zA-Z\s]+$`)
 	if !validPattern.MatchString(department) {
 		return "", fmt.Errorf("department must contain only letters and spaces")
 	}
-	
+
 	blacklistPatterns := []string{
 		"or", "and", "union", "select", "drop", "insert", "update", "delete",
 		"'", "\"", "=", "<", ">", "(", ")", "[", "]", "*", "/",
 	}
-	
+
 	lowerDept := strings.ToLower(department)
 	for _, pattern := range blacklistPatterns {
 		if strings.Contains(lowerDept, pattern) {
 			return "", fmt.Errorf("department contains invalid characters or keywords")
 		}
 	}
-	
+
 	return strings.TrimSpace(department), nil
 }
 
 func searchPatientsSecure(w http.ResponseWriter, r *http.Request) {
 	department := r.URL.Query().Get("department")
-	
+
 	validDept, err := validateDepartmentInput(department)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Invalid department: %v", err), http.StatusBadRequest)
@@ -115,49 +114,23 @@ func searchPatientsSecure(w http.ResponseWriter, r *http.Request) {
 
 	escapedDept := escapeXPathString(validDept)
 	xpathQuery := fmt.Sprintf("//patient[department=%s]", escapedDept)
-	
-	patients, err := doc.Search(xpathQuery)
+
+	_, err = doc.Search(xpathQuery)
 	if err != nil {
 		http.Error(w, "XPath search error", http.StatusInternalServerError)
 		return
 	}
 
-	if len(patients) == 0 {
-		fmt.Fprintf(w, "No patients found in department: %s", validDept)
-		return
-	}
-
-	fmt.Fprintf(w, "Patients in %s department:\n", validDept)
-	for _, patient := range patients {
-		name, _ := patient.Search("name")
-		publicID, _ := patient.Search("public_id")
-		status, _ := patient.Search("status")
-		email, _ := patient.Search("contact_email")
-		
-		if len(name) > 0 && len(publicID) > 0 {
-			fmt.Fprintf(w, "Name: %s, ID: %s", name[0].Content(), publicID[0].Content())
-			
-			if len(status) > 0 {
-				fmt.Fprintf(w, ", Status: %s", status[0].Content())
-			}
-			
-			if len(email) > 0 {
-				fmt.Fprintf(w, ", Contact: %s", email[0].Content())
-			}
-			
-			fmt.Fprintf(w, "\n")
-		}
-	}
 }
 
 func getPatientByID(w http.ResponseWriter, r *http.Request) {
 	publicID := r.URL.Query().Get("id")
-	
+
 	if len(publicID) == 0 {
 		http.Error(w, "Patient ID required", http.StatusBadRequest)
 		return
 	}
-	
+
 	idPattern := regexp.MustCompile(`^P\d{3}$`)
 	if !idPattern.MatchString(publicID) {
 		http.Error(w, "Invalid patient ID format (expected: P###)", http.StatusBadRequest)
@@ -173,7 +146,7 @@ func getPatientByID(w http.ResponseWriter, r *http.Request) {
 
 	escapedID := escapeXPathString(publicID)
 	xpathQuery := fmt.Sprintf("//patient[public_id=%s]", escapedID)
-	
+
 	patients, err := doc.Search(xpathQuery)
 	if err != nil {
 		http.Error(w, "XPath search error", http.StatusInternalServerError)
@@ -181,30 +154,9 @@ func getPatientByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(patients) == 0 {
-		fmt.Fprintf(w, "Patient not found with ID: %s", publicID)
 		return
 	}
 
-	patient := patients[0]
-	name, _ := patient.Search("name")
-	department, _ := patient.Search("department")
-	status, _ := patient.Search("status")
-	email, _ := patient.Search("contact_email")
-	
-	fmt.Fprintf(w, "Patient Information:\n")
-	if len(name) > 0 {
-		fmt.Fprintf(w, "Name: %s\n", name[0].Content())
-	}
-	fmt.Fprintf(w, "ID: %s\n", publicID)
-	if len(department) > 0 {
-		fmt.Fprintf(w, "Department: %s\n", department[0].Content())
-	}
-	if len(status) > 0 {
-		fmt.Fprintf(w, "Status: %s\n", status[0].Content())
-	}
-	if len(email) > 0 {
-		fmt.Fprintf(w, "Contact: %s\n", email[0].Content())
-	}
 }
 
 func main() {

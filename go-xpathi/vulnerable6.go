@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/moovweb/gokogiri"
-	"github.com/moovweb/gokogiri/xml"
 )
 
 var xmlData = `<?xml version="1.0" encoding="UTF-8"?>
@@ -38,7 +37,7 @@ var xmlData = `<?xml version="1.0" encoding="UTF-8"?>
 
 func searchPatients(w http.ResponseWriter, r *http.Request) {
 	diagnosis := r.URL.Query().Get("diagnosis")
-	
+
 	if diagnosis == "" {
 		http.Error(w, "Diagnosis parameter required", http.StatusBadRequest)
 		return
@@ -52,7 +51,7 @@ func searchPatients(w http.ResponseWriter, r *http.Request) {
 	defer doc.Free()
 
 	xpathQuery := fmt.Sprintf("//patient[diagnosis='%s']", diagnosis)
-	
+
 	patients, err := doc.Search(xpathQuery)
 	if err != nil {
 		http.Error(w, "XPath search error", http.StatusInternalServerError)
@@ -60,18 +59,16 @@ func searchPatients(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(patients) == 0 {
-		fmt.Fprintf(w, "No patients found with diagnosis: %s", diagnosis)
 		return
 	}
 
-	fmt.Fprintf(w, "Patients with diagnosis '%s':\n", diagnosis)
 	for _, patient := range patients {
 		name, _ := patient.Search("name")
 		ssn, _ := patient.Search("ssn")
 		medication, _ := patient.Search("medication")
 		insurance, _ := patient.Search("insurance")
 		notes, _ := patient.Search("notes")
-		
+
 		if len(name) > 0 {
 			fmt.Fprintf(w, "Name: %s", name[0].Content())
 			if len(ssn) > 0 {

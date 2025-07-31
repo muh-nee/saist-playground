@@ -9,10 +9,10 @@ import (
 )
 
 type PublicConfig struct {
-	XMLName  xml.Name      `xml:"config"`
-	Database DatabaseInfo  `xml:"database"`
-	APIs     []PublicAPI   `xml:"apis>api"`
-	Settings AppSettings   `xml:"settings"`
+	XMLName  xml.Name     `xml:"config"`
+	Database DatabaseInfo `xml:"database"`
+	APIs     []PublicAPI  `xml:"apis>api"`
+	Settings AppSettings  `xml:"settings"`
 }
 
 type DatabaseInfo struct {
@@ -64,12 +64,12 @@ type ConfigPathValidator struct {
 func NewConfigPathValidator() *ConfigPathValidator {
 	return &ConfigPathValidator{
 		AllowedPaths: map[string]bool{
-			"database":    true,
-			"apis":        true,
-			"settings":    true,
-			"theme":       true,
-			"language":    true,
-			"timezone":    true,
+			"database": true,
+			"apis":     true,
+			"settings": true,
+			"theme":    true,
+			"language": true,
+			"timezone": true,
 		},
 	}
 }
@@ -82,22 +82,22 @@ func validateConfigPath(path string) (string, error) {
 	if len(path) == 0 {
 		return "", fmt.Errorf("path cannot be empty")
 	}
-	
+
 	if len(path) > 20 {
 		return "", fmt.Errorf("path too long")
 	}
-	
+
 	validPattern := regexp.MustCompile(`^[a-zA-Z_]+$`)
 	if !validPattern.MatchString(path) {
 		return "", fmt.Errorf("path must contain only letters and underscores")
 	}
-	
+
 	return strings.ToLower(strings.TrimSpace(path)), nil
 }
 
 func getConfigSecure(w http.ResponseWriter, r *http.Request) {
 	configPath := r.URL.Query().Get("path")
-	
+
 	validPath, err := validateConfigPath(configPath)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Invalid path: %v", err), http.StatusBadRequest)
@@ -116,35 +116,33 @@ func getConfigSecure(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "Configuration for path '%s':\n", validPath)
-	
 	switch validPath {
 	case "database":
 		fmt.Fprintf(w, "Host: %s\n", config.Database.Host)
 		fmt.Fprintf(w, "Port: %s\n", config.Database.Port)
 		fmt.Fprintf(w, "Database Name: %s\n", config.Database.Name)
-		
+
 	case "apis":
 		fmt.Fprintf(w, "Available APIs:\n")
 		for _, api := range config.APIs {
 			fmt.Fprintf(w, "- %s: %s (%s)\n", api.Name, api.URL, api.Description)
 		}
-		
+
 	case "settings":
 		fmt.Fprintf(w, "App Settings:\n")
 		fmt.Fprintf(w, "Theme: %s\n", config.Settings.Theme)
 		fmt.Fprintf(w, "Language: %s\n", config.Settings.Language)
 		fmt.Fprintf(w, "Timezone: %s\n", config.Settings.Timezone)
-		
+
 	case "theme":
 		fmt.Fprintf(w, "Theme: %s\n", config.Settings.Theme)
-		
+
 	case "language":
 		fmt.Fprintf(w, "Language: %s\n", config.Settings.Language)
-		
+
 	case "timezone":
 		fmt.Fprintf(w, "Timezone: %s\n", config.Settings.Timezone)
-		
+
 	default:
 		fmt.Fprintf(w, "Configuration section not found")
 	}

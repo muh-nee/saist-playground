@@ -59,7 +59,7 @@ func authenticateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	xpathQuery := fmt.Sprintf("//user[username='%s' and password='%s']", username, password)
-	
+
 	result, err := goxpath.ParseExpr(xpathQuery)
 	if err != nil {
 		http.Error(w, "XPath parsing error", http.StatusInternalServerError)
@@ -73,7 +73,7 @@ func authenticateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if nodeSet, ok := res.(tree.NodeSet); ok && len(nodeSet) > 0 {
-		fmt.Fprintf(w, "Authentication successful for user: %s", username)
+		fmt.Fprintf(w, "Authentication successful for user")
 	} else {
 		fmt.Fprintf(w, "Authentication failed")
 	}
