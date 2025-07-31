@@ -1,165 +1,115 @@
-
 import xml.etree.ElementTree as ET
 import re
 import html
+import sys
 from enum import Enum
 
-class SearchField(Enum):
-    EQUALS = "eq"
+class SearchOperator(Enum):
+    EQUALS = "equals"
     CONTAINS = "contains"
-    GREATER_THAN = "gt"
-    LESS_THAN = "lt"
+    STARTS_WITH = "starts_with"
+    ENDS_WITH = "ends_with"
 
 class SecureElementTreeProcessor:
     
     def __init__(self):
-        self.field_validators = {
-            SearchField.PRODUCT_NAME: self._validate_product_name,
-            SearchField.CATEGORY: self._validate_category,
-            SearchField.PRICE_RANGE: self._validate_price,
-            SearchField.STOCK_STATUS: self._validate_stock,
-            SearchField.SUPPLIER: self._validate_supplier
-        }
-        
         self.allowed_categories = {
             'electronics', 'books', 'clothing', 'home', 'sports'
         }
         
-        self.allowed_suppliers = {
-            'TechCorp', 'BookPublisher', 'FashionCo', 'HomeMart', 'SportsCo'
+        self.allowed_fields = {
+            'name', 'category', 'price', 'stock', 'supplier'
         }
     
-    def _validate_product_name(self, value):
+    def sanitize_input(self, value):
         if not isinstance(value, str):
-            return False, "Category must be a string"
+            value = str(value)
         
-        clean_value = value.lower().strip()
-        if clean_value not in self.allowed_categories:
-            return False, f"Invalid category. Allowed: {', '.join(self.allowed_categories)}"
-        
-        return True, "Valid"
-    
-    def _validate_price(self, value):
-        try:
-            stock = int(value)
-            if stock < 0:
-                return False, "Stock cannot be negative"
-            if stock > 10000:
-                return False, "Stock value too high"
-            return True, "Valid"
-        except (ValueError, TypeError):
-            return False, "Stock must be a valid integer"
-    
-    def _validate_supplier(self, value):
-        if not isinstance(value, str):
-            return str(value)
+        if len(value) > 100:
+            raise ValueError("Input too long")
         
         sanitized = html.escape(value)
-        
-        sanitized = sanitized.replace("'", "&
-        sanitized = sanitized.replace('"', "&
-        
+        sanitized = sanitized.replace("'", "")
+        sanitized = sanitized.replace('"', "")
+        sanitized = re.sub(r'[^\w\s.-]', '', sanitized)
         sanitized = re.sub(r'\s+', ' ', sanitized.strip())
         
         return sanitized
     
-    def validate_input(self, field, value):
-    Secure product search using ElementTree with validation
-    <catalog>
-        <products>
-            <product id="1" category="electronics">
-                <name>Smartphone</name>
-                <price>299.99</price>
-                <stock>15</stock>
-                <supplier>TechCorp</supplier>
-                <description>Latest model smartphone with advanced features</description>
-            </product>
-            <product id="2" category="electronics">
-                <name>Laptop</name>
-                <price>899.99</price>
-                <stock>8</stock>
-                <supplier>TechCorp</supplier>
-                <description>High-performance laptop for professionals</description>
-            </product>
-            <product id="3" category="books">
-                <name>Security Guide</name>
-                <price>49.99</price>
-                <stock>25</stock>
-                <supplier>BookPublisher</supplier>
-                <description>Comprehensive security practices guide</description>
-            </product>
-            <product id="4" category="clothing">
-                <name>Business Shirt</name>
-                <price>79.99</price>
-                <stock>50</stock>
-                <supplier>FashionCo</supplier>
-                <description>Professional business attire</description>
-            </product>
-        </products>
-    </catalog>
-    Safely check if a product matches the search criteria
-    try:
-        product_id = product.get('id', 'Unknown')
-        category = product.get('category', 'Unknown')
-        
-        name_elem = product.find('name')
-        price_elem = product.find('price')
-        stock_elem = product.find('stock')
-        supplier_elem = product.find('supplier')
-        
-        name = name_elem.text if name_elem is not None else 'Unknown'
-        price = price_elem.text if price_elem is not None else 'Unknown'
-        stock = stock_elem.text if stock_elem is not None else 'Unknown'
-        supplier = supplier_elem.text if supplier_elem is not None else 'Unknown'
-        
-        print(f"  Product 
-        print(f"    Category: {category}")
-        print(f"    Price: ${price}")
-        print(f"    Stock: {stock}")
-        print(f"    Supplier: {supplier}")
-        print()
-        
-    except Exception as e:
-        print(f"Error displaying product: {e}")
+    def validate_category(self, category):
+        clean_category = category.lower().strip()
+        return clean_category in self.allowed_categories
+    
+    def validate_price(self, price_str):
+        try:
+            price = float(price_str)
+            return 0 <= price <= 10000
+        except (ValueError, TypeError):
+            return False
+    
+    def validate_stock(self, stock_str):
+        try:
+            stock = int(stock_str)
+            return 0 <= stock <= 1000
+        except (ValueError, TypeError):
+            return False
 
-def demonstrate_security_features(processor):
-    print("=== Security Features Demonstration ===")
-    
-    print("\n1. Testing invalid field rejection:")
-    secure_product_search(processor, "invalid_field", SearchOperator.EQUALS, "test")
-    
-    print("\n2. Testing invalid operator rejection:")
-    secure_product_search(processor, SearchField.PRODUCT_NAME, "invalid_op", "test")
-    
-    print("\n3. Testing input validation:")
-    secure_product_search(processor, SearchField.CATEGORY, SearchOperator.EQUALS, "invalid_category")
-    
-    print("\n4. Testing injection attempt (safely handled):")
-    secure_product_search(processor, SearchField.PRODUCT_NAME, SearchOperator.CONTAINS, "'; DROP TABLE products; --")
-    
-    print("\n5. Testing price validation:")
-    secure_product_search(processor, SearchField.PRICE_RANGE, SearchOperator.EQUALS, "not_a_number")
-
-if __name__ == "__main__":
-    print("=== Secure ElementTree XML Processing ===")
+def secure_product_search(product_name):
+    xml_data = """
+    <products>
+        <product id="1" category="electronics">
+            <name>Laptop</name>
+            <price>999.99</price>
+            <stock>10</stock>
+        </product>
+        <product id="2" category="electronics">
+            <name>Phone</name>
+            <price>599.99</price>
+            <stock>25</stock>
+        </product>
+        <product id="3" category="books">
+            <name>Security Manual</name>
+            <price>49.99</price>
+            <stock>5</stock>
+        </product>
+    </products>
+    """
     
     processor = SecureElementTreeProcessor()
     
-    print("Normal usage examples:")
-    
-    print("\n1. Search by product name:")
-    secure_product_search(processor, SearchField.PRODUCT_NAME, SearchOperator.CONTAINS, "Smartphone")
-    
-    print("\n2. Search by category:")
-    secure_product_search(processor, SearchField.CATEGORY, SearchOperator.EQUALS, "electronics")
-    
-    print("\n3. Search by price range:")
-    secure_product_search(processor, SearchField.PRICE_RANGE, SearchOperator.LESS_THAN, "100")
-    
-    print("\n4. Search by stock level:")
-    secure_product_search(processor, SearchField.STOCK_STATUS, SearchOperator.GREATER_THAN, "20")
-    
-    print("\n5. Search by supplier:")
-    secure_product_search(processor, SearchField.SUPPLIER, SearchOperator.EQUALS, "TechCorp")
-    
-    demonstrate_security_features(processor)
+    try:
+        sanitized_name = processor.sanitize_input(product_name)
+        
+        if not re.match(r'^[a-zA-Z0-9\s.-]+$', sanitized_name):
+            raise ValueError("Invalid characters in product name")
+        
+        root = ET.fromstring(xml_data)
+        products = []
+        
+        for product in root.findall(".//product"):
+            name_elem = product.find('name')
+            if name_elem is not None and sanitized_name.lower() in name_elem.text.lower():
+                products.append({
+                    'name': name_elem.text,
+                    'price': product.find('price').text,
+                    'stock': product.find('stock').text,
+                    'category': product.get('category')
+                })
+        
+        return products
+        
+    except (ValueError, ET.ParseError) as e:
+        print(f"Error: {e}")
+        return []
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        user_input = sys.argv[1]
+        results = secure_product_search(user_input)
+        if results:
+            for product in results:
+                print(f"Product: {product}")
+        else:
+            print("No products found or invalid input")
+    else:
+        print("Usage: python secure2.py <product_name>")

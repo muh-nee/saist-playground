@@ -1,146 +1,129 @@
-import xmltodict
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.urls import path
+from django.conf import settings
+from django.core.wsgi import get_wsgi_application
+import defusedxml.ElementTree as ET
 import re
-import json
-from typing import Dict, List, Any, Optional, Set
-from dataclasses import dataclass
-from enum import Enum
+import html
 
-class PathOperation(Enum):
-    path: str
-    operation: PathOperation
-    max_depth: int = 5
+if not settings.configured:
+    settings.configure(
+        DEBUG=False,
+        SECRET_KEY='django-secure-key-for-demo',
+        ROOT_URLCONF=__name__,
+        ALLOWED_HOSTS=['127.0.0.1', 'localhost'],
+    )
 
-class SecureXMLtoDictProcessor:
-
-    def __init__(self, user_role: str =        ):
-        self.user_role = user_role
-
-        self.role_levels = {
-                   : 0,
-                  : 1,
-                   : 2,
-                       : 3
+class SecureDjangoProcessor:
+    
+    def __init__(self):
+        self.allowed_settings = {
+            'host', 'port', 'endpoint', 'timeout', 'level', 'destination'
         }
-
-        self.allowed_paths = {
-                                            :        ,
-                                               :        ,
-                                                   :        ,
-
-                                         :       ,
-                                         :       ,
-                                        :       ,
-
-                                             :        ,
-                                               :        ,
-                                         :        ,
-
-                                             :            ,
-                                      :            ,
-                                                :
+        
+        self.setting_validators = {
+            'host': self._validate_host,
+            'port': self._validate_port,
+            'timeout': self._validate_timeout,
+            'level': self._validate_level
         }
-
-        self.allowed_operations = {
-                   : {PathOperation.GET, PathOperation.EXISTS},
-                  : {PathOperation.GET, PathOperation.LIST, PathOperation.EXISTS},
-                   : {PathOperation.GET, PathOperation.LIST, PathOperation.EXISTS},
-                       : {PathOperation.GET, PathOperation.LIST, PathOperation.EXISTS}
-        }
-
-        self.max_path_depth = 6
-
-        self.blocked_patterns = [
-                    ,
-                     ,
-                           ,
-                         ,
-                          ,
-                        ,
-
-        ]
-
-    def has_role_access(self, required_role: str) -> bool:
-        if not isinstance(path, str):
-            raise ValueError(                       )
-
-        sanitized = re.sub(                        ,   , path)
-
-        sanitized = re.sub(         ,    , sanitized)
-
-        sanitized = sanitized.strip(    )
-
-        sanitized = sanitized.lower()
-
+    
+    def _validate_host(self, value):
+        return re.match(r'^[a-zA-Z0-9.-]+$', value) is not None
+    
+    def _validate_port(self, value):
+        try:
+            port = int(value)
+            return 1 <= port <= 65535
+        except (ValueError, TypeError):
+            return False
+    
+    def _validate_timeout(self, value):
+        try:
+            timeout = int(value)
+            return 1 <= timeout <= 300
+        except (ValueError, TypeError):
+            return False
+    
+    def _validate_level(self, value):
+        return value.upper() in ['DEBUG', 'INFO', 'WARN', 'ERROR']
+    
+    def sanitize_input(self, value):
+        if not isinstance(value, str):
+            value = str(value)
+        
+        if len(value) > 50:
+            raise ValueError("Input too long")
+        
+        sanitized = html.escape(value)
+        sanitized = re.sub(r'[^\w.-]', '', sanitized)
+        
         return sanitized
+    
+    def validate_setting_name(self, setting_name):
+        sanitized = self.sanitize_input(setting_name)
+        return sanitized in self.allowed_settings
 
-    def validate_path(self, path: str) -> tuple[bool, str]:
-        if '*' in pattern:
-            regex_pattern = pattern.replace(   ,     )
-            return bool(re.match(f"^{regex_pattern}$", path))
-        return path == pattern
-
-    def validate_operation(self, operation: PathOperation) -> tuple[bool, str]:
-    Secure configuration access using xmltodict with validation
+@csrf_exempt
+def secure_config_lookup(request, setting_name):
+    xml_data = """
     <configuration>
-        <application>
-            <name>SecureApp</name>
-            <version>1.0.0</version>
-            <description>A secure application configuration</description>
-        </application>
         <database>
             <host>localhost</host>
             <port>5432</port>
-            <username>app_user</username>
-            <password>super_secret_db_password</password>
-            <ssl_enabled>true</ssl_enabled>
+            <username>dbuser</username>
+            <password>dbpass123</password>
         </database>
         <api>
             <endpoint>https://api.example.com</endpoint>
             <timeout>30</timeout>
-            <secret>api_secret_key_12345</secret>
-            <rate_limit>1000</rate_limit>
         </api>
-        <security>
-            <encryption>AES256</encryption>
-            <private_key>private_key_data_very_secret</private_key>
-            <session_timeout>3600</session_timeout>
-        </security>
         <logging>
             <level>INFO</level>
             <destination>file</destination>
-            <max_size>10MB</max_size>
         </logging>
     </configuration>
-    Safely traverse the dictionary path without eval or dynamic execution
-    Secure batch access to multiple configuration paths
-    <system>
-        <services>
-            <web_server>
-                <name>nginx</name>
-                <port>80</port>
-                <ssl_port>443</ssl_port>
-                <status>running</status>
-            </web_server>
-            <database>
-                <name>postgresql</name>
-                <port>5432</port>
-                <status>running</status>
-                <admin_password>db_admin_secret_password</admin_password>
-            </database>
-            <cache>
-                <name>redis</name>
-                <port>6379</port>
-                <status>running</status>
-                <auth_token>redis_secret_token</auth_token>
-            </cache>
-        </services>
-        <monitoring>
-            <enabled>true</enabled>
-            <interval>60</interval>
-            <alerts>
-                <email>admin@company.com</email>
-                <webhook>https://alerts.company.com/webhook</webhook>
-            </alerts>
-        </monitoring>
-    </system>
-    Demonstrate security features and access controls
+    """
+    
+    processor = SecureDjangoProcessor()
+    
+    try:
+        if not processor.validate_setting_name(setting_name):
+            return JsonResponse({'error': 'Invalid setting name'}, status=400)
+        
+        sanitized_name = processor.sanitize_input(setting_name)
+        
+        root = ET.fromstring(xml_data)
+        settings_found = []
+        
+        for element in root.iter():
+            if element.tag == sanitized_name and element.text:
+                if sanitized_name in processor.setting_validators:
+                    if processor.setting_validators[sanitized_name](element.text):
+                        settings_found.append({
+                            'name': element.tag,
+                            'value': element.text
+                        })
+                else:
+                    settings_found.append({
+                        'name': element.tag,
+                        'value': element.text
+                    })
+        
+        return JsonResponse({'settings': settings_found})
+        
+    except (ValueError, ET.ParseError) as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+urlpatterns = [
+    path('config/<str:setting_name>/', secure_config_lookup),
+]
+
+application = get_wsgi_application()
+
+if __name__ == '__main__':
+    from django.core.management import execute_from_command_line
+    import sys
+    sys.argv = ['secure4.py', 'runserver', '127.0.0.1:8000']
+    execute_from_command_line(sys.argv)

@@ -1,134 +1,83 @@
-
-from bs4 import BeautifulSoup
+from flask import Flask, request, jsonify
+from lxml import etree
 import re
 import html
-from typing import Dict, List, Optional, Union
-from dataclasses import dataclass
 
-@dataclass
-class SearchCriteria:
-    PUBLIC = "public"
-    INTERNAL = "internal"
-    CONFIDENTIAL = "confidential"
-    SECRET = "secret"
+app = Flask(__name__)
 
-class SecureBeautifulSoupProcessor:
+class SecureFlaskProcessor:
     
-    def __init__(self, user_clearance: str = AccessLevel.PUBLIC):
-        self.user_clearance = user_clearance
-        
-        self.clearance_levels = {
-            AccessLevel.PUBLIC: 0,
-            AccessLevel.INTERNAL: 1,
-            AccessLevel.CONFIDENTIAL: 2,
-            AccessLevel.SECRET: 3
-        }
-        
-        self.allowed_fields = {
-            'id': AccessLevel.PUBLIC,
-            'name': AccessLevel.PUBLIC,
-            'department': AccessLevel.INTERNAL,
-            'position': AccessLevel.INTERNAL,
-            'clearance': AccessLevel.CONFIDENTIAL,
-            'salary': AccessLevel.SECRET,
-            'classification': AccessLevel.CONFIDENTIAL
-        }
-        
-        self.allowed_operators = {
-            'equals', 'contains', 'starts_with', 'ends_with'
-        }
-        
+    def __init__(self):
         self.allowed_departments = {
-            'hr', 'engineering', 'marketing', 'finance', 'operations', 'security'
+            'IT', 'HR', 'Finance', 'Engineering', 'Marketing'
         }
         
-        self.allowed_positions = {
-            'manager', 'developer', 'analyst', 'director', 'coordinator', 
-            'specialist', 'consultant', 'administrator'
+        self.allowed_employee_ids = {
+            '1', '2', '3', '4', '5'
         }
     
-    def has_access(self, required_level: str) -> bool:
+    def sanitize_input(self, value):
         if not isinstance(value, str):
             value = str(value)
         
+        if len(value) > 20:
+            raise ValueError("Input too long")
+        
         sanitized = html.escape(value)
-        
-        dangerous_patterns = [
-            r'[<>]',           
-            r'[\'"]',          
-            r'[&|]',           
-            r'[\(\)\[\]]',     
-            r'[;]',            
-            r'[@
-        ]
-        
-        for pattern in dangerous_patterns:
-            sanitized = re.sub(pattern, '', sanitized)
-        
-        sanitized = re.sub(r'\s+', ' ', sanitized.strip())
-        
-        if len(sanitized) > 50:
-            sanitized = sanitized[:50]
+        sanitized = re.sub(r'[^\w-]', '', sanitized)
         
         return sanitized
     
-    def validate_field(self, field: str) -> tuple[bool, str]:
-        if operator not in self.allowed_operators:
-            return False, f"Invalid operator: {operator}"
-        return True, "Valid"
-    
-    def validate_value(self, field: str, value: str) -> tuple[bool, str]:
-    Secure employee search using BeautifulSoup with validation
+    def validate_employee_id(self, employee_id):
+        sanitized_id = self.sanitize_input(employee_id)
+        return sanitized_id in self.allowed_employee_ids
+
+@app.route('/employee/<employee_id>')
+def secure_employee_search(employee_id):
+    xml_data = """
     <company>
         <employees>
-            <employee id="1" department="hr" clearance="public">
+            <employee id="1" department="IT">
                 <name>Alice Johnson</name>
-                <position>HR Manager</position>
                 <salary>75000</salary>
-                <classification>internal</classification>
+                <clearance>secret</clearance>
             </employee>
-            <employee id="2" department="engineering" clearance="internal">
+            <employee id="2" department="HR">
                 <name>Bob Smith</name>
-                <position>Senior Developer</position>
-                <salary>95000</salary>
-                <classification>internal</classification>
+                <salary>65000</salary>
+                <clearance>public</clearance>
             </employee>
-            <employee id="3" department="security" clearance="confidential">
+            <employee id="3" department="Finance">
                 <name>Carol Davis</name>
-                <position>Security Analyst</position>
                 <salary>85000</salary>
-                <classification>confidential</classification>
-            </employee>
-            <employee id="4" department="finance" clearance="secret">
-                <name>David Wilson</name>
-                <position>Finance Director</position>
-                <salary>120000</salary>
-                <classification>secret</classification>
+                <clearance>confidential</clearance>
             </employee>
         </employees>
     </company>
-    Safely check if employee matches search criteria
-    Display employee information with access control
-    Secure multi-criteria search with validation
-    <departments>
-        <department name="engineering" budget="2000000">
-            <manager clearance="confidential">
-                <name>Tech Manager</name>
-                <position>Engineering Director</position>
-            </manager>
-            <projects>
-                <project classification="internal">Web Platform</project>
-                <project classification="confidential">AI Research</project>
-            </projects>
-        </department>
-        <department name="hr" budget="500000">
-            <manager clearance="internal">
-                <name>HR Manager</name>
-                <position>Human Resources Director</position>
-            </manager>
-            <projects>
-                <project classification="internal">Employee Portal</project>
-            </projects>
-        </department>
-    </departments>
-    Demonstrate security features and access controls
+    """
+    
+    processor = SecureFlaskProcessor()
+    
+    try:
+        if not processor.validate_employee_id(employee_id):
+            return jsonify({'error': 'Invalid employee ID'}), 400
+        
+        sanitized_id = processor.sanitize_input(employee_id)
+        
+        root = etree.fromstring(xml_data)
+        
+        for emp_elem in root.xpath("//employee"):
+            if emp_elem.get('id') == sanitized_id:
+                return jsonify({
+                    'name': emp_elem.find('name').text,
+                    'department': emp_elem.get('department'),
+                    'clearance': emp_elem.find('clearance').text
+                })
+        
+        return jsonify({'error': 'Employee not found'}), 404
+        
+    except (ValueError, etree.XPathEvalError) as e:
+        return jsonify({'error': str(e)}), 400
+
+if __name__ == '__main__':
+    app.run(debug=False, host='127.0.0.1', port=5000)

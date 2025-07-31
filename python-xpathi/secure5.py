@@ -1,164 +1,106 @@
+from fastapi import FastAPI, HTTPException
 import xml.etree.ElementTree as ET
-from xml.dom import minidom
 import re
 import html
-from typing import Dict, List, Optional, Set, Union
-from dataclasses import dataclass
-from enum import Enum
+import uvicorn
 
-class QueryType(Enum):
-    SIMPLE_MATCH = "simple_match"
-    ATTRIBUTE_SEARCH = "attribute_search"
-    TEXT_SEARCH = "text_search"
-    ELEMENT_EXISTS = "element_exists"
+app = FastAPI()
 
-@dataclass
-class SecureQuery:
-    query_type: QueryType
-    element_name: str
-    search_value: str
-    attribute_name: Optional[str] = None
-
-class SecureXMLSchemaProcessor:
+class SecureFastAPIProcessor:
     
-    def __init__(self, schema_version: str = "1.0"):
-        self.schema_version = schema_version
-        
-        self.allowed_elements = {
-            'employee', 'user', 'project', 'task', 'document', 
-            'configuration', 'setting', 'service', 'log'
+    def __init__(self):
+        self.allowed_categories = {
+            'electronics', 'books', 'software', 'clothing'
         }
         
-        self.allowed_attributes = {
-            'id', 'name', 'type', 'status', 'level', 'category',
-            'priority', 'version', 'active', 'enabled'
-        }
+        self.max_input_length = 30
         
-        self.attribute_patterns = {
-            'id': r'^[a-zA-Z0-9_-]{1,20}$',
-            'name': r'^[a-zA-Z0-9\s._-]{1,50}$',
-            'type': r'^[a-zA-Z]{1,20}$',
-            'status': r'^(active|inactive|pending|completed|failed)$',
-            'level': r'^(low|medium|high|critical)$',
-            'category': r'^[a-zA-Z]{1,30}$',
-            'priority': r'^[1-5]$',
-            'version': r'^\d+\.\d+(\.\d+)?$'
-        }
-        
-        self.max_search_length = 100
-        self.max_results = 50
+        self.dangerous_patterns = [
+            r'[\'"]',
+            r'[<>]',
+            r'[&|]',
+            r'[\(\)\[\]]',
+            r'[;@#$%]'
+        ]
     
-    def validate_element_name(self, element_name: str) -> tuple[bool, str]:
-        if not isinstance(element_name, str):
-            return False, "Element name must be a string"
-        
-        if element_name not in self.allowed_elements:
-            return False, f"Element '{element_name}' not allowed. Allowed: {', '.join(self.allowed_elements)}"
-        
-        return True, "Valid"
-    
-    def validate_attribute_name(self, attribute_name: str) -> tuple[bool, str]:
-        if not isinstance(attribute_name, str):
-            return False, "Attribute name must be a string"
-        
-        if attribute_name not in self.allowed_attributes:
-            return False, f"Attribute '{attribute_name}' not allowed. Allowed: {', '.join(self.allowed_attributes)}"
-        
-        return True, "Valid"
-    
-    def validate_search_value(self, search_value: str, attribute_name: Optional[str] = None) -> tuple[bool, str]:
-        if not isinstance(search_value, str):
-            return False, "Search value must be a string"
-        
-        if len(search_value) > self.max_search_length:
-            return False, f"Search value too long. Maximum: {self.max_search_length}"
-        
-        if len(search_value.strip()) == 0:
-            return False, "Search value cannot be empty"
-        
-        if attribute_name and attribute_name in self.attribute_patterns:
-            pattern = self.attribute_patterns[attribute_name]
-            if not re.match(pattern, search_value):
-                return False, f"Search value doesn't match required pattern for attribute '{attribute_name}'"
-        
-        dangerous_chars = ['<', '>', '"', "'", '&', '|', ';', '(', ')', '[', ']', '=', '!']
-        for char in dangerous_chars:
-            if char in search_value:
-                return False, f"Search value contains dangerous character: {char}"
-        
-        return True, "Valid"
-    
-    def sanitize_search_value(self, value: str) -> str:
+    def sanitize_input(self, value):
         if not isinstance(value, str):
             value = str(value)
         
+        if len(value) > self.max_input_length:
+            raise ValueError(f"Input too long. Maximum length: {self.max_input_length}")
+        
         sanitized = html.escape(value)
-        sanitized = re.sub(r'[^\w\s.-]', '', sanitized)
+        
+        for pattern in self.dangerous_patterns:
+            sanitized = re.sub(pattern, '', sanitized)
+        
         sanitized = re.sub(r'\s+', ' ', sanitized.strip())
         
-        return sanitized[:self.max_search_length]
+        if not re.match(r'^[a-zA-Z0-9\s_-]+$', sanitized):
+            raise ValueError("Input contains invalid characters")
+        
+        return sanitized
+    
+    def validate_category(self, category):
+        sanitized = self.sanitize_input(category)
+        return sanitized.lower() in self.allowed_categories
 
-def secure_employee_search(processor: SecureXMLSchemaProcessor, query: SecureQuery) -> None:
+@app.get("/inventory/{item_category}")
+async def secure_inventory_search(item_category: str):
     xml_data = """
-    <company>
-        <employees>
-            <employee id="emp001" status="active" level="medium">
-                <name>Alice Johnson</name>
-                <department>Engineering</department>
-                <position>Senior Developer</position>
-                <clearance>internal</clearance>
-            </employee>
-            <employee id="emp002" status="active" level="high">
-                <name>Bob Smith</name>
-                <department>Security</department>
-                <position>Security Analyst</position>
-                <clearance>confidential</clearance>
-            </employee>
-            <employee id="emp003" status="inactive" level="low">
-                <name>Carol Davis</name>
-                <department>HR</department>
-                <position>HR Coordinator</position>
-                <clearance>public</clearance>
-            </employee>
-        </employees>
-    </company>
-    <projects>
-        <project id="proj001" status="active" priority="3" category="development">
-            <name>Website Redesign</name>
-            <description>Modern responsive website</description>
-            <manager>Alice Johnson</manager>
-            <budget>50000</budget>
-        </project>
-        <project id="proj002" status="completed" priority="5" category="security">
-            <name>Security Audit</name>
-            <description>Comprehensive security review</description>
-            <manager>Bob Smith</manager>
-            <budget>25000</budget>
-        </project>
-        <project id="proj003" status="pending" priority="2" category="maintenance">
-            <name>System Upgrade</name>
-            <description>Infrastructure modernization</description>
-            <manager>Carol Davis</manager>
-            <budget>75000</budget>
-        </project>
-    </projects>
-    <configuration version="2.1">
-        <settings>
-            <setting id="app_name" type="string" category="application">
-                <name>Application Name</name>
-                <value>SecureApp</value>
-            </setting>
-            <setting id="debug_mode" type="boolean" category="development">
-                <name>Debug Mode</name>
-                <value>false</value>
-            </setting>
-            <setting id="max_users" type="integer" category="limits">
-                <name>Maximum Users</name>
-                <value>1000</value>
-            </setting>
-            <setting id="log_level" type="string" category="logging">
-                <name>Logging Level</name>
-                <value>INFO</value>
-            </setting>
-        </settings>
-    </configuration>
+    <inventory>
+        <items>
+            <item category="electronics" confidential="true">
+                <name>Laptop</name>
+                <price>1200</price>
+                <cost>800</cost>
+                <supplier>SecretSupplier</supplier>
+            </item>
+            <item category="books" confidential="false">
+                <name>Python Guide</name>
+                <price>45</price>
+                <cost>20</cost>
+                <supplier>BookPublisher</supplier>
+            </item>
+            <item category="software" confidential="true">
+                <name>Security Suite</name>
+                <price>2500</price>
+                <cost>1000</cost>
+                <supplier>SecurityCorp</supplier>
+            </item>
+        </items>
+    </inventory>
+    """
+    
+    processor = SecureFastAPIProcessor()
+    
+    try:
+        if not processor.validate_category(item_category):
+            raise HTTPException(status_code=400, detail="Invalid or unauthorized category")
+        
+        sanitized_category = processor.sanitize_input(item_category)
+        
+        root = ET.fromstring(xml_data)
+        items = []
+        
+        for item in root.findall(".//item"):
+            if item.get('category') == sanitized_category.lower():
+                items.append({
+                    'name': item.find('name').text,
+                    'category': item.get('category'),
+                    'price': item.find('price').text
+                })
+        
+        if not items:
+            raise HTTPException(status_code=404, detail="No items found")
+        
+        return {"items": items}
+        
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except ET.ParseError as e:
+        raise HTTPException(status_code=500, detail="XML parsing error")
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000)

@@ -1,7 +1,9 @@
+from flask import Flask, request, jsonify
+from lxml import etree
 
-from bs4 import BeautifulSoup
-import lxml.etree as etree
+app = Flask(__name__)
 
+@app.route('/employee/<employee_id>')
 def vulnerable_employee_search(employee_id):
     xml_data = """
     <company>
@@ -26,20 +28,22 @@ def vulnerable_employee_search(employee_id):
             </employee>
         </employees>
     </company>
-    <documents>
-        <document classification="public">
-            <title>Annual Report</title>
-            <content>Company performance was excellent this year...</content>
-            <author>John Doe</author>
-        </document>
-        <document classification="confidential">
-            <title>Security Audit</title>
-            <content>Several vulnerabilities were discovered...</content>
-            <author>Security Team</author>
-        </document>
-        <document classification="top-secret">
-            <title>Merger Plans</title>
-            <content>Plans to acquire competitor company...</content>
-            <author>CEO</author>
-        </document>
-    </documents>
+    """
+    
+    root = etree.fromstring(xml_data)
+    xpath_query = f"//employee[@id='{employee_id}']"
+    result = root.xpath(xpath_query)
+    
+    if result:
+        employee = result[0]
+        return jsonify({
+            'name': employee.find('name').text,
+            'department': employee.get('department'),
+            'salary': employee.find('salary').text,
+            'clearance': employee.find('clearance').text
+        })
+    
+    return jsonify({'error': 'Employee not found'}), 404
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)

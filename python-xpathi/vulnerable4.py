@@ -1,8 +1,21 @@
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.urls import path
+from django.conf import settings
+from django.core.wsgi import get_wsgi_application
+import os
+import defusedxml.ElementTree as ET
 
-import xmltodict
-import xml.etree.ElementTree as ET
+if not settings.configured:
+    settings.configure(
+        DEBUG=True,
+        SECRET_KEY='django-insecure-key-for-demo',
+        ROOT_URLCONF=__name__,
+        ALLOWED_HOSTS=['*'],
+    )
 
-def vulnerable_config_lookup(setting_name):
+@csrf_exempt
+def vulnerable_config_lookup(request, setting_name):
     xml_data = """
     <configuration>
         <database>
@@ -22,43 +35,29 @@ def vulnerable_config_lookup(setting_name):
             <admin_token>admin_secret_token_xyz</admin_token>
         </security>
     </configuration>
-    <users>
-        <user role="admin" active="true">
-            <id>1</id>
-            <username>administrator</username>
-            <email>admin@company.com</email>
-            <permissions>all</permissions>
-        </user>
-        <user role="user" active="true">
-            <id>2</id>
-            <username>john_doe</username>
-            <email>john@company.com</email>
-            <permissions>read</permissions>
-        </user>
-        <user role="user" active="false">
-            <id>3</id>
-            <username>inactive_user</username>
-            <email>inactive@company.com</email>
-            <permissions>none</permissions>
-        </user>
-    </users>
-    <inventory>
-        <items>
-            <item category="electronics">
-                <name>Laptop</name>
-                <price>1200</price>
-                <sensitive_data>
-                    <cost>800</cost>
-                    <supplier>SecretSupplier</supplier>
-                </sensitive_data>
-            </item>
-            <item category="books">
-                <name>Python Guide</name>
-                <price>45</price>
-                <sensitive_data>
-                    <cost>20</cost>
-                    <supplier>BookPublisher</supplier>
-                </sensitive_data>
-            </item>
-        </items>
-    </inventory>
+    """
+    
+    root = ET.fromstring(xml_data)
+    xpath_query = f"//{setting_name}"
+    result = root.findall(xpath_query)
+    
+    settings_found = []
+    for setting in result:
+        settings_found.append({
+            'name': setting.tag,
+            'value': setting.text
+        })
+    
+    return JsonResponse({'settings': settings_found})
+
+urlpatterns = [
+    path('config/<str:setting_name>/', vulnerable_config_lookup),
+]
+
+application = get_wsgi_application()
+
+if __name__ == '__main__':
+    from django.core.management import execute_from_command_line
+    import sys
+    sys.argv = ['vulnerable4.py', 'runserver', '0.0.0.0:8000']
+    execute_from_command_line(sys.argv)

@@ -1,5 +1,5 @@
-
 import xml.etree.ElementTree as ET
+import sys
 
 def vulnerable_product_search(product_name):
     xml_data = """
@@ -20,15 +20,30 @@ def vulnerable_product_search(product_name):
             <stock>5</stock>
         </product>
     </products>
-    <inventory>
-        <item type="hardware">
-            <name>Server</name>
-            <confidential>true</confidential>
-            <location>datacenter-1</location>
-        </item>
-        <item type="software">
-            <name>Database License</name>
-            <confidential>false</confidential>
-            <location>cloud</location>
-        </item>
-    </inventory>
+    """
+    
+    root = ET.fromstring(xml_data)
+    xpath_query = f".//product[name='{product_name}']"
+    result = root.findall(xpath_query)
+    
+    products = []
+    for product in result:
+        products.append({
+            'name': product.find('name').text,
+            'price': product.find('price').text,
+            'stock': product.find('stock').text
+        })
+    
+    return products
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        user_input = sys.argv[1]
+        results = vulnerable_product_search(user_input)
+        if results:
+            for product in results:
+                print(f"Product: {product}")
+        else:
+            print("No products found")
+    else:
+        print("Usage: python vulnerable2.py <product_name>")

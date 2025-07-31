@@ -1,40 +1,10 @@
+from bottle import route, run, request
+from bs4 import BeautifulSoup
+import xml.etree.ElementTree as ET
 
-import defusedxml.ElementTree as ET
-from defusedxml import defuse_stdlib
-import xml.etree.ElementTree as stdlib_ET
-
-defuse_stdlib()
-
-def vulnerable_secure_employee_lookup(employee_criteria):
+@route('/documents/<doc_classification>')
+def vulnerable_document_search(doc_classification):
     xml_data = """
-    <enterprise>
-        <employees>
-            <employee id="1" clearance="public" department="hr">
-                <name>Alice Johnson</name>
-                <position>HR Manager</position>
-                <salary>65000</salary>
-                <social_security>123-45-6789</social_security>
-            </employee>
-            <employee id="2" clearance="secret" department="engineering">
-                <name>Bob Smith</name>
-                <position>Senior Engineer</position>
-                <salary>95000</salary>
-                <social_security>987-65-4321</social_security>
-            </employee>
-            <employee id="3" clearance="top-secret" department="research">
-                <name>Carol Davis</name>
-                <position>Research Director</position>
-                <salary>120000</salary>
-                <social_security>456-78-9012</social_security>
-            </employee>
-        </employees>
-        <departments>
-            <department name="hr" budget="500000"/>
-            <department name="engineering" budget="2000000"/>
-            <department name="research" budget="5000000"/>
-        </departments>
-    </enterprise>
-    Document search using defusedxml with XPath injection vulnerability
     <document_system>
         <documents>
             <document classification="unclassified" type="report">
@@ -57,28 +27,24 @@ def vulnerable_secure_employee_lookup(employee_criteria):
             </document>
         </documents>
     </document_system>
-    Configuration lookup with defusedxml and XPath injection
-    <configuration>
-        <database>
-            <host>production-db.company.com</host>
-            <port>5432</port>
-            <username>db_user</username>
-            <password>super_secret_db_password</password>
-            <ssl_cert>/etc/ssl/certs/db.pem</ssl_cert>
-        </database>
-        <api_keys>
-            <service name="payment_gateway">
-                <key>pk_live_secret_payment_key_12345</key>
-                <webhook_secret>whsec_super_secret_webhook</webhook_secret>
-            </service>
-            <service name="email_service">
-                <key>sg_api_key_secret_mailgun_key</key>
-                <domain>mail.company.com</domain>
-            </service>
-        </api_keys>
-        <security>
-            <jwt_secret>jwt_super_secret_key_for_tokens</jwt_secret>
-            <encryption_key>aes_256_encryption_master_key</encryption_key>
-            <admin_token>admin_backdoor_token_xyz123</admin_token>
-        </security>
-    </configuration>
+    """
+    
+    root = ET.fromstring(xml_data)
+    xpath_query = f"//document[@classification='{doc_classification}']"
+    result = root.findall(xpath_query)
+    
+    documents = []
+    for doc in result:
+        documents.append({
+            'title': doc.find('title').text,
+            'classification': doc.get('classification'),
+            'type': doc.get('type'),
+            'author': doc.find('author').text,
+            'content': doc.find('content').text,
+            'access_level': doc.find('access_level').text
+        })
+    
+    return {"documents": documents}
+
+if __name__ == '__main__':
+    run(host='localhost', port=8080, debug=True)
