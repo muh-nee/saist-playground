@@ -12,7 +12,7 @@ func main() {
 		return
 	}
 	userInput := os.Args[1]
-	
+
 	// Whitelist validation - only allow specific safe directories
 	allowedDirs := map[string]bool{
 		"/tmp":     true,
