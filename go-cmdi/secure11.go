@@ -11,7 +11,7 @@ func main() {
 		fmt.Println("Usage: secure1 <directory>")
 		return
 	}
-	
+
 	userInput := os.Args[1]
 	// Whitelist validation - only allow specific safe directories
 	allowedDirs := map[string]bool{
