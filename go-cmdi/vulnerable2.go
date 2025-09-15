@@ -20,6 +20,6 @@ func main() {
 		fmt.Printf("Error: %v\n", err)
 		return
 	}
-	
+
 	fmt.Printf("Output: %s\n", output)
 }
