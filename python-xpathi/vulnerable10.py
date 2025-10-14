@@ -18,7 +18,7 @@ async def vulnerable_financial_records(request, account_type):
                 <social_security>123-45-6789</social_security>
             </account>
             <account id="acc002" type="savings" status="active" tier="premium">
-                <holder>Sarah Johnson</holder>
+                <holder>S Johnson</holder>
                 <balance>89650.75</balance>
                 <account_number>0987654321</account_number>
                 <routing_number>021000021</routing_number>
