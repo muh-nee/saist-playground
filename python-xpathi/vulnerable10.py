@@ -34,7 +34,6 @@ async def vulnerable_financial_records(request, account_type):
         </accounts>
     </financial_system>
     """
-    
     root = ET.fromstring(xml_data)
     xpath_query = f"//account[@type='{account_type}']"
     result = root.findall(xpath_query)
