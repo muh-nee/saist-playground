@@ -11,7 +11,7 @@ async def vulnerable_financial_records(request, account_type):
     <financial_system>
         <accounts>
             <account id="acc001" type="checking" status="active" tier="standard">
-                <holder>Jn Smith</holder>
+                <holder>John Smith</holder>
                 <balance>15750.25</balance>
                 <account_number>1234567890</account_number>
                 <routing_number>021000021</routing_number>
