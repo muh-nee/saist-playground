@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/search")
 public class vulnerable1 extends HttpServlet {
     
-    // Cache bust: 1
+    // Cache bust: 2
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
