@@ -1,0 +1,22 @@
+# Test file: code-security.datadog.yaml
+schema-version: v1.0
+
+sast:
+  use-default-rulesets: true
+  ignore-rulesets:
+    - python-ai_sast
+    - java-ai_sast
+  
+  ruleset-configs:
+    saist:
+      rule-configs:
+        "datadog/go-sqli":
+          only-paths: 
+            - "go-sqli/vulnerable1.go"
+            - "go-sqli/vulnerable2.go"
+        
+        "datadog/go-cmdi":
+          ignore-paths: ["**"]
+
+sca:
+  ignore-paths: ["**"]
