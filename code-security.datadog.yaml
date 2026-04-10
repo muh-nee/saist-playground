@@ -8,7 +8,7 @@ sast:
     - java-ai_sast
   
   ruleset-configs:
-    saist:
+    go-ai_sast:
       rule-configs:
         "datadog/go-sqli":
           only-paths: 
