@@ -5,7 +5,6 @@ sast:
   use-default-rulesets: true
   ignore-rulesets:
     - python-ai_sast
-    - java-ai_sast
   
   ruleset-configs:
     go-ai_sast:
