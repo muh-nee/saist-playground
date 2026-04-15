@@ -3,9 +3,6 @@ schema-version: v1.0
 
 sast:
   use-default-rulesets: true
-  ignore-rulesets:
-    - python-ai_sast
-    - java-ai_sast
   
   ruleset-configs:
     saist:
