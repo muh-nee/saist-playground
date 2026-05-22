@@ -3,37 +3,5 @@ schema-version: v1.0
 
 sast:
   use-default-rulesets: true
-  
-  ruleset-configs:
-    saist:
-      rule-configs:
-        "datadog/go-sqli":
-          only-paths: 
-            - "go-sqli/vulnerable1.go"
-            - "go-sqli/vulnerable2.go"
-        
-        "datadog/go-cmdi":
-          ignore-paths: ["**"]
-
-        "datadog/go-prompti":
-          only-paths:
-            - "go-prompti/**"
-
-        "datadog/python-prompti":
-          only-paths:
-            - "python-prompti/**"
-
-        "datadog/java-prompti":
-          only-paths:
-            - "java-prompti/**"
-
-        "datadog/csharp-prompti":
-          only-paths:
-            - "csharp-prompti/**"
-
-        "datadog/javascript-sqli":
-          only-paths:
-            - "javascript-sqli/**"
-
 sca:
   ignore-paths: ["**"]
