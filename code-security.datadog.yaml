@@ -5,7 +5,7 @@ sast:
   use-default-rulesets: true
   
   ruleset-configs:
-    saist:
+    go-ai_sast:
       rule-configs:
         "datadog/go-sqli":
           only-paths: 
