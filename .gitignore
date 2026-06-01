@@ -1,2 +1,4 @@
 .datadog-saist
 .claude
+*.systemprompt
+*.userprompt
