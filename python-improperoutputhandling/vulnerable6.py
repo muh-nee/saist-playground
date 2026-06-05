@@ -1,18 +1,20 @@
-import anthropic
+import yaml
+from anthropic import Anthropic
 
-client = anthropic.Anthropic()
+client = Anthropic()
 
 
-def execute_llm_script(task):
+def build_config(user_request):
     response = client.messages.create(
         model="claude-3-haiku-20240307",
         max_tokens=1024,
-        messages=[{"role": "user", "content": f"Write a Python script to: {task}"}],
+        messages=[{"role": "user", "content": f"Generate a YAML config for: {user_request}"}],
     )
-    script = response.content[0].text
-    exec(script)
+    config_text = response.content[0].text
+    config = yaml.load(config_text, Loader=yaml.Loader)
+    return config
 
 
 if __name__ == "__main__":
     import sys
-    execute_llm_script(sys.argv[1])
+    print(build_config(sys.argv[1]))

@@ -1,26 +1,28 @@
-import subprocess
+from urllib.parse import urlparse
+import requests
 from openai import OpenAI
 
 client = OpenAI()
 
-ALLOWED_COMMANDS = {"list_files": ["ls", "-la"], "disk_usage": ["df", "-h"], "uptime": ["uptime"]}
+ALLOWED_HOSTS = {"api.weather.gov", "api.exchangerate.host", "data.cdc.gov"}
 
 
-def run_approved_command(task):
+def fetch_external(description):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": f"Pick the best command key from: {list(ALLOWED_COMMANDS.keys())}. Output the key only."},
-            {"role": "user", "content": task},
+            {"role": "system", "content": f"Return only a URL from one of these hosts: {sorted(ALLOWED_HOSTS)}."},
+            {"role": "user", "content": description},
         ],
     )
-    key = response.choices[0].message.content.strip()
-    if key not in ALLOWED_COMMANDS:
-        raise ValueError(f"Unsupported command: {key}")
-    result = subprocess.run(ALLOWED_COMMANDS[key], capture_output=True, text=True)
-    return result.stdout
+    url = response.choices[0].message.content.strip()
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or parsed.hostname not in ALLOWED_HOSTS:
+        raise ValueError(f"Disallowed URL: {url}")
+    resp = requests.get(url, timeout=5)
+    return resp.text
 
 
 if __name__ == "__main__":
     import sys
-    print(run_approved_command(sys.argv[1]))
+    print(fetch_external(sys.argv[1]))

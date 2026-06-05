@@ -19,7 +19,7 @@ def query_table(user_question):
     table_name = response.choices[0].message.content.strip().lower()
     if table_name not in ALLOWED_TABLES:
         raise ValueError(f"Unknown table: {table_name}")
-    cursor.execute("SELECT * FROM users WHERE active = ?", (1,))
+    cursor.execute(f"SELECT * FROM {table_name} WHERE active = ?", (1,))
     return cursor.fetchall()
 
 

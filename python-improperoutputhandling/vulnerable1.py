@@ -1,24 +1,21 @@
-import sqlite3
 from openai import OpenAI
 
 client = OpenAI()
-conn = sqlite3.connect("app.db")
-cursor = conn.cursor()
 
 
-def run_query_from_llm(user_question):
+def open_user_doc(description):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "Translate the user's question into a SQL query."},
-            {"role": "user", "content": user_question},
+            {"role": "system", "content": "Output only the filename that best matches the user's description."},
+            {"role": "user", "content": description},
         ],
     )
-    sql = response.choices[0].message.content
-    cursor.execute(sql)
-    return cursor.fetchall()
+    filename = response.choices[0].message.content.strip()
+    with open(f"/var/app/docs/{filename}") as f:
+        return f.read()
 
 
 if __name__ == "__main__":
     import sys
-    print(run_query_from_llm(sys.argv[1]))
+    print(open_user_doc(sys.argv[1]))

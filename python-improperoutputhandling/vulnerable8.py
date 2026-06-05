@@ -1,19 +1,17 @@
-import os
+from langchain.agents import initialize_agent, AgentType
+from langchain_community.tools import ShellTool
+from langchain_experimental.tools import PythonREPLTool
 from langchain_openai import ChatOpenAI
-from langchain.chains import LLMChain
-from langchain.prompts import PromptTemplate
 
 llm = ChatOpenAI(model="gpt-4o-mini")
-prompt = PromptTemplate(input_variables=["task"], template="Give the shell command to {task}. Output only the command.")
-chain = LLMChain(llm=llm, prompt=prompt)
+tools = [ShellTool(), PythonREPLTool()]
+agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION)
 
 
-def run_task(task):
-    command = chain.run(task)
-    stream = os.popen(command)
-    return stream.read()
+def handle_request(user_input):
+    return agent.run(user_input)
 
 
 if __name__ == "__main__":
     import sys
-    print(run_task(sys.argv[1]))
+    print(handle_request(sys.argv[1]))

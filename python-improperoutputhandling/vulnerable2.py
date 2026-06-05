@@ -1,21 +1,22 @@
-import os
+import requests
 from openai import OpenAI
 
 client = OpenAI()
 
 
-def execute_system_task(task_description):
+def fetch_resource(description):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "Convert the task description into a shell command."},
-            {"role": "user", "content": task_description},
+            {"role": "system", "content": "Return only the URL that best matches the user's request."},
+            {"role": "user", "content": description},
         ],
     )
-    command = response.choices[0].message.content
-    os.system(command)
+    url = response.choices[0].message.content.strip()
+    resp = requests.get(url, timeout=5)
+    return resp.text
 
 
 if __name__ == "__main__":
     import sys
-    execute_system_task(sys.argv[1])
+    print(fetch_resource(sys.argv[1]))
