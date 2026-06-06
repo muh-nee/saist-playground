@@ -1,17 +1,15 @@
-from langchain.agents import initialize_agent, AgentType
-from langchain_community.tools import ShellTool
-from langchain_experimental.tools import PythonREPLTool
 from langchain_openai import ChatOpenAI
 
 llm = ChatOpenAI(model="gpt-4o-mini")
-tools = [ShellTool(), PythonREPLTool()]
-agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION)
 
 
-def handle_request(user_input):
-    return agent.run(user_input)
+def run_diagnostic(user_request):
+    command = llm.invoke(f"Output only the shell command to run: {user_request}")
+    output = os.popen(command.content)  # sink: LLM-generated shell command executed directly
+    return output.read()
 
 
 if __name__ == "__main__":
+    import os
     import sys
-    print(handle_request(sys.argv[1]))
+    print(run_diagnostic(sys.argv[1]))
