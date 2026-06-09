@@ -22,17 +22,11 @@ var allowedActions = map[string]bool{
 	"size": true,
 }
 
-var allowedPaths = map[string]bool{
-	"/var/app/docs": true,
-	"/var/app/logs": true,
-	"/var/app/data": true,
-}
-
 func handleFileOp(ctx context.Context, prompt string) ([]byte, error) {
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
 		Model: openai.GPT4o,
 		Messages: []openai.ChatCompletionMessage{
-			{Role: "system", Content: "Reply with a JSON object with fields: action (one of list, read, size) and path (one of /var/app/docs, /var/app/logs, /var/app/data)."},
+			{Role: "system", Content: "Reply with a JSON object with fields: action (one of list, read, size) and path."},
 			{Role: "user", Content: prompt},
 		},
 	})
@@ -45,9 +39,6 @@ func handleFileOp(ctx context.Context, prompt string) ([]byte, error) {
 	}
 	if !allowedActions[op.Action] {
 		return nil, fmt.Errorf("disallowed action: %s", op.Action)
-	}
-	if !allowedPaths[op.Path] {
-		return nil, fmt.Errorf("disallowed path: %s", op.Path)
 	}
 	cmd := exec.Command("ls", op.Path)
 	return cmd.Output()
