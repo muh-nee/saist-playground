@@ -1,27 +1,26 @@
-// Vulnerable: Anthropic Java SDK output executed directly via JdbcTemplate.execute()
+// Vulnerable: Anthropic Java SDK output evaluated as SpEL expression (Spring Expression Language injection)
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.models.messages.Message;
 import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 public class vulnerable14 {
     private final AnthropicClient client = AnthropicOkHttpClient.fromEnv();
-    private final JdbcTemplate jdbcTemplate;
+    private final ExpressionParser parser = new SpelExpressionParser();
 
-    public vulnerable14(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
-    public void applyMigration(String description) {
+    public Object evaluateRule(String description) {
         MessageCreateParams params = MessageCreateParams.builder()
                 .model(Model.CLAUDE_SONNET_4_5)
-                .maxTokens(512)
-                .addUserMessage("Generate a SQL migration statement for: " + description)
+                .maxTokens(256)
+                .addUserMessage("Return only a SpEL expression that computes: " + description)
                 .build();
         Message message = client.messages().create(params);
-        String sql = message.content().get(0).asText().text();
-        jdbcTemplate.execute(sql); // sink: raw LLM output in SQL
+        String expr = message.content().get(0).asText().text();
+        Expression expression = parser.parseExpression(expr);
+        return expression.getValue(); // sink: LLM-controlled SpEL — T(java.lang.Runtime).getRuntime().exec(...) style RCE
     }
 }
