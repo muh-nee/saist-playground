@@ -1,9 +1,12 @@
 import subprocess
+from pathlib import Path
 from typing import Literal
 from pydantic import BaseModel
 from openai import OpenAI
 
 client = OpenAI()
+
+ALLOWED_BASE = Path("/var/app/files").resolve()
 
 
 class FileOperation(BaseModel):
@@ -18,12 +21,15 @@ def perform_file_operation(user_request):
         response_format=FileOperation,
     )
     op = response.choices[0].message.parsed
+    resolved = ALLOWED_BASE.joinpath(op.path).resolve()
+    if not resolved.is_relative_to(ALLOWED_BASE):
+        raise ValueError("Path traversal detected")
     if op.action == "list":
-        result = subprocess.run(["ls", op.path], capture_output=True, text=True)
+        result = subprocess.run(["ls", str(resolved)], capture_output=True, text=True)
     elif op.action == "read":
-        result = subprocess.run(["cat", op.path], capture_output=True, text=True)
+        result = subprocess.run(["cat", str(resolved)], capture_output=True, text=True)
     elif op.action == "size":
-        result = subprocess.run(["du", "-sh", op.path], capture_output=True, text=True)
+        result = subprocess.run(["du", "-sh", str(resolved)], capture_output=True, text=True)
     return result.stdout
 
 
