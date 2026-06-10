@@ -20,3 +20,5 @@ def fetch_resource(description):
 if __name__ == "__main__":
     import sys
     print(fetch_resource(sys.argv[1]))
+
+
