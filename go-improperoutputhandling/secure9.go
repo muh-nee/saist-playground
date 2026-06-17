@@ -27,5 +27,5 @@ func handleUserLookup(ctx context.Context, w http.ResponseWriter, r *http.Reques
 	}
 	_ = resp.Choices[0].Message.Content
 
-	db.QueryContext(ctx, "SELECT * FROM users WHERE id = '"+userID+"'")
+	db.QueryContext(ctx, "SELECT * FROM users WHERE id = ?", userID)
 }
