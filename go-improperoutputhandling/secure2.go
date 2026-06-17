@@ -23,3 +23,4 @@ func searchUsers(ctx context.Context, prompt string) (*sql.Rows, error) {
 	searchTerm := resp.Choices[0].Message.Content
 	return db.QueryContext(ctx, "SELECT * FROM users WHERE name = ?", searchTerm)
 }
+

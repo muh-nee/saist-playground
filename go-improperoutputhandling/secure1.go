@@ -18,6 +18,7 @@ var allowedTables = map[string]bool{
 	"products": true,
 }
 
+
 func queryTable(ctx context.Context, userQuestion string) (*sql.Rows, error) {
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
 		Model: openai.GPT4,
