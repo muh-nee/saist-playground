@@ -4,10 +4,10 @@ from openai import OpenAI
 client = OpenAI()
 
 
-def render_llm_response(user_topic):
+def render_llm_response():
     response = client.chat.completions.create(
         model="gpt-4o-mini",
-        messages=[{"role": "user", "content": f"Write a short HTML snippet about: {user_topic}"}],
+        messages=[{"role": "user", "content": "Write a short HTML snippet about: the history of the internet"}],
     )
     llm_html = response.choices[0].message.content
     template = Template("<div class='content'>{{ content }}</div>")
@@ -15,5 +15,4 @@ def render_llm_response(user_topic):
 
 
 if __name__ == "__main__":
-    import sys
-    print(render_llm_response(sys.argv[1]))
+    print(render_llm_response())
