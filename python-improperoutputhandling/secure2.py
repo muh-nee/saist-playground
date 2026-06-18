@@ -21,6 +21,8 @@ def perform_file_operation(user_request):
         response_format=FileOperation,
     )
     op = response.choices[0].message.parsed
+    if ".." in op.path or op.path.startswith("/"):
+        raise ValueError("Invalid path")
     resolved = ALLOWED_BASE.joinpath(op.path).resolve()
     if not resolved.is_relative_to(ALLOWED_BASE):
         raise ValueError("Path traversal detected")
