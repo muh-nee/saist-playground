@@ -1,4 +1,3 @@
-// Vulnerable: Spring AI output placed into Velocity template context — rendered unescaped
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;

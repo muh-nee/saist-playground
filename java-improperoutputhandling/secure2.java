@@ -1,4 +1,3 @@
-// Safe: Spring AI output validated against an allowlist before use in SQL
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatModel;
@@ -23,6 +22,6 @@ public class secure2 {
         if (!ALLOWED_TABLES.contains(tableName)) {
             throw new IllegalArgumentException("Unknown table: " + tableName);
         }
-        return jdbcTemplate.queryForList("SELECT * FROM " + tableName + " WHERE active = ?", true); // safe: allowlist enforced
+        return jdbcTemplate.queryForList("SELECT * FROM " + tableName + " WHERE active = ?", true);
     }
 }

@@ -1,4 +1,3 @@
-// Safe: Anthropic Java SDK output confined to base directory via path canonicalization and prefix check
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.models.messages.Message;
@@ -25,6 +24,6 @@ public class secure5 {
         if (!resolved.startsWith(BASE_DIR)) {
             throw new SecurityException("Path escapes base directory");
         }
-        return Files.readAllBytes(resolved); // safe: confined to BASE_DIR after normalize + prefix check
+        return Files.readAllBytes(resolved);
     }
 }

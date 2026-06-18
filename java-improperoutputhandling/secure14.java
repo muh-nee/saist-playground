@@ -1,4 +1,3 @@
-// Safe: Anthropic Java SDK output passed as JdbcTemplate bind parameter — not concatenated into SQL
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.models.messages.Message;
@@ -25,6 +24,6 @@ public class secure14 {
                 .build();
         Message message = client.messages().create(params);
         String searchTerm = message.content().get(0).asText().text();
-        return jdbcTemplate.queryForList("SELECT * FROM products WHERE name LIKE ?", "%" + searchTerm + "%"); // safe: bind parameter
+        return jdbcTemplate.queryForList("SELECT * FROM products WHERE name LIKE ?", "%" + searchTerm + "%");
     }
 }

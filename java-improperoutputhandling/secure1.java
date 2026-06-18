@@ -1,4 +1,3 @@
-// Safe: langchain4j output passed as PreparedStatement bind parameter — never concatenated into SQL
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 
@@ -17,7 +16,7 @@ public class secure1 {
     public ResultSet searchUsers(String userQuery) throws Exception {
         String searchTerm = model.generate("Extract only the search term from: " + userQuery);
         PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE name = ?");
-        ps.setString(1, searchTerm); // safe: bind parameter, not string concatenation
+        ps.setString(1, searchTerm);
         return ps.executeQuery();
     }
 }

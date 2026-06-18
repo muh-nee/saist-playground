@@ -1,4 +1,3 @@
-// Vulnerable: Anthropic Java SDK output evaluated as SpEL expression (Spring Expression Language injection)
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.models.messages.Message;

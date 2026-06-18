@@ -1,4 +1,3 @@
-// Safe: langchain4j output validated against allowlist before sendRedirect — no open redirect
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 
@@ -14,6 +13,6 @@ public class secure12 {
         if (!ALLOWED_DESTINATIONS.contains(target)) {
             throw new SecurityException("Redirect target not allowed: " + target);
         }
-        response.sendRedirect(target); // safe: allowlist enforced before redirect
+        response.sendRedirect(target);
     }
 }

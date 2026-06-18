@@ -1,4 +1,3 @@
-// Safe: OpenAI Java SDK output loaded by SnakeYAML with SafeConstructor — prevents gadget chain deserialization
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.chat.completions.ChatCompletion;
@@ -17,7 +16,7 @@ public class secure11 {
                 .build();
         ChatCompletion completion = client.chat().completions().create(params);
         String yaml = completion.choices().get(0).message().content().orElse("");
-        Yaml parser = new Yaml(new SafeConstructor(new LoaderOptions())); // safe: SafeConstructor prevents arbitrary class instantiation
+        Yaml parser = new Yaml(new SafeConstructor(new LoaderOptions()));
         return parser.load(yaml);
     }
 }

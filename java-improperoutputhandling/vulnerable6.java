@@ -1,4 +1,3 @@
-// Vulnerable: Anthropic Java SDK output used to construct a file path (path traversal)
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.models.messages.Message;

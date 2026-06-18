@@ -1,4 +1,3 @@
-// Safe: OpenAI Java SDK output URL validated against an allowlist before HTTP request
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.chat.completions.ChatCompletion;
@@ -23,7 +22,7 @@ public class secure6 {
         if (!ALLOWED_HOSTS.contains(u.getHost())) {
             throw new SecurityException("Host not allowed: " + u.getHost());
         }
-        HttpURLConnection conn = (HttpURLConnection) u.openConnection(); // safe: host allowlisted
+        HttpURLConnection conn = (HttpURLConnection) u.openConnection();
         conn.connect();
         return conn.getResponseMessage();
     }

@@ -1,4 +1,3 @@
-// Safe: Anthropic Java SDK output validated against an allowlist before JNDI lookup
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.models.messages.Message;
@@ -29,6 +28,6 @@ public class secure13 {
             throw new SecurityException("JNDI name not allowed: " + name);
         }
         Context ctx = new InitialContext();
-        return ctx.lookup(name); // safe: lookup name allowlisted — no remote class loading
+        return ctx.lookup(name);
     }
 }

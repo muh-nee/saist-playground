@@ -1,4 +1,3 @@
-// Vulnerable: langchain4j output used as URL in HTTP request (SSRF)
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 

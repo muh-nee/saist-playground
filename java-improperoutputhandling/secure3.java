@@ -1,4 +1,3 @@
-// Safe: OpenAI Java SDK XML output parsed with XXE protections enabled (no external entity resolution)
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.chat.completions.ChatCompletion;
@@ -30,6 +29,6 @@ public class secure3 {
         factory.setXIncludeAware(false);
         factory.setExpandEntityReferences(false);
         DocumentBuilder builder = factory.newDocumentBuilder();
-        return builder.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))); // safe: XXE disabled
+        return builder.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
     }
 }

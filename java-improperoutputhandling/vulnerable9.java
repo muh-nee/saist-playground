@@ -1,4 +1,3 @@
-// Vulnerable: Anthropic tool-use block input passed directly to ProcessBuilder
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.models.messages.Message;

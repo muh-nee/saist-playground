@@ -1,4 +1,3 @@
-// Vulnerable: langchain4j generate() output used directly in JDBC SQL query (string concatenation)
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 

@@ -1,4 +1,3 @@
-// Vulnerable: OpenAI Java SDK output used as class name in reflection (Class.forName)
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.chat.completions.ChatCompletion;

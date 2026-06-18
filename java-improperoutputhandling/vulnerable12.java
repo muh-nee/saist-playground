@@ -1,4 +1,3 @@
-// Vulnerable: Spring AI output set in HTTP response header (CRLF / response splitting)
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatModel;

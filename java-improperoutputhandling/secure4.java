@@ -1,4 +1,3 @@
-// Safe: langchain4j output HTML-escaped via Spring's HtmlUtils before writing to HTML response
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.springframework.web.util.HtmlUtils;
@@ -12,6 +11,6 @@ public class secure4 {
         String llmContent = model.generate("Write a short summary about: " + topic);
         String safe = HtmlUtils.htmlEscape(llmContent);
         resp.setContentType("text/html");
-        resp.getWriter().write("<div>" + safe + "</div>"); // safe: HTML-escaped before output
+        resp.getWriter().write("<div>" + safe + "</div>");
     }
 }

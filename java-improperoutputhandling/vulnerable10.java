@@ -1,4 +1,3 @@
-// Vulnerable: langchain4j output loaded by SnakeYAML without SafeConstructor (unsafe deserialization)
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.yaml.snakeyaml.Yaml;

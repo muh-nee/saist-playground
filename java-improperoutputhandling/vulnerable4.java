@@ -1,4 +1,3 @@
-// Vulnerable: langchain4j output placed into FreeMarker template model — ${content} renders unescaped
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import freemarker.template.Configuration;

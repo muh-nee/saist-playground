@@ -1,4 +1,3 @@
-// Vulnerable: langchain4j output passed as argument to ProcessBuilder (no shell interpreter — argument injection)
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 

@@ -1,4 +1,3 @@
-// Vulnerable: OpenAI Java SDK output written directly to HTML response
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.chat.completions.ChatCompletion;

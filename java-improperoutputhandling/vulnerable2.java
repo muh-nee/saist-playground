@@ -1,4 +1,3 @@
-// Vulnerable: Spring AI output used as JNDI lookup name (Log4Shell-class sink)
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatModel;

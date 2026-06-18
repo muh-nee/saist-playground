@@ -1,4 +1,3 @@
-// Vulnerable: OpenAI Java SDK output evaluated as script code via ScriptEngine (Nashorn)
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.chat.completions.ChatCompletion;
