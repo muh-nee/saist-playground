@@ -1,20 +1,17 @@
-import yaml
-from flask import Flask, request
+from flask import Flask, render_template_string
 from openai import OpenAI
 
 app = Flask(__name__)
 client = OpenAI()
 
+DOCUMENT = "The quick brown fox jumps over the lazy dog. This is a sample document for summarization."
 
-@app.route("/config")
-def generate_config():
-    description = request.args.get("description", "")
+
+@app.route("/summarize")
+def summarize():
     response = client.chat.completions.create(
         model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "Output a YAML configuration for the described deployment."},
-            {"role": "user", "content": description},
-        ],
+        messages=[{"role": "user", "content": f"Summarize this: {DOCUMENT}"}],
     )
-    raw = response.choices[0].message.content
-    return str(yaml.unsafe_load(raw))  # sink: LLM-controlled YAML deserialized without SafeLoader
+    summary = response.choices[0].message.content
+    return render_template_string(f"<html><body><p>{summary}</p></body></html>")

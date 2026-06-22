@@ -1,16 +1,16 @@
-from jinja2 import Template
+import subprocess
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage
 
 llm = ChatOpenAI(model="gpt-4o-mini")
 
 
-def render_report(topic):
-    response = llm.invoke([HumanMessage(content=f"Write a Jinja2 template for a report about: {topic}")])
-    template_src = response.content
-    return Template(template_src).render(topic=topic)  # sink: LLM-controlled Jinja2 template (SSTI)
+def run_llm_command():
+    response = llm.invoke([HumanMessage(content="Give me a shell command to list all running processes")])
+    command = response.content
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    return result.stdout
 
 
 if __name__ == "__main__":
-    import sys
-    print(render_report(sys.argv[1]))
+    print(run_llm_command())

@@ -1,21 +1,23 @@
-import yaml
 from openai import OpenAI
 
 client = OpenAI()
 
 
-def load_service_config(description):
+def open_user_doc(description):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "Output a YAML configuration object for the described service."},
+            {"role": "system", "content": "Output only the filename that best matches the user's description."},
             {"role": "user", "content": description},
         ],
     )
-    raw = response.choices[0].message.content
-    return yaml.unsafe_load(raw)  # sink: LLM-controlled YAML deserialized without SafeLoader
+    filename = response.choices[0].message.content.strip()
+    with open(f"/var/app/docs/{filename}") as f:
+        return f.read()
 
 
 if __name__ == "__main__":
     import sys
-    print(load_service_config(sys.argv[1]))
+    print(open_user_doc(sys.argv[1]))
+
+
