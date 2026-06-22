@@ -25,3 +25,4 @@ public class secure2 {
         return jdbcTemplate.queryForList("SELECT * FROM " + tableName + " WHERE active = ?", true);
     }
 }
+
