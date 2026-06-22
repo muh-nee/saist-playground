@@ -1,24 +1,22 @@
-from sqlalchemy import create_engine, text
+import pickle
+import base64
 from openai import OpenAI
 
 client = OpenAI()
-engine = create_engine("sqlite:///app.db")
 
 
-def query_from_natural_language(question):
+def load_cached_result(task_description):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "Convert natural language to SQL for a SQLite database with a 'users' table."},
-            {"role": "user", "content": question},
+            {"role": "system", "content": "Output a base64-encoded pickle of a Python dict representing the cached result for the described task."},
+            {"role": "user", "content": task_description},
         ],
     )
-    sql = response.choices[0].message.content.strip()
-    with engine.connect() as conn:
-        result = conn.execute(text(sql))
-        return result.fetchall()
+    encoded = response.choices[0].message.content.strip()
+    return pickle.loads(base64.b64decode(encoded))  # sink: LLM-controlled pickle deserialization
 
 
 if __name__ == "__main__":
     import sys
-    print(query_from_natural_language(sys.argv[1]))
+    print(load_cached_result(sys.argv[1]))

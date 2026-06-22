@@ -1,16 +1,21 @@
-from flask import Flask
-from markupsafe import Markup
+import yaml
+from flask import Flask, request
 from openai import OpenAI
 
 app = Flask(__name__)
 client = OpenAI()
 
 
-@app.route("/bio")
-def render_bio():
+@app.route("/provision")
+def provision():
+    description = request.args.get("description", "")
     response = client.chat.completions.create(
         model="gpt-4o-mini",
-        messages=[{"role": "user", "content": "Write an HTML bio snippet for: Ada Lovelace"}],
+        messages=[
+            {"role": "system", "content": "Output a YAML manifest for provisioning the described cloud resource."},
+            {"role": "user", "content": description},
+        ],
     )
-    bio_html = Markup(response.choices[0].message.content)
-    return f"<html><body><div class='bio'>{bio_html}</div></body></html>"
+    raw = response.choices[0].message.content
+    config = yaml.unsafe_load(raw)  # sink: LLM-controlled YAML deserialized without SafeLoader
+    return str(config)
