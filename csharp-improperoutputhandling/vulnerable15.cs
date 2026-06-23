@@ -15,3 +15,4 @@ async Task HandlePostAction(HttpContext context, string userRequest)
     string redirectUrl = response.Text.Trim();
     context.Response.Redirect(redirectUrl);
 }
+
