@@ -3,7 +3,7 @@ using Microsoft.Extensions.AI;
 
 IChatClient chatClient = new OpenAIChatClient(
     new System.ClientModel.ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")),
-    "gpt-4o-mini"
+    "gpt-5.2"
 );
 
 async Task HandlePostAction(HttpContext context, string userRequest)
