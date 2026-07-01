@@ -1,0 +1,15 @@
+{
+  "[go]": {
+    "editor.formatOnSave": false
+  },
+  "gopls": {
+    "build.directoryFilters": [
+      "-go-cmdi",
+      "-go-improperoutputhandling",
+      "-go-prompti",
+      "-go-sqli",
+      "-go-xpathi",
+      "-go-xss"
+    ]
+  }
+}
