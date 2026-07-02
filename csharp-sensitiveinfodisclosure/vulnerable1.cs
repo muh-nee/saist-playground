@@ -15,3 +15,4 @@ public class VulnerableAzureOpenAI
         return completion.Content[0].Text;
     }
 }
+
