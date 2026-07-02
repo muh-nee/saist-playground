@@ -1,27 +1,25 @@
 package main;
 
-import dev.langchain4j.agent.tool.Tool;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.springframework.ai.tool.annotation.Tool;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Set;
 
-class OrderTools {
-    private final Connection conn;
+class SafeWebTools {
+    private static final Set<String> ALLOWED_HOSTS = Set.of("api.internal.example.com");
 
-    OrderTools(Connection conn) {
-        this.conn = conn;
-    }
-
-    @Tool("Look up an order by ID")
-    public String lookupOrder(String orderId) throws SQLException {
-        PreparedStatement ps = conn.prepareStatement(
-                "SELECT id, status, total FROM orders WHERE id = ?");
-        ps.setString(1, orderId);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            return rs.getString("id") + " " + rs.getString("status") + " " + rs.getString("total");
+    @Tool("Fetch data from an approved internal API")
+    public String fetchInternal(String url) throws IOException, InterruptedException {
+        String host = URI.create(url).getHost();
+        if (!ALLOWED_HOSTS.contains(host)) {
+            throw new SecurityException("host not in allowlist");
         }
-        return "not found";
+        HttpRequest req = HttpRequest.newBuilder(URI.create(url)).GET().build();
+        return HttpClient.newHttpClient()
+                .send(req, HttpResponse.BodyHandlers.ofString())
+                .body();
     }
 }

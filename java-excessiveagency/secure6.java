@@ -1,25 +1,31 @@
 package main;
 
 import dev.langchain4j.agent.tool.Tool;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-class RefundTools {
-    record RefundRequest(String orderId, int amountCents) {}
+class SafeClusterTools {
+    record PodDeletion(String namespace, String podName) {}
 
-    private final Map<String, RefundRequest> pending = new ConcurrentHashMap<>();
+    private final KubernetesClient k8s;
+    private final Map<String, PodDeletion> pending = new ConcurrentHashMap<>();
 
-    @Tool("Propose a refund — requires human approval before it is processed")
-    public String requestRefund(String orderId, int amountCents) {
-        String ticketId = "refund-" + orderId;
-        pending.put(ticketId, new RefundRequest(orderId, amountCents));
+    SafeClusterTools(KubernetesClient k8s) {
+        this.k8s = k8s;
+    }
+
+    @Tool("Propose a pod deletion — requires human approval before it is executed")
+    public String requestPodDeletion(String namespace, String podName) {
+        String ticketId = "delpod-" + namespace + "-" + podName;
+        pending.put(ticketId, new PodDeletion(namespace, podName));
         return ticketId;
     }
 
     public void approve(String ticketId, boolean humanApproved) {
         if (!humanApproved) throw new IllegalStateException("not approved");
-        RefundRequest req = pending.remove(ticketId);
+        PodDeletion req = pending.remove(ticketId);
         if (req == null) throw new IllegalArgumentException("unknown ticket");
-        // actual payment SDK call gated by human approval
+        k8s.pods().inNamespace(req.namespace()).withName(req.podName()).delete();
     }
 }
