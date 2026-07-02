@@ -48,4 +48,3 @@ def handle_request(user_query: str) -> str:
 if __name__ == "__main__":
     import sys
     print(handle_request(sys.argv[1]))
-
