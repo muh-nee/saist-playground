@@ -1,18 +1,18 @@
-import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.chat.model.ChatResponse;
-import java.sql.ResultSet;
+import com.openai.client.OpenAIClient;
+import com.openai.models.chat.completions.ChatCompletion;
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
 
-public class vulnerable2 {
-    private ChatModel chatModel;
-    private ResultSet resultSet;
+public class vulnerable4 {
+    private OpenAIClient client;
 
-    public String summarizeAccount() throws Exception {
-        String email = resultSet.getString("email");
-        String ssn = resultSet.getString("ssn");
-        ChatResponse response = chatModel.call(
-                new Prompt("Summarize account activity for " + email + " (SSN: " + ssn + ")")
+    public String debugWebhook() {
+        String webhookSecret = "whsec_abc123xyz789";
+        ChatCompletion completion = client.chat().completions().create(
+                ChatCompletionCreateParams.builder()
+                        .model("gpt-4o")
+                        .addUserMessage("Webhook delivery failed. Secret used: " + webhookSecret)
+                        .build()
         );
-        return response.getResult().getOutput().getContent();
+        return completion.choices().get(0).message().content().orElse("");
     }
 }

@@ -1,35 +1,22 @@
-import dev.langchain4j.service.AiServices;
-import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.chat.completions.ChatCompletion;
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import org.yaml.snakeyaml.LoaderOptions;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Set;
+public class secure11 {
+    private final OpenAIClient client = OpenAIOkHttpClient.fromEnv();
 
-public class secure9 {
-    static class FileOperation {
-        public String action;
-        public String path;
-    }
-
-    interface CommandService {
-        FileOperation extractCommand(String description);
-    }
-
-    private final ChatLanguageModel model = OpenAiChatModel.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
-    private static final Set<String> ALLOWED_ACTIONS = Set.of("list", "read");
-    private static final Path BASE_DIR = Paths.get("/app/data").toAbsolutePath().normalize();
-
-    public void handleRequest(String description) throws Exception {
-        CommandService svc = AiServices.create(CommandService.class, model);
-        FileOperation op = svc.extractCommand(description);
-        if (!ALLOWED_ACTIONS.contains(op.action)) {
-            throw new IllegalArgumentException("Disallowed action");
-        }
-        Path resolved = BASE_DIR.resolve(op.path).normalize();
-        if (!resolved.startsWith(BASE_DIR)) {
-            throw new IllegalArgumentException("Path traversal detected");
-        }
-        new ProcessBuilder("ls", resolved.toString()).start();
+    public Object parseConfig(String description) {
+        ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
+                .model("gpt-4o")
+                .addUserMessage("Generate a simple YAML config for: " + description)
+                .build();
+        ChatCompletion completion = client.chat().completions().create(params);
+        String yaml = completion.choices().get(0).message().content().orElse("");
+        Yaml parser = new Yaml(new SafeConstructor(new LoaderOptions()));
+        return parser.load(yaml);
     }
 }

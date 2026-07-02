@@ -1,18 +1,29 @@
-import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.models.messages.Message;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 
-public class secure12 {
-    private final ChatLanguageModel model = OpenAiChatModel.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
-    private static final Set<String> ALLOWED_DESTINATIONS = Set.of("/dashboard", "/profile", "/settings");
+public class secure14 {
+    private final AnthropicClient client = AnthropicOkHttpClient.fromEnv();
+    private final JdbcTemplate jdbcTemplate;
 
-    public void redirect(String userRequest, HttpServletResponse response) throws Exception {
-        String target = model.generate("Return only the redirect path for: " + userRequest).trim();
-        if (!ALLOWED_DESTINATIONS.contains(target)) {
-            throw new SecurityException("Redirect target not allowed: " + target);
-        }
-        response.sendRedirect(target);
+    public secure14(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<Map<String, Object>> searchProducts(String description) {
+        MessageCreateParams params = MessageCreateParams.builder()
+                .model(Model.CLAUDE_SONNET_4_5)
+                .maxTokens(256)
+                .addUserMessage("Extract only the search term from: " + description)
+                .build();
+        Message message = client.messages().create(params);
+        String searchTerm = message.content().get(0).asText().text();
+        return jdbcTemplate.queryForList("SELECT * FROM products WHERE name LIKE ?", "%" + searchTerm + "%");
     }
 }

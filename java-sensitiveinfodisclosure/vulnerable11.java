@@ -1,20 +1,20 @@
-import com.google.cloud.vertexai.VertexAI;
-import com.google.cloud.vertexai.generativeai.GenerativeModel;
-import com.google.cloud.vertexai.api.GenerateContentResponse;
+import dev.langchain4j.model.chat.ChatLanguageModel;
 import java.sql.ResultSet;
 
-public class vulnerable11 {
+public class vulnerable14 {
+    private ChatLanguageModel chatLanguageModel;
     private ResultSet resultSet;
+    private String issue;
 
-    public String analyzeAccount() throws Exception {
+    private String buildPrompt(String name, String email, String ssn) {
+        return "Customer " + name + " (email=" + email + ", ssn=" + ssn + ")";
+    }
+
+    public String handleTicket() throws Exception {
+        String name = resultSet.getString("name");
         String email = resultSet.getString("email");
-        String dateOfBirth = resultSet.getString("date_of_birth");
-        try (VertexAI vertexAI = new VertexAI("my-project", "us-central1")) {
-            GenerativeModel model = new GenerativeModel("gemini-1.5-pro", vertexAI);
-            GenerateContentResponse response = model.generateContent(
-                    "Review account for " + email + " (DOB: " + dateOfBirth + ")"
-            );
-            return response.getCandidates(0).getContent().getParts(0).getText();
-        }
+        String ssn = resultSet.getString("ssn");
+        String prompt = buildPrompt(name, email, ssn);
+        return chatLanguageModel.generate(prompt + " Issue: " + issue);
     }
 }

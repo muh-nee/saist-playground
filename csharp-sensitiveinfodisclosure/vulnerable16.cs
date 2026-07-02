@@ -1,26 +1,20 @@
 using OpenAI.Chat;
-using System.Data.SqlClient;
+using System.Text;
 
-public class VulnerableSqlExceptionMessage
+public class VulnerableStringBuilder
 {
     private ChatClient _chatClient;
 
-    public async Task<string> DiagnoseConnection()
+    public async Task<string> InvestigateBreach()
     {
         string dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
-        string connectionString = $"Server=db.internal;Database=app;User Id=svc;Password={dbPassword}";
-        try
-        {
-            using var conn = new SqlConnection(connectionString);
-            await conn.OpenAsync();
-            return "ok";
-        }
-        catch (SqlException ex)
-        {
-            ChatCompletion completion = await _chatClient.CompleteChatAsync(
-                new[] { new UserChatMessage("Diagnose this DB error: " + ex.Message) }
-            );
-            return completion.Content[0].Text;
-        }
+        var sb = new StringBuilder();
+        sb.Append("Investigate potential credential leak. ");
+        sb.Append("Compromised DB password: ");
+        sb.Append(dbPassword);
+        ChatCompletion completion = await _chatClient.CompleteChatAsync(
+            new[] { new UserChatMessage(sb.ToString()) }
+        );
+        return completion.Content[0].Text;
     }
 }

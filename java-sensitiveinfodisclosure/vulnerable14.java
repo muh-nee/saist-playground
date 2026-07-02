@@ -1,20 +1,15 @@
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import java.sql.ResultSet;
+import java.util.List;
 
-public class vulnerable14 {
-    private ChatLanguageModel chatLanguageModel;
+public class vulnerable17 {
+    private ChatLanguageModel model;
     private ResultSet resultSet;
-    private String issue;
 
-    private String buildPrompt(String name, String email, String ssn) {
-        return "Customer " + name + " (email=" + email + ", ssn=" + ssn + ")";
-    }
-
-    public String handleTicket() throws Exception {
-        String name = resultSet.getString("name");
+    public String summarizeRisk() throws Exception {
         String email = resultSet.getString("email");
         String ssn = resultSet.getString("ssn");
-        String prompt = buildPrompt(name, email, ssn);
-        return chatLanguageModel.generate(prompt + " Issue: " + issue);
+        List<String> context = List.of("user=" + email, "ssn=" + ssn);
+        return model.generate("Context: " + context + ". Summarize risk profile.");
     }
 }

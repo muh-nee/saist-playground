@@ -1,15 +1,19 @@
-using Microsoft.SemanticKernel;
+using OpenAI.Chat;
 
-public class VulnerableKernelArgumentsSecret
+public class VulnerableStringFormat
 {
-    private Kernel _kernel;
-    private KernelFunction _payoutFunction;
+    private ChatClient _chatClient;
+    private AppSecrets _secrets;
 
-    public async Task<string> RunPayout()
+    public async Task<string> SummarizeRotation()
     {
-        string stripeKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
-        var args = new KernelArguments { ["stripeKey"] = stripeKey };
-        var result = await _kernel.InvokeAsync(_payoutFunction, args);
-        return result.GetValue<string>();
+        string current = _secrets.WebhookSecret;
+        string prompt = string.Format("Summarize rotation status. Current webhook secret: {0}", current);
+        ChatCompletion completion = await _chatClient.CompleteChatAsync(
+            new[] { new UserChatMessage(prompt) }
+        );
+        return completion.Content[0].Text;
     }
 }
+
+public class AppSecrets { public string WebhookSecret { get; set; } }

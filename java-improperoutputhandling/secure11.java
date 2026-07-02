@@ -1,22 +1,33 @@
-import com.openai.client.OpenAIClient;
-import com.openai.client.okhttp.OpenAIOkHttpClient;
-import com.openai.models.chat.completions.ChatCompletion;
-import com.openai.models.chat.completions.ChatCompletionCreateParams;
-import org.yaml.snakeyaml.LoaderOptions;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.SafeConstructor;
+import com.anthropic.client.AnthropicClient;
+import com.anthropic.client.okhttp.AnthropicOkHttpClient;
+import com.anthropic.models.messages.Message;
+import com.anthropic.models.messages.MessageCreateParams;
+import com.anthropic.models.messages.Model;
 
-public class secure11 {
-    private final OpenAIClient client = OpenAIOkHttpClient.fromEnv();
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.Set;
 
-    public Object parseConfig(String description) {
-        ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
-                .model("gpt-4o")
-                .addUserMessage("Generate a simple YAML config for: " + description)
+public class secure13 {
+    private final AnthropicClient client = AnthropicOkHttpClient.fromEnv();
+    private static final Set<String> ALLOWED_NAMES = Set.of(
+            "java:comp/env/jdbc/primary",
+            "java:comp/env/jdbc/replica",
+            "java:comp/env/mail/Session"
+    );
+
+    public Object resolveResource(String description) throws Exception {
+        MessageCreateParams params = MessageCreateParams.builder()
+                .model(Model.CLAUDE_SONNET_4_5)
+                .maxTokens(64)
+                .addUserMessage("Return only the JNDI resource name for: " + description)
                 .build();
-        ChatCompletion completion = client.chat().completions().create(params);
-        String yaml = completion.choices().get(0).message().content().orElse("");
-        Yaml parser = new Yaml(new SafeConstructor(new LoaderOptions()));
-        return parser.load(yaml);
+        Message message = client.messages().create(params);
+        String name = message.content().get(0).asText().text().trim();
+        if (!ALLOWED_NAMES.contains(name)) {
+            throw new SecurityException("JNDI name not allowed: " + name);
+        }
+        Context ctx = new InitialContext();
+        return ctx.lookup(name);
     }
 }

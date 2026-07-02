@@ -1,26 +1,26 @@
-from typing import Literal
+import boto3
 from langchain.tools import tool
 from langchain.agents import initialize_agent, AgentType
 from langchain_openai import ChatOpenAI
 
 llm = ChatOpenAI(model="gpt-4o", temperature=0)
+s3 = boto3.client("s3")
 
-SECTION_PATHS = {
-    "summary": "/var/app/reports/summary.txt",
-    "details": "/var/app/reports/details.txt",
-    "appendix": "/var/app/reports/appendix.txt",
-}
+ALLOWED_BUCKET = "app-reports"
+ALLOWED_PREFIX = "summaries/"
 
 
 @tool
-def read_report_section(section: Literal["summary", "details", "appendix"]) -> str:
-    """Read a specific section of the quarterly report."""
-    with open(SECTION_PATHS[section]) as f:
-        return f.read()
+def get_report_object(key: str) -> str:
+    """Fetch a generated report object from the reports bucket."""
+    if not key.startswith(ALLOWED_PREFIX):
+        raise ValueError(f"Key {key!r} is outside the allowed prefix")
+    obj = s3.get_object(Bucket=ALLOWED_BUCKET, Key=key)
+    return obj["Body"].read().decode("utf-8")
 
 
 agent = initialize_agent(
-    tools=[read_report_section],
+    tools=[get_report_object],
     llm=llm,
     agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
     verbose=True,

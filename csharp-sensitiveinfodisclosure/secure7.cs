@@ -1,25 +1,17 @@
-using OpenAI.Chat;
+using Microsoft.SemanticKernel;
 using System.Data.SqlClient;
 
-public class SecureHelperDropsPII
+public class SecureNonSecretConfig
 {
-    private ChatClient _chatClient;
-    private SqlDataReader _reader;
+    private Kernel _kernel;
 
-    public async Task<string> HandleSupportTicket()
+    public async Task<string> GetRegionInfo()
     {
-        string name = (string)_reader["name"];
-        string email = (string)_reader["email"];
-        string region = (string)_reader["region"];
-        string prompt = BuildPrompt(name, email, region);
-        ChatCompletion completion = await _chatClient.CompleteChatAsync(
-            new[] { new UserChatMessage(prompt) }
+        string region = Environment.GetEnvironmentVariable("AWS_REGION");
+        string environment = Environment.GetEnvironmentVariable("APP_ENV");
+        string response = await _kernel.InvokePromptAsync(
+            $"Describe the infrastructure topology for region {region} in the {environment} environment."
         );
-        return completion.Content[0].Text;
-    }
-
-    private string BuildPrompt(string name, string email, string region)
-    {
-        return $"Customer region: {region}.";
+        return response;
     }
 }

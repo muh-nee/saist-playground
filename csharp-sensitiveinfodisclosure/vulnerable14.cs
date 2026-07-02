@@ -1,25 +1,15 @@
-using OpenAI.Chat;
-using System.Data.SqlClient;
+using Microsoft.SemanticKernel;
 
-public class VulnerableHelperMethod
+public class VulnerableKernelArgumentsSecret
 {
-    private ChatClient _chatClient;
-    private SqlDataReader _reader;
+    private Kernel _kernel;
+    private KernelFunction _payoutFunction;
 
-    public async Task<string> HandleSupportTicket()
+    public async Task<string> RunPayout()
     {
-        string name = (string)_reader["name"];
-        string email = (string)_reader["email"];
-        string plan = (string)_reader["subscription_tier"];
-        string prompt = BuildSupportContext(name, email, plan);
-        ChatCompletion completion = await _chatClient.CompleteChatAsync(
-            new[] { new UserChatMessage(prompt) }
-        );
-        return completion.Content[0].Text;
-    }
-
-    private string BuildSupportContext(string name, string email, string plan)
-    {
-        return $"Customer: {name}, email: {email}, plan: {plan}";
+        string stripeKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
+        var args = new KernelArguments { ["stripeKey"] = stripeKey };
+        var result = await _kernel.InvokeAsync(_payoutFunction, args);
+        return result.GetValue<string>();
     }
 }

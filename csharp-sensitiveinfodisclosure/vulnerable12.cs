@@ -1,23 +1,25 @@
 using OpenAI.Chat;
-using System.Text.Json;
+using System.Data.SqlClient;
 
-public class VulnerableJsonSerialization
+public class VulnerableHelperMethod
 {
     private ChatClient _chatClient;
+    private SqlDataReader _reader;
 
-    public async Task<string> InvestigateUser(UserRecord user)
+    public async Task<string> HandleSupportTicket()
     {
+        string name = (string)_reader["name"];
+        string email = (string)_reader["email"];
+        string plan = (string)_reader["subscription_tier"];
+        string prompt = BuildSupportContext(name, email, plan);
         ChatCompletion completion = await _chatClient.CompleteChatAsync(
-            new[] { new UserChatMessage("Investigate this user: " + JsonSerializer.Serialize(user)) }
+            new[] { new UserChatMessage(prompt) }
         );
         return completion.Content[0].Text;
     }
-}
 
-public class UserRecord
-{
-    public string Email { get; set; }
-    public string Ssn { get; set; }
-    public string CreditCard { get; set; }
-    public string SubscriptionTier { get; set; }
+    private string BuildSupportContext(string name, string email, string plan)
+    {
+        return $"Customer: {name}, email: {email}, plan: {plan}";
+    }
 }

@@ -1,28 +1,20 @@
-import boto3
-from langchain.tools import tool
-from langchain.agents import initialize_agent, AgentType
+from langchain_community.agent_toolkits import SQLDatabaseToolkit
+from langchain_community.utilities import SQLDatabase
+from langchain.agents import create_sql_agent
 from langchain_openai import ChatOpenAI
 
 llm = ChatOpenAI(model="gpt-4o", temperature=0)
-s3 = boto3.client("s3")
 
-ALLOWED_BUCKET = "app-reports"
-ALLOWED_PREFIX = "summaries/"
+db = SQLDatabase.from_uri(
+    "postgresql://app_readonly:secret@db.internal/orders",
+    include_tables=["orders", "customers"],
+)
 
+toolkit = SQLDatabaseToolkit(db=db, llm=llm)
 
-@tool
-def get_report_object(key: str) -> str:
-    """Fetch a generated report object from the reports bucket."""
-    if not key.startswith(ALLOWED_PREFIX):
-        raise ValueError(f"Key {key!r} is outside the allowed prefix")
-    obj = s3.get_object(Bucket=ALLOWED_BUCKET, Key=key)
-    return obj["Body"].read().decode("utf-8")
-
-
-agent = initialize_agent(
-    tools=[get_report_object],
+agent = create_sql_agent(
     llm=llm,
-    agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+    toolkit=toolkit,
     verbose=True,
 )
 

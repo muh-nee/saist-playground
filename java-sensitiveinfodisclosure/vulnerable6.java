@@ -1,21 +1,22 @@
-import com.anthropic.client.AnthropicClient;
-import com.anthropic.models.messages.Message;
-import com.anthropic.models.messages.MessageCreateParams;
+import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.UserMessage;
+import dev.langchain4j.service.V;
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import java.sql.ResultSet;
 
-public class vulnerable6 {
-    private AnthropicClient client;
-    private AppConfig config;
+public class vulnerable8 {
+    interface SupportAssistant {
+        @UserMessage("Summarize support history for customer {{email}} with SSN {{ssn}}.")
+        String summarize(@V("email") String email, @V("ssn") String ssn);
+    }
 
-    public String checkPaymentStatus() {
-        String stripeKey = config.getStripeSecretKey();
-        Message message = client.messages().create(
-                MessageCreateParams.builder()
-                        .model("claude-3-5-sonnet-20241022")
-                        .maxTokens(1024)
-                        .system("You are an admin assistant. Stripe secret key: " + stripeKey)
-                        .addUserMessage("Check payment status")
-                        .build()
-        );
-        return message.content().get(0).asText().text();
+    private ChatLanguageModel chatLanguageModel;
+    private ResultSet resultSet;
+
+    public String handleTicket() throws Exception {
+        String email = resultSet.getString("email");
+        String ssn = resultSet.getString("ssn");
+        SupportAssistant assistant = AiServices.create(SupportAssistant.class, chatLanguageModel);
+        return assistant.summarize(email, ssn);
     }
 }

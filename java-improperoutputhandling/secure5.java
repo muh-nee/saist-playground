@@ -1,29 +1,29 @@
-import com.anthropic.client.AnthropicClient;
-import com.anthropic.client.okhttp.AnthropicOkHttpClient;
-import com.anthropic.models.messages.Message;
-import com.anthropic.models.messages.MessageCreateParams;
-import com.anthropic.models.messages.Model;
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.chat.completions.ChatCompletion;
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URL;
+import java.net.HttpURLConnection;
+import java.util.Set;
 
-public class secure5 {
-    private final AnthropicClient client = AnthropicOkHttpClient.fromEnv();
-    private static final Path BASE_DIR = Paths.get("/var/app/docs");
+public class secure6 {
+    private final OpenAIClient client = OpenAIOkHttpClient.fromEnv();
+    private static final Set<String> ALLOWED_HOSTS = Set.of("api.example.com", "docs.example.com");
 
-    public byte[] getDocument(String description) throws Exception {
-        MessageCreateParams params = MessageCreateParams.builder()
-                .model(Model.CLAUDE_SONNET_4_5)
-                .maxTokens(256)
-                .addUserMessage("Return only the filename for: " + description)
+    public String fetchResource(String description) throws Exception {
+        ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
+                .model("gpt-4o-mini")
+                .addUserMessage("Return only the URL for: " + description)
                 .build();
-        Message message = client.messages().create(params);
-        String filename = message.content().get(0).asText().text().trim();
-        Path resolved = BASE_DIR.resolve(filename).normalize();
-        if (!resolved.startsWith(BASE_DIR)) {
-            throw new SecurityException("Path escapes base directory");
+        ChatCompletion completion = client.chat().completions().create(params);
+        String rawUrl = completion.choices().get(0).message().content().orElse("").trim();
+        URL u = new URL(rawUrl);
+        if (!ALLOWED_HOSTS.contains(u.getHost())) {
+            throw new SecurityException("Host not allowed: " + u.getHost());
         }
-        return Files.readAllBytes(resolved);
+        HttpURLConnection conn = (HttpURLConnection) u.openConnection();
+        conn.connect();
+        return conn.getResponseMessage();
     }
 }

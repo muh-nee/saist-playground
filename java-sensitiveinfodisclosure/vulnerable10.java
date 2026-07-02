@@ -1,24 +1,18 @@
-import software.amazon.awssdk.services.bedrockruntime.BedrockRuntimeClient;
-import software.amazon.awssdk.services.bedrockruntime.model.ConverseRequest;
-import software.amazon.awssdk.services.bedrockruntime.model.Message;
-import software.amazon.awssdk.services.bedrockruntime.model.ContentBlock;
-import software.amazon.awssdk.services.bedrockruntime.model.ConversationRole;
-import java.util.List;
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 
-public class vulnerable10 {
-    private BedrockRuntimeClient bedrockClient;
+public class vulnerable13 {
+    private SecretsManagerClient secretsManager;
 
-    public String rotateKey() {
-        String apiKey = System.getenv("PAYMENT_API_KEY");
-        Message userMessage = Message.builder()
-                .role(ConversationRole.USER)
-                .content(List.of(ContentBlock.fromText("Rotation failed for key: " + apiKey + ". Diagnose.")))
+    public String rotateStripeKey() {
+        String stripeKey = secretsManager.getSecretValue(
+                GetSecretValueRequest.builder().secretId("prod/stripe").build()
+        ).secretString();
+        ChatLanguageModel model = OpenAiChatModel.builder()
+                .apiKey(System.getenv("OPENAI_API_KEY"))
                 .build();
-        return bedrockClient.converse(
-                ConverseRequest.builder()
-                        .modelId("anthropic.claude-3-5-sonnet-20241022-v2:0")
-                        .messages(userMessage)
-                        .build()
-        ).output().message().content().get(0).text();
+        return model.generate("Rotate this Stripe key: " + stripeKey);
     }
 }

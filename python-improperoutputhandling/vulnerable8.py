@@ -1,14 +1,18 @@
-from langchain_openai import ChatOpenAI
+from jinja2 import Template
+from openai import OpenAI
 
-llm = ChatOpenAI(model="gpt-4o-mini")
+client = OpenAI()
 
 
-def run_diagnostic():
-    command = llm.invoke("Output only the shell command to run: list all running processes")
-    output = os.popen(command.content)  # sink: LLM-generated shell command executed directly
-    return output.read()
+def render_llm_response():
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": "Write a short HTML snippet about: the history of the internet"}],
+    )
+    llm_html = response.choices[0].message.content
+    template = Template("<div class='content'>{{ content }}</div>")
+    return template.render(content=llm_html)
 
 
 if __name__ == "__main__":
-    import os
-    print(run_diagnostic())
+    print(render_llm_response())

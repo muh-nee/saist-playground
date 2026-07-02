@@ -1,25 +1,23 @@
-using Amazon.BedrockRuntime;
-using Amazon.BedrockRuntime.Model;
-using System.Text;
+using OpenAI.Chat;
 using System.Text.Json;
 
-public class VulnerableBedrockInvokeModel
+public class VulnerableJsonSerialization
 {
-    private AmazonBedrockRuntimeClient _bedrockRuntimeClient;
+    private ChatClient _chatClient;
 
-    public async Task<string> RotateSecret()
+    public async Task<string> InvestigateUser(UserRecord user)
     {
-        string dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
-        var body = JsonSerializer.Serialize(new
-        {
-            messages = new[] { new { role = "user", content = "Rotate this password: " + dbPassword } }
-        });
-        var invokeRequest = new InvokeModelRequest
-        {
-            ModelId = "anthropic.claude-3-5-sonnet-20241022-v2:0",
-            Body = new MemoryStream(Encoding.UTF8.GetBytes(body))
-        };
-        var invokeResponse = await _bedrockRuntimeClient.InvokeModelAsync(invokeRequest);
-        return new StreamReader(invokeResponse.Body).ReadToEnd();
+        ChatCompletion completion = await _chatClient.CompleteChatAsync(
+            new[] { new UserChatMessage("Investigate this user: " + JsonSerializer.Serialize(user)) }
+        );
+        return completion.Content[0].Text;
     }
+}
+
+public class UserRecord
+{
+    public string Email { get; set; }
+    public string Ssn { get; set; }
+    public string CreditCard { get; set; }
+    public string SubscriptionTier { get; set; }
 }

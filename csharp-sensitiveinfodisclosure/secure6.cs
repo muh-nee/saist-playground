@@ -1,17 +1,25 @@
 using OpenAI.Chat;
-using Microsoft.AspNetCore.Http;
+using System.Data.SqlClient;
 
-public class SecureGenericUserInput
+public class SecureHelperDropsPII
 {
     private ChatClient _chatClient;
-    private HttpRequest _request;
+    private SqlDataReader _reader;
 
-    public async Task<string> HandleQuery()
+    public async Task<string> HandleSupportTicket()
     {
-        string userQuery = _request.Form["query"].ToString();
+        string name = (string)_reader["name"];
+        string email = (string)_reader["email"];
+        string region = (string)_reader["region"];
+        string prompt = BuildPrompt(name, email, region);
         ChatCompletion completion = await _chatClient.CompleteChatAsync(
-            new[] { new UserChatMessage(userQuery) }
+            new[] { new UserChatMessage(prompt) }
         );
         return completion.Content[0].Text;
+    }
+
+    private string BuildPrompt(string name, string email, string region)
+    {
+        return $"Customer region: {region}.";
     }
 }
