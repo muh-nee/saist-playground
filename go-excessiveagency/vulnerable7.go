@@ -2,44 +2,42 @@ package main
 
 import (
 	"context"
-	"io"
-	"net/http"
 
-	openai "github.com/sashabaranov/go-openai"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	anthropic "github.com/anthropics/anthropic-sdk-go"
 )
 
-var oaiClient *openai.Client
+var s3Client *s3.Client
 
-func httpFetch(rawURL string) (string, error) {
-	resp, err := http.Get(rawURL)
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
-	return string(body), nil
+func deleteS3Object(bucket, key string) error {
+	_, err := s3Client.DeleteObject(context.Background(), &s3.DeleteObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+	})
+	return err
 }
 
-func handleFetchRequest(ctx context.Context, userQuery string) (string, error) {
-	_, err := oaiClient.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model:    openai.GPT4o,
-		Messages: []openai.ChatCompletionMessage{{Role: "user", Content: userQuery}},
-		Tools: []openai.Tool{
+func handleS3Request(ctx context.Context, messages []anthropic.MessageParam) error {
+	client := anthropic.NewClient()
+	_, err := client.Messages.New(ctx, anthropic.MessageNewParams{
+		Model:     anthropic.F(anthropic.ModelClaude3_5SonnetLatest),
+		MaxTokens: anthropic.F(int64(1024)),
+		Tools: anthropic.F([]anthropic.ToolParam{
 			{
-				Type: openai.ToolTypeFunction,
-				Function: &openai.FunctionDefinition{
-					Name:        "http_fetch",
-					Description: "Fetch data from a URL",
-					Parameters: map[string]interface{}{
-						"type": "object",
-						"properties": map[string]interface{}{
-							"url": map[string]interface{}{"type": "string"},
-						},
-						"required": []string{"url"},
+				Name:        anthropic.F("delete_s3_object"),
+				Description: anthropic.F("Delete an object from any S3 bucket"),
+				InputSchema: anthropic.F[interface{}](map[string]interface{}{
+					"type": "object",
+					"properties": map[string]interface{}{
+						"bucket": map[string]interface{}{"type": "string"},
+						"key":    map[string]interface{}{"type": "string"},
 					},
-				},
+					"required": []string{"bucket", "key"},
+				}),
 			},
-		},
+		}),
+		Messages: anthropic.F(messages),
 	})
-	return "", err
+	return err
 }

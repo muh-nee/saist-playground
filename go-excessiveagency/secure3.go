@@ -4,30 +4,33 @@ import (
 	"context"
 	"errors"
 	"os/exec"
-	"strings"
 
 	"github.com/tmc/langchaingo/agents"
 	"github.com/tmc/langchaingo/llms"
 	"github.com/tmc/langchaingo/tools"
 )
 
-var allowedCommands = map[string]bool{
-	"df":       true,
-	"free":     true,
-	"uptime":   true,
-	"hostname": true,
+// Full-argv tuple allowlist: both the command name AND its arguments are
+// bound. The LLM selects a diagnostic key; the process invocation is fixed.
+var diagnosticInvocations = map[string][]string{
+	"disk":     {"df", "-h"},
+	"memory":   {"free", "-m"},
+	"uptime":   {"uptime"},
+	"hostname": {"hostname"},
 }
 
 type DiagnosticTool struct{}
 
-func (t *DiagnosticTool) Name() string        { return "RunDiagnostic" }
-func (t *DiagnosticTool) Description() string { return "Run an approved system diagnostic command" }
-func (t *DiagnosticTool) Call(ctx context.Context, cmd string) (string, error) {
-	parts := strings.Fields(cmd)
-	if len(parts) == 0 || !allowedCommands[parts[0]] {
-		return "", errors.New("command not in allowlist")
+func (t *DiagnosticTool) Name() string { return "RunDiagnostic" }
+func (t *DiagnosticTool) Description() string {
+	return "Run an approved diagnostic: disk, memory, uptime, or hostname"
+}
+func (t *DiagnosticTool) Call(ctx context.Context, name string) (string, error) {
+	argv, ok := diagnosticInvocations[name]
+	if !ok {
+		return "", errors.New("diagnostic not in allowlist")
 	}
-	out, err := exec.Command(parts[0], parts[1:]...).Output()
+	out, err := exec.Command(argv[0], argv[1:]...).Output()
 	return string(out), err
 }
 

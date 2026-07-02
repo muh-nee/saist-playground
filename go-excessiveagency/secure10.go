@@ -2,46 +2,64 @@ package main
 
 import (
 	"context"
-	"database/sql"
+	"errors"
+	"fmt"
 
-	openai "github.com/sashabaranov/go-openai"
+	anthropic "github.com/anthropics/anthropic-sdk-go"
 )
 
-var analyticsDB *sql.DB
-var analyticsClient *openai.Client
+// Human-in-the-loop approval: the LLM proposes a refund via the tool, but
+// the mutation is only executed after an out-of-band human approves it.
+// The tool handler enqueues the request and returns a ticket ID; a separate
+// approval channel (not the LLM) authorizes the actual refund.
 
-func getMetric(metricName string) (float64, error) {
-	var value float64
-	err := analyticsDB.QueryRowContext(context.Background(),
-		"SELECT value FROM metrics WHERE name = ? AND recorded_at > NOW() - INTERVAL 1 DAY",
-		metricName,
-	).Scan(&value)
-	return value, err
+type refundRequest struct {
+	OrderID string
+	Amount  int64
 }
 
-func handleMetricRequest(ctx context.Context, userQuery string) (string, error) {
-	_, err := analyticsClient.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model:    openai.GPT4o,
-		Messages: []openai.ChatCompletionMessage{{Role: "user", Content: userQuery}},
-		Tools: []openai.Tool{
+var pendingRefunds = map[string]refundRequest{}
+
+func approveAndProcessRefund(ticketID string, humanApproved bool) error {
+	req, ok := pendingRefunds[ticketID]
+	if !ok {
+		return errors.New("unknown ticket")
+	}
+	if !humanApproved {
+		return errors.New("refund not approved")
+	}
+	// Real payment SDK call would happen here, gated by human approval.
+	_ = req
+	delete(pendingRefunds, ticketID)
+	return nil
+}
+
+func enqueueRefund(orderID string, amount int64) string {
+	ticketID := fmt.Sprintf("refund-%s", orderID)
+	pendingRefunds[ticketID] = refundRequest{OrderID: orderID, Amount: amount}
+	return ticketID
+}
+
+func handleRefundRequest(ctx context.Context, messages []anthropic.MessageParam) error {
+	client := anthropic.NewClient()
+	_, err := client.Messages.New(ctx, anthropic.MessageNewParams{
+		Model:     anthropic.F(anthropic.ModelClaude3_5SonnetLatest),
+		MaxTokens: anthropic.F(int64(1024)),
+		Tools: anthropic.F([]anthropic.ToolParam{
 			{
-				Type: openai.ToolTypeFunction,
-				Function: &openai.FunctionDefinition{
-					Name:        "get_metric",
-					Description: "Get a specific analytics metric value",
-					Parameters: map[string]interface{}{
-						"type": "object",
-						"properties": map[string]interface{}{
-							"metric_name": map[string]interface{}{
-								"type": "string",
-								"enum": []string{"page_views", "active_users", "conversion_rate", "revenue"},
-							},
-						},
-						"required": []string{"metric_name"},
+				Name:        anthropic.F("request_refund"),
+				Description: anthropic.F("Propose a refund. Requires human approval before it is executed."),
+				InputSchema: anthropic.F[interface{}](map[string]interface{}{
+					"type": "object",
+					"properties": map[string]interface{}{
+						"order_id": map[string]interface{}{"type": "string"},
+						"amount":   map[string]interface{}{"type": "integer"},
 					},
-				},
+					"required": []string{"order_id", "amount"},
+				}),
 			},
-		},
+		}),
+		Messages: anthropic.F(messages),
 	})
-	return "", err
+	return err
 }

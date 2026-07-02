@@ -20,10 +20,17 @@ func (t *SafeFileReaderTool) Name() string        { return "ReadFile" }
 func (t *SafeFileReaderTool) Description() string { return "Read a file from the data directory" }
 func (t *SafeFileReaderTool) Call(ctx context.Context, path string) (string, error) {
 	absPath, err := filepath.Abs(path)
-	if err != nil || !strings.HasPrefix(absPath, allowedRoot+string(os.PathSeparator)) {
+	if err != nil {
+		return "", err
+	}
+	resolved, err := filepath.EvalSymlinks(absPath)
+	if err != nil {
+		return "", err
+	}
+	if !strings.HasPrefix(resolved, allowedRoot+string(os.PathSeparator)) {
 		return "", errors.New("path outside allowed directory")
 	}
-	data, err := os.ReadFile(absPath)
+	data, err := os.ReadFile(resolved)
 	return string(data), err
 }
 

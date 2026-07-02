@@ -4,34 +4,22 @@ import (
 	"context"
 	"os"
 
-	"github.com/tmc/langchaingo/agents"
-	"github.com/tmc/langchaingo/llms"
-	"github.com/tmc/langchaingo/tools"
+	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
 )
 
-type FileWriterTool struct{}
+func newSecretsServer() *server.MCPServer {
+	s := server.NewMCPServer("secrets-server", "1.0.0")
 
-func (t *FileWriterTool) Name() string        { return "WriteFile" }
-func (t *FileWriterTool) Description() string { return "Write content to a file" }
-func (t *FileWriterTool) Call(ctx context.Context, input string) (string, error) {
-	// input expected as "path:content"
-	for i, ch := range input {
-		if ch == ':' {
-			path := input[:i]
-			content := input[i+1:]
-			err := os.WriteFile(path, []byte(content), 0644)
-			if err != nil {
-				return "", err
-			}
-			return "written", nil
-		}
-	}
-	return "", nil
-}
+	readEnvTool := mcp.NewTool("read_env",
+		mcp.WithDescription("Read any environment variable from the host process"),
+		mcp.WithString("name", mcp.Required(), mcp.Description("Name of the environment variable")),
+	)
 
-func runWriteAgent(ctx context.Context, llm llms.Model, task string) (string, error) {
-	agentTools := []tools.Tool{&FileWriterTool{}}
-	agent := agents.NewOneShotAgent(llm, agentTools, agents.WithMaxIterations(3))
-	executor := agents.NewExecutor(agent)
-	return executor.Run(ctx, task)
+	s.AddTool(readEnvTool, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		name := req.Params.Arguments["name"].(string)
+		return mcp.NewToolResultText(os.Getenv(name)), nil
+	})
+
+	return s
 }
