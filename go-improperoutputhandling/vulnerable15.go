@@ -2,47 +2,26 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"os/exec"
+	"strings"
 
 	anthropic "github.com/anthropics/anthropic-sdk-go"
 )
 
-func runWithTools(ctx context.Context, userPrompt string) ([]byte, error) {
+// The LLM's text response is used directly as a shell command with no sanitization.
+
+func runLLMCommand(ctx context.Context, userRequest string) ([]byte, error) {
 	client := anthropic.NewClient()
 	msg, err := client.Messages.New(ctx, anthropic.MessageNewParams{
 		Model:     anthropic.ModelClaudeSonnet4_6,
-		MaxTokens: 1024,
-		Tools: []anthropic.ToolUnionParam{
-			{
-				OfTool: &anthropic.ToolParam{
-					Name:        "run_shell",
-					Description: anthropic.String("Run a shell command and return its output."),
-					InputSchema: anthropic.ToolInputSchemaParam{
-						Properties: map[string]any{
-							"command": map[string]any{"type": "string"},
-						},
-					},
-				},
-			},
-		},
+		MaxTokens: 256,
 		Messages: []anthropic.MessageParam{
-			anthropic.NewUserMessage(anthropic.NewTextBlock(userPrompt)),
+			anthropic.NewUserMessage(anthropic.NewTextBlock(userRequest)),
 		},
 	})
 	if err != nil {
 		return nil, err
 	}
-	for _, block := range msg.Content {
-		if block.Type == "tool_use" && block.Name == "run_shell" {
-			var args struct {
-				Command string `json:"command"`
-			}
-			if err := json.Unmarshal([]byte(block.Input), &args); err != nil {
-				return nil, err
-			}
-			return exec.Command("sh", "-c", args.Command).Output()
-		}
-	}
-	return nil, nil
+	command := strings.TrimSpace(msg.Content[0].Text)
+	return exec.Command("sh", "-c", command).Output()
 }
