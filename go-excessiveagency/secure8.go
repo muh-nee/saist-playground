@@ -48,5 +48,3 @@ func handleScriptRequest(ctx context.Context, messages []anthropic.MessageParam)
 	})
 	return err
 }
-
-
