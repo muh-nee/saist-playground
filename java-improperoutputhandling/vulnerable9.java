@@ -21,7 +21,7 @@ public class vulnerable9 {
                 com.fasterxml.jackson.databind.JsonNode input =
                         new com.fasterxml.jackson.databind.ObjectMapper().readTree(toolUse.input().toString());
                 String command = input.get("command").asText();
-                new ProcessBuilder("sh", "-c", command).start(); // sink: LLM-controlled tool input in shell
+                new ProcessBuilder("sh", "-c", command).start(); 
             }
         }
     }
