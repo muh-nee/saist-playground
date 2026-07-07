@@ -33,3 +33,4 @@ public class SafeShellPlugin
         return await process.StandardOutput.ReadToEndAsync();
     }
 }
+
