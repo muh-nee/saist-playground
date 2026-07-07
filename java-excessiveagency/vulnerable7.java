@@ -2,7 +2,7 @@ package main;
 
 import dev.langchain4j.agent.tool.Tool;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.SQLException;
 
 class OrderCleanupTools {
@@ -14,9 +14,8 @@ class OrderCleanupTools {
 
     @Tool("Delete an order by ID")
     public String deleteOrder(String orderId) throws SQLException {
-        PreparedStatement ps = conn.prepareStatement("DELETE FROM orders WHERE id = ?");
-        ps.setString(1, orderId);
-        int rows = ps.executeUpdate();
-        return "deleted " + rows;
+        Statement stmt = conn.createStatement();
+        stmt.execute("DELETE FROM orders WHERE id = " + orderId);
+        return "deleted";
     }
 }
