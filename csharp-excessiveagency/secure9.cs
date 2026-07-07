@@ -4,8 +4,17 @@ using Microsoft.SemanticKernel;
 
 namespace AgentTools;
 
+public enum VideoAsset { IntroClip, OutroClip, DemoClip }
+
 public class VideoPlugin
 {
+    private static readonly Dictionary<VideoAsset, string> AssetPaths = new()
+    {
+        [VideoAsset.IntroClip] = "/var/app/videos/intro.mp4",
+        [VideoAsset.OutroClip] = "/var/app/videos/outro.mp4",
+        [VideoAsset.DemoClip]  = "/var/app/videos/demo.mp4"
+    };
+
     private readonly string _ffmpegPath;
 
     public VideoPlugin(string ffmpegPath)
@@ -14,9 +23,12 @@ public class VideoPlugin
     }
 
     [KernelFunction("extract_thumbnail")]
-    [Description("Extract a thumbnail from a video at the given time offset")]
-    public async Task<string> ExtractThumbnail(string inputFile, string outputFile, int secondOffset)
+    [Description("Extract a thumbnail from a predefined video asset")]
+    public async Task<string> ExtractThumbnail(VideoAsset asset, int secondOffset)
     {
+        var inputFile = AssetPaths[asset];
+        var outputFile = Path.Combine("/var/app/thumbnails", $"{asset}.jpg");
+
         var psi = new ProcessStartInfo(_ffmpegPath)
         {
             UseShellExecute = false,

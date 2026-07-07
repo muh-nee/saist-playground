@@ -20,7 +20,18 @@ public class WebFetchAgent
         })
     );
 
-    public async Task<string> FetchUrl(string url)
+    public async Task<string> HandleToolCall(ChatToolCall toolCall)
+    {
+        if (toolCall.FunctionName == "fetch_url")
+        {
+            var args = System.Text.Json.JsonDocument.Parse(toolCall.FunctionArguments);
+            var url = args.RootElement.GetProperty("url").GetString()!;
+            return await FetchUrl(url);
+        }
+        throw new InvalidOperationException($"Unknown tool: {toolCall.FunctionName}");
+    }
+
+    private async Task<string> FetchUrl(string url)
     {
         var response = await _http.GetAsync(url);
         return await response.Content.ReadAsStringAsync();
