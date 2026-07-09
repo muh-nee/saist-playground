@@ -16,3 +16,4 @@ if __name__ == "__main__":
     import sys
     result = agent.run(sys.argv[1])
     print(result)
+

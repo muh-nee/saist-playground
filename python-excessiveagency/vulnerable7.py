@@ -22,3 +22,4 @@ crew = Crew(agents=[analyst], tasks=[task])
 
 if __name__ == "__main__":
     print(crew.kickoff())
+

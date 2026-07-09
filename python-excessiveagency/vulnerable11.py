@@ -13,3 +13,4 @@ def run_command(cmd: str) -> str:
 
 if __name__ == "__main__":
     mcp.run()
+
