@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,19 +16,15 @@ public class AnnotatedController {
     @JsonIgnore
     private final String systemPrompt = "Proprietary business instructions — never serialize.";
 
-    private final String modelName = "gpt-4o";
-
     public AnnotatedController(ChatLanguageModel model) {
         this.model = model;
     }
 
     @PostMapping("/chat")
-    public ResponseEntity<String> chat(@RequestBody String message) {
-        return ResponseEntity.ok(
-                model.generate(
-                        SystemMessage.from(systemPrompt),
-                        UserMessage.from(message)
-                ).content().text()
-        );
+    public String chat(@RequestParam String message) {
+        return model.generate(
+                SystemMessage.from(systemPrompt),
+                UserMessage.from(message)
+        ).content().text();
     }
 }

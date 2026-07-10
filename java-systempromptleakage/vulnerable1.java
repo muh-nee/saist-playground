@@ -6,7 +6,7 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -32,11 +32,10 @@ public class DebugController {
     }
 
     @PostMapping("/chat")
-    public ResponseEntity<Map<String, String>> chat(@RequestBody Map<String, String> req) {
-        String reply = model.generate(
+    public String chat(@RequestParam String message) {
+        return model.generate(
                 SystemMessage.from(systemPrompt),
-                UserMessage.from(req.get("message"))
+                UserMessage.from(message)
         ).content().text();
-        return ResponseEntity.ok(Map.of("reply", reply));
     }
 }

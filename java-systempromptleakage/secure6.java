@@ -3,12 +3,9 @@ package main;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 public class LlmOutputController {
@@ -21,11 +18,10 @@ public class LlmOutputController {
     }
 
     @PostMapping("/chat")
-    public ResponseEntity<Map<String, String>> chat(@RequestBody Map<String, String> req) {
-        String llmOutput = model.generate(
+    public String chat(@RequestParam String message) {
+        return model.generate(
                 SystemMessage.from(systemPrompt),
-                UserMessage.from(req.get("message"))
+                UserMessage.from(message)
         ).content().text();
-        return ResponseEntity.ok(Map.of("reply", llmOutput));
     }
 }
