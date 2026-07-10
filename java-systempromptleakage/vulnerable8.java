@@ -6,10 +6,9 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -25,18 +24,17 @@ public class DiagnosticController {
 
     @GetMapping("/debug")
     public ResponseEntity<Map<String, Object>> debug() {
-        Map<String, Object> debugInfo = new HashMap<>();
-        debugInfo.put("model", "gpt-4o");
-        debugInfo.put("prompt", systemPrompt);
-        return ResponseEntity.ok(debugInfo);
+        return ResponseEntity.ok(Map.of(
+                "model", "gpt-4o",
+                "prompt", systemPrompt
+        ));
     }
 
     @PostMapping("/chat")
-    public ResponseEntity<Map<String, String>> chat(@RequestBody Map<String, String> req) {
-        String reply = model.generate(
+    public String chat(@RequestParam String message) {
+        return model.generate(
                 SystemMessage.from(systemPrompt),
-                UserMessage.from(req.get("message"))
+                UserMessage.from(message)
         ).content().text();
-        return ResponseEntity.ok(Map.of("reply", reply));
     }
 }
