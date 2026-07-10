@@ -1,21 +1,33 @@
+using Microsoft.AspNetCore.Mvc;
 using NLog;
+using OpenAI.Chat;
 
 namespace ChatApi;
 
-public class NLogRequestHandler
+[ApiController]
+[Route("api")]
+public class NLogController : ControllerBase
 {
-    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-    private readonly string _systemPrompt = LoadConfig().SystemPrompt;
+    private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
+    private readonly ChatClient _chatClient;
+    private readonly string _systemPrompt = LoadConfig();
 
-    public async Task<string> HandleRequestAsync(string userMessage)
+    public NLogController(ChatClient chatClient) => _chatClient = chatClient;
+
+    [HttpPost("chat")]
+    public async Task<IActionResult> Chat([FromBody] ChatRequest req)
     {
         Logger.Info("Using system prompt: {0}", _systemPrompt);
-        return await CallLlmAsync(_systemPrompt, userMessage);
+        var result = await _chatClient.CompleteChatAsync(
+        [
+            ChatMessage.CreateSystemMessage(_systemPrompt),
+            ChatMessage.CreateUserMessage(req.Message)
+        ]);
+        return Ok(new { reply = result.Value.Content[0].Text });
     }
 
-    private static async Task<string> CallLlmAsync(string systemPrompt, string userMessage) =>
-        await Task.FromResult("response");
-
-    private static (string SystemPrompt, string Model) LoadConfig() =>
-        ("Internal ops assistant. Has access to deployment credentials and CI secrets.", "gpt-4o");
+    private static string LoadConfig() =>
+        "Internal ops assistant. Has access to deployment credentials and CI secrets.";
 }
+
+public record ChatRequest(string Message);
