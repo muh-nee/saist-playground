@@ -25,4 +25,3 @@ public class ChatController {
         ).content().text();
     }
 }
-
