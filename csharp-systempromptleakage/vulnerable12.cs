@@ -25,4 +25,16 @@ public class SemanticKernelController : ControllerBase
             system = _systemPrompt
         });
     }
+
+    [HttpPost("chat")]
+    public async Task<IActionResult> Chat([FromBody] ChatRequest req)
+    {
+        var chatHistory = new Microsoft.SemanticKernel.ChatCompletion.ChatHistory();
+        chatHistory.AddSystemMessage(_systemPrompt);
+        chatHistory.AddUserMessage(req.Message);
+        var result = await _chatCompletionService.GetChatMessageContentsAsync(chatHistory);
+        return Ok(new { reply = result[^1].Content });
+    }
 }
+
+public record ChatRequest(string Message);
