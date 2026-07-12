@@ -1,13 +1,10 @@
-from openai import OpenAI
+from openai import AsyncOpenAI
 
-client = OpenAI()
+client = AsyncOpenAI()
 
-def stream_answer(prompt: str):
-    stream = client.chat.completions.create(
+async def answer_async(user_message: str) -> str:
+    response = await client.chat.completions.create(
         model="gpt-4o",
-        messages=[{"role": "user", "content": prompt}],
-        stream=True,
+        messages=[{"role": "user", "content": user_message}],
     )
-    for chunk in stream:
-        if chunk.choices[0].delta.content:
-            yield chunk.choices[0].delta.content
+    return response.choices[0].message.content

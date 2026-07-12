@@ -1,5 +1,5 @@
-import httpx
 from openai import OpenAI
+import httpx
 
 client = OpenAI()
 
@@ -13,11 +13,3 @@ async def call_ollama(prompt: str) -> str:
             },
         )
         return response.json()["choices"][0]["message"]["content"]
-
-def call_openai(prompt: str) -> str:
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=512,
-    )
-    return response.choices[0].message.content
