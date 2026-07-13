@@ -8,9 +8,9 @@ import (
 )
 
 func generate(ctx context.Context, prompt string) (string, error) {
-	llm, err := openai.New(openai.WithMaxTokens(1024))
+	llm, err := openai.New()
 	if err != nil {
 		return "", err
 	}
-	return llms.GenerateFromSinglePrompt(ctx, llm, prompt)
+	return llms.GenerateFromSinglePrompt(ctx, llm, prompt, llms.WithMaxTokens(1024))
 }
