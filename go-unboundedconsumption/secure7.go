@@ -8,9 +8,9 @@ import (
 )
 
 func classify(ctx context.Context, text string) (string, error) {
-	llm, err := anthropic.New(anthropic.WithMaxTokens(1024))
+	llm, err := anthropic.New()
 	if err != nil {
 		return "", err
 	}
-	return llms.GenerateFromSinglePrompt(ctx, llm, text)
+	return llms.GenerateFromSinglePrompt(ctx, llm, text, llms.WithMaxTokens(1024))
 }
