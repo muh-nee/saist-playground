@@ -3,14 +3,18 @@ package main
 import (
 	"context"
 
-	"github.com/tmc/langchaingo/llms"
-	"github.com/tmc/langchaingo/llms/anthropic"
+	openai "github.com/sashabaranov/go-openai"
 )
 
-func classify(ctx context.Context, text string) (string, error) {
-	llm, err := anthropic.New()
+func callLLMNoTimeout(client *openai.Client, prompt string) (string, error) {
+	resp, err := client.CreateChatCompletion(context.TODO(), openai.ChatCompletionRequest{
+		Model: openai.GPT4o,
+		Messages: []openai.ChatCompletionMessage{
+			{Role: openai.ChatMessageRoleUser, Content: prompt},
+		},
+	})
 	if err != nil {
 		return "", err
 	}
-	return llms.GenerateFromSinglePrompt(ctx, llm, text)
+	return resp.Choices[0].Message.Content, nil
 }
