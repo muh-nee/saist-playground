@@ -2,7 +2,7 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 
 public class vulnerable13 {
-    private final ChatLanguageModel model = OpenAiChatModel.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
+    private final ChatLanguageModel model = OpenAiChatModel.builder().apiKey(System.getenv("OPENAI_API_KEY")).maxTokens(1024).build();
 
     public void readFile(String description) throws Exception {
         String filename = model.generate("Return only the filename for: " + description).trim();

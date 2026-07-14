@@ -9,6 +9,7 @@ public class secure3 {
         DataSource ds = DataSourceBuilder.create().password(dbPassword).build();
         ChatLanguageModel model = OpenAiChatModel.builder()
                 .apiKey(System.getenv("OPENAI_API_KEY"))
+                .maxTokens(1024)
                 .build();
         return model.generate("List available database tables.");
     }

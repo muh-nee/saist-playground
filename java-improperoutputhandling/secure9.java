@@ -13,6 +13,7 @@ public class secure11 {
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
                 .model("gpt-4o")
                 .addUserMessage("Generate a simple YAML config for: " + description)
+                .maxTokens(1024)
                 .build();
         ChatCompletion completion = client.chat().completions().create(params);
         String yaml = completion.choices().get(0).message().content().orElse("");

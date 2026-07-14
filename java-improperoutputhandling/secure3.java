@@ -5,7 +5,7 @@ import org.springframework.web.util.HtmlUtils;
 import javax.servlet.http.HttpServletResponse;
 
 public class secure4 {
-    private final ChatLanguageModel model = OpenAiChatModel.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
+    private final ChatLanguageModel model = OpenAiChatModel.builder().apiKey(System.getenv("OPENAI_API_KEY")).maxTokens(1024).build();
 
     public void handleRequest(String topic, HttpServletResponse resp) throws Exception {
         String llmContent = model.generate("Write a short summary about: " + topic);

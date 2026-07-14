@@ -15,6 +15,7 @@ public class secure6 {
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
                 .model("gpt-4o-mini")
                 .addUserMessage("Return only the URL for: " + description)
+                .maxTokens(1024)
                 .build();
         ChatCompletion completion = client.chat().completions().create(params);
         String rawUrl = completion.choices().get(0).message().content().orElse("").trim();

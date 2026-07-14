@@ -34,6 +34,7 @@ public class vulnerable16 {
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
                 .model("gpt-4o")
                 .addUserMessage("Audit this rotation:\n" + report)
+                .maxTokens(1024)
                 .build();
         ChatCompletion completion = client.chat().completions().create(params);
         return completion.choices().get(0).message().content().orElse("");

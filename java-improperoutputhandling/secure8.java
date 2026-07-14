@@ -6,7 +6,7 @@ import org.owasp.html.Sanitizers;
 import javax.servlet.http.HttpServletResponse;
 
 public class secure10 {
-    private final ChatLanguageModel model = OpenAiChatModel.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
+    private final ChatLanguageModel model = OpenAiChatModel.builder().apiKey(System.getenv("OPENAI_API_KEY")).maxTokens(1024).build();
     private static final PolicyFactory POLICY = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
 
     public void handleRequest(String topic, HttpServletResponse resp) throws Exception {
