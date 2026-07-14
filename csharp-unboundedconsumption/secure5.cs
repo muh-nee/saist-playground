@@ -1,3 +1,4 @@
+using OpenAI.Chat;
 using OpenAI.Embeddings;
 
 public class secure5
