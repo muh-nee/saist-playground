@@ -24,7 +24,8 @@ func handleSecureAnalysis(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp, err := safeClient.CreateChatCompletion(context.Background(), openai.ChatCompletionRequest{
-		Model: openai.GPT4oMini,
+		Model:     openai.GPT4oMini,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: openai.ChatMessageRoleSystem, Content: analysisSystemPrompt},
 			{Role: openai.ChatMessageRoleUser, Content: userPrompt},

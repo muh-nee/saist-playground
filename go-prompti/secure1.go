@@ -16,7 +16,8 @@ func handleSecureChat(w http.ResponseWriter, r *http.Request) {
 	userMessage := r.URL.Query().Get("message")
 
 	resp, err := secureClient.CreateChatCompletion(context.Background(), openai.ChatCompletionRequest{
-		Model: openai.GPT4oMini,
+		Model:     openai.GPT4oMini,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: openai.ChatMessageRoleSystem, Content: systemPrompt},
 			{Role: openai.ChatMessageRoleUser, Content: userMessage},

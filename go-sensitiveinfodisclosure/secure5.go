@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/tmc/langchaingo/llms"
 	"github.com/tmc/langchaingo/llms/openai"
 )
 
@@ -19,7 +20,7 @@ func handleSupportTicket(ctx context.Context, userID int, issue string) (string,
 	var name, email, plan string
 	db.QueryRow("SELECT name, email, plan FROM users WHERE id = ?", userID).Scan(&name, &email, &plan)
 	supportPrompt := buildSupportContext(name, email, plan)
-	return llm.Call(ctx, fmt.Sprintf("%s Issue: %s", supportPrompt, issue))
+	return llm.Call(ctx, fmt.Sprintf("%s Issue: %s", supportPrompt, issue), llms.WithMaxTokens(1024))
 }
 
 func main() {

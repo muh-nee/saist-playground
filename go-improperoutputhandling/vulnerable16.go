@@ -13,7 +13,8 @@ var streamClient *openai.Client
 
 func streamAndExecute(ctx context.Context, userPrompt string) error {
 	stream, err := streamClient.CreateChatCompletionStream(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4oMini,
+		Model:     openai.GPT4oMini,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "system", Content: "Return the shell command to run."},
 			{Role: "user", Content: userPrompt},

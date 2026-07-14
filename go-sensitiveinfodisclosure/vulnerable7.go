@@ -14,7 +14,8 @@ var client = openai.NewClient(os.Getenv("OPENAI_API_KEY"))
 
 func debugWebhookFailure(ctx context.Context, errMsg string) (string, error) {
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4oMini,
+		Model:     openai.GPT4oMini,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "user", Content: fmt.Sprintf("Webhook verification failed: %s. Secret in use: %s", errMsg, webhookSecret)},
 		},

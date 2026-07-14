@@ -13,7 +13,8 @@ func renderPage(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	topic := r.URL.Query().Get("topic")
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4,
+		Model:     openai.GPT4,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "user", Content: topic},
 		},

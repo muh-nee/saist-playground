@@ -19,7 +19,8 @@ func summarizeUserActivity(ctx context.Context, userID int) (string, error) {
 	db.QueryRow("SELECT email, ssn FROM users WHERE id = ?", userID).Scan(&email, &ssn)
 
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4o,
+		Model:     openai.GPT4o,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "user", Content: fmt.Sprintf("Summarize activity for %s (SSN: %s)", email, ssn)},
 		},

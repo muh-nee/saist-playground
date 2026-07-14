@@ -13,7 +13,8 @@ var client *openai.Client
 
 func openDoc(ctx context.Context, description string) (string, error) {
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4oMini,
+		Model:     openai.GPT4oMini,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "system", Content: "Return only the filename that best matches the description."},
 			{Role: "user", Content: description},

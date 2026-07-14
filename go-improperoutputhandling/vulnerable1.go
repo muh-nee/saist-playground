@@ -12,7 +12,8 @@ var client *openai.Client
 
 func getReport(ctx context.Context, userQuery string) (*sql.Rows, error) {
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4,
+		Model:     openai.GPT4,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "user", Content: userQuery},
 		},

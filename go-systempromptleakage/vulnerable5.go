@@ -14,7 +14,8 @@ const systemPrompt = "You are a sales assistant. Internal pricing: Enterprise $1
 func handleRequest(ctx context.Context, userMsg string) (string, error) {
 	log.Printf("handling request with systemPrompt=%s", systemPrompt)
 	resp, err := llmClient.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4o,
+		Model:     openai.GPT4o,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: openai.ChatMessageRoleSystem, Content: systemPrompt},
 			{Role: openai.ChatMessageRoleUser, Content: userMsg},

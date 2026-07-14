@@ -19,7 +19,8 @@ var allowedCommands = map[string]bool{
 
 func runSystemCommand(ctx context.Context, prompt string) ([]byte, error) {
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4,
+		Model:     openai.GPT4,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "system", Content: "Reply with only the command name (no arguments)."},
 			{Role: "user", Content: prompt},

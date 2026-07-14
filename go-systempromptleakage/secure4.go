@@ -17,7 +17,8 @@ func handleQuery(ctx context.Context, userMsg string) (string, error) {
 	hash := fmt.Sprintf("%x", sha256.Sum256([]byte(systemPrompt)))[:8]
 	slog.Info("processing query", "prompt_hash", hash, "prompt_length", len(systemPrompt))
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4o,
+		Model:     openai.GPT4o,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: openai.ChatMessageRoleSystem, Content: systemPrompt},
 			{Role: openai.ChatMessageRoleUser, Content: userMsg},

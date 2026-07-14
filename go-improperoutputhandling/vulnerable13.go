@@ -19,7 +19,8 @@ type Report struct {
 
 func runReport(ctx context.Context, userQuery string) ([]Report, error) {
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4o,
+		Model:     openai.GPT4o,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "system", Content: "Translate the user's question into a SQL query against the reports table."},
 			{Role: "user", Content: userQuery},

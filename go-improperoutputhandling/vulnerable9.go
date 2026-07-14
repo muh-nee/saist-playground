@@ -14,7 +14,7 @@ func fetchReport(ctx context.Context, reportName string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	result, err := llms.GenerateFromSinglePrompt(ctx, llm, "Return only the filename for report: "+reportName)
+	result, err := llms.GenerateFromSinglePrompt(ctx, llm, "Return only the filename for report: "+reportName, llms.WithMaxTokens(1024))
 	if err != nil {
 		return nil, err
 	}
