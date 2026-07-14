@@ -21,5 +21,3 @@ func answerQuestion(ctx context.Context, client *openai.Client, userMessage stri
 	return resp.Choices[0].Message.Content, nil
 }
 
-
-
