@@ -15,6 +15,7 @@ ALLOWED_QUERIES = {
 def query_table(user_question):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": "Reply with only the table name relevant to the question."},
             {"role": "user", "content": user_question},

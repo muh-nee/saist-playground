@@ -17,6 +17,7 @@ class FileOperation(BaseModel):
 def perform_file_operation(user_request):
     response = client.beta.chat.completions.parse(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[{"role": "user", "content": user_request}],
         response_format=FileOperation,
     )

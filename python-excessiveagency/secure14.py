@@ -3,7 +3,7 @@ from langchain_community.utilities.requests import TextRequestsWrapper
 from langchain.agents import initialize_agent, AgentType
 from langchain_openai import ChatOpenAI
 
-llm = ChatOpenAI(model="gpt-4o", temperature=0)
+llm = ChatOpenAI(model="gpt-4o", temperature=0, max_tokens=1024)
 
 ALLOWED_BASE = "https://api.internal.example.com/reports/"
 

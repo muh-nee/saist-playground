@@ -6,6 +6,7 @@ client = OpenAI()
 def open_user_doc(description):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": "Output only the filename that best matches the user's description."},
             {"role": "user", "content": description},

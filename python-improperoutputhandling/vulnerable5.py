@@ -11,6 +11,7 @@ DOCUMENT = "The quick brown fox jumps over the lazy dog. This is a sample docume
 def summarize():
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[{"role": "user", "content": f"Summarize this: {DOCUMENT}"}],
     )
     summary = response.choices[0].message.content

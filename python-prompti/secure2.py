@@ -12,6 +12,7 @@ def analyze(context_name, start_time, end_time, user_message):
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": ANALYSIS_SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt},

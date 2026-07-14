@@ -10,6 +10,7 @@ def help_user(user_name, department, user_message):
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_message},

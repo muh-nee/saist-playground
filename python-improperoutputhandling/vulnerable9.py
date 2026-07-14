@@ -7,6 +7,7 @@ client = OpenAI()
 def fix_file(filename, error_message):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": "You are a code repair assistant. Output only the shell command needed to fix the issue."},
             {"role": "user", "content": f"File: {filename}\nError: {error_message}"},

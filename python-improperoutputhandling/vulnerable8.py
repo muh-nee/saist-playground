@@ -7,6 +7,7 @@ client = OpenAI()
 def render_llm_response():
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[{"role": "user", "content": "Write a short HTML snippet about: the history of the internet"}],
     )
     llm_html = response.choices[0].message.content

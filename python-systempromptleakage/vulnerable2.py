@@ -11,6 +11,7 @@ system_message = "Internal assistant. Has access to all customer records and pri
 async def chat(body: dict):
     response = client.chat.completions.create(
         model="gpt-4o",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": system_message},
             {"role": "user", "content": body["message"]},

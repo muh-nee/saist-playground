@@ -9,6 +9,7 @@ cursor = conn.cursor()
 def search_users(user_request):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": "Extract only the search term from the user request. Output plain text only."},
             {"role": "user", "content": user_request},

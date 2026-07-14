@@ -15,6 +15,7 @@ class ChatResponse(BaseModel):
 async def chat(body: dict):
     response = client.chat.completions.create(
         model="gpt-4o",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": body["message"]}

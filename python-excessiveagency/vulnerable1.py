@@ -14,6 +14,7 @@ def handle_request(user_query: str) -> str:
 
     response = client.chat.completions.create(
         model="gpt-4o",
+        max_tokens=1024,
         messages=messages,
         tools=[{
             "type": "function",

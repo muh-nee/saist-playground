@@ -11,6 +11,7 @@ def support():
     user_message = request.json.get("message")
     response = client.chat.completions.create(
         model="gpt-4o",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_message}

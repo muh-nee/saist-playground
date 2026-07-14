@@ -10,6 +10,7 @@ def process_query(user_input: str) -> str:
     logger.info("Processing query with system prompt: %s", system_prompt)
     response = client.chat.completions.create(
         model="gpt-4o",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_input},

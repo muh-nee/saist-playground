@@ -10,6 +10,7 @@ ALLOWED_HOSTS = {"api.weather.gov", "api.exchangerate.host", "data.cdc.gov"}
 def fetch_external(description):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": f"Return only a URL from one of these hosts: {sorted(ALLOWED_HOSTS)}."},
             {"role": "user", "content": description},

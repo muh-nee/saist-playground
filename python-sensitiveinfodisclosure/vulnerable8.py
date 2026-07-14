@@ -8,6 +8,7 @@ WEBHOOK_SECRET = "whsec_abc123xyz789secretkey"
 def debug_webhook_failure(error_msg):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[
             {"role": "user", "content": f"Webhook verification failed: {error_msg}. Secret in use: {WEBHOOK_SECRET}"}
         ],

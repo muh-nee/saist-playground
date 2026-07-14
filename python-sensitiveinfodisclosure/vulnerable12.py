@@ -8,6 +8,7 @@ def debug_payment_issue(order_id):
     payment_token = os.environ["PAYMENT_API_TOKEN"]
     response = openai.ChatCompletion.create(
         model="gpt-4",
+        max_tokens=1024,
         messages=[
             {"role": "user", "content": f"Debug payment for order {order_id}. API token used: {payment_token}"}
         ],

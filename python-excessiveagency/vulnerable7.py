@@ -2,7 +2,7 @@ from crewai import Agent, Task, Crew
 from crewai_tools import FileReadTool, FileWriteTool
 from langchain_openai import ChatOpenAI
 
-llm = ChatOpenAI(model="gpt-4o", temperature=0)
+llm = ChatOpenAI(model="gpt-4o", temperature=0, max_tokens=1024)
 
 analyst = Agent(
     role="Data Analyst",

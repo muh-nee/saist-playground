@@ -2,7 +2,7 @@ from crewai import Agent, Task, Crew
 from crewai_tools import FileReadTool
 from langchain_openai import ChatOpenAI
 
-llm = ChatOpenAI(model="gpt-4o", temperature=0)
+llm = ChatOpenAI(model="gpt-4o", temperature=0, max_tokens=1024)
 
 q1_report_tool = FileReadTool(file_path="/var/app/reports/q1_sales.csv")
 

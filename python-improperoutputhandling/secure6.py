@@ -7,6 +7,7 @@ client = OpenAI()
 def get_sentiment_score(text):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": 'Respond with JSON only: {"sentiment": "positive"|"negative"|"neutral", "score": 0.0-1.0}'},
             {"role": "user", "content": text},
