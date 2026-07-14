@@ -17,7 +17,8 @@ const systemPrompt = "You are a customer support bot. Internal note: escalate VI
 func handleQuery(ctx context.Context, userMsg string) (string, error) {
 	logger.Info("processing query", zap.String("system_prompt", systemPrompt))
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4o,
+		Model:     openai.GPT4o,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: openai.ChatMessageRoleSystem, Content: systemPrompt},
 			{Role: openai.ChatMessageRoleUser, Content: userMsg},

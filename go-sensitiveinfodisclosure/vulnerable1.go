@@ -13,7 +13,8 @@ var client = openai.NewClient(os.Getenv("OPENAI_API_KEY"))
 func debugConnectionError(ctx context.Context, errMsg string) (string, error) {
 	dbPassword := os.Getenv("DB_PASSWORD")
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4o,
+		Model:     openai.GPT4o,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "user", Content: fmt.Sprintf("Debug this DB error: %s. Password in use: %s", errMsg, dbPassword)},
 		},

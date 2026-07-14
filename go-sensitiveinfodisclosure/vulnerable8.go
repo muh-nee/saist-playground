@@ -14,7 +14,7 @@ func investigateOAuthFailure(ctx context.Context, provider string) (string, erro
 	llm, _ := langchaingopenai.New()
 	chain := chains.NewLLMChain(llm, prompts.NewPromptTemplate("{{.input}}", []string{"input"}))
 	oauthSecret := os.Getenv("OAUTH_CLIENT_SECRET")
-	return chains.Run(ctx, chain, fmt.Sprintf("Investigate OAuth failure for %s. Client secret: %s", provider, oauthSecret))
+	return chains.Run(ctx, chain, fmt.Sprintf("Investigate OAuth failure for %s. Client secret: %s", provider, oauthSecret), chains.WithMaxTokens(1024))
 }
 
 func main() {

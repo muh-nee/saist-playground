@@ -12,7 +12,8 @@ var client *openai.Client
 
 func fetchResource(ctx context.Context, description string) (*http.Response, error) {
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4oMini,
+		Model:     openai.GPT4oMini,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "system", Content: "Return only the URL for the resource described."},
 			{Role: "user", Content: description},

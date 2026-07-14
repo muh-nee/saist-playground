@@ -21,7 +21,8 @@ var allowedTables = map[string]bool{
 
 func queryTable(ctx context.Context, userQuestion string) (*sql.Rows, error) {
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4,
+		Model:     openai.GPT4,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "system", Content: "Reply with only the table name relevant to the question."},
 			{Role: "user", Content: userQuestion},

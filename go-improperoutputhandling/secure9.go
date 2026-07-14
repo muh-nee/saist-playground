@@ -15,7 +15,8 @@ func handleUserLookup(ctx context.Context, w http.ResponseWriter, r *http.Reques
 	userID := r.URL.Query().Get("id")
 
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4,
+		Model:     openai.GPT4,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "system", Content: "You are a helpful assistant."},
 			{Role: "user", Content: "What fields are in the users table?"},

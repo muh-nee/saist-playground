@@ -30,7 +30,8 @@ var allowedPaths = map[string]bool{
 
 func handleFileOp(ctx context.Context, prompt string) ([]byte, error) {
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4o,
+		Model:     openai.GPT4o,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "system", Content: "Reply with a JSON object with fields: action (one of list, read, size) and path (one of /var/app/docs, /var/app/logs, /var/app/data)."},
 			{Role: "user", Content: prompt},

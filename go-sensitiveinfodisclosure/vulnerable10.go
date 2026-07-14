@@ -18,7 +18,8 @@ var client = openai.NewClient(os.Getenv("OPENAI_API_KEY"))
 
 func troubleshootDB(ctx context.Context, cfg DBConfig, errMsg string) (string, error) {
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4o,
+		Model:     openai.GPT4o,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "user", Content: fmt.Sprintf("Troubleshoot DB error in %s: %s. Password: %s", cfg.Environment, errMsg, cfg.DBPassword)},
 		},

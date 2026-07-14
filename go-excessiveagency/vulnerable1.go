@@ -16,8 +16,9 @@ func sendEmail(to, subject, body string) error {
 
 func handleEmailRequest(ctx context.Context, userQuery string) (string, error) {
 	_, err := mailClient.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model:    openai.GPT4o,
-		Messages: []openai.ChatCompletionMessage{{Role: "user", Content: userQuery}},
+		Model:     openai.GPT4o,
+		MaxTokens: 1024,
+		Messages:  []openai.ChatCompletionMessage{{Role: "user", Content: userQuery}},
 		Tools: []openai.Tool{
 			{
 				Type: openai.ToolTypeFunction,

@@ -12,7 +12,8 @@ var client *openai.Client
 
 func readFile(ctx context.Context, description string) ([]byte, error) {
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4oMini,
+		Model:     openai.GPT4oMini,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "system", Content: "Return only the filename."},
 			{Role: "user", Content: description},

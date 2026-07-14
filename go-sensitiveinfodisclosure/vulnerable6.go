@@ -21,7 +21,7 @@ func reviewAccount(ctx context.Context, userID int) error {
 		{Role: schema.ChatMessageTypeHuman, Parts: []llms.ContentPart{
 			llms.TextPart(fmt.Sprintf("Review account for %s (card: %s)", email, creditCard)),
 		}},
-	})
+	}, llms.WithMaxTokens(1024))
 	return err
 }
 

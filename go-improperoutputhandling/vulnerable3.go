@@ -11,7 +11,8 @@ var client *openai.Client
 
 func runTask(ctx context.Context, taskDescription string) error {
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4,
+		Model:     openai.GPT4,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "user", Content: taskDescription},
 		},

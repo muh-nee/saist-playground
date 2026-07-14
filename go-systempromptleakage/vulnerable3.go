@@ -14,7 +14,8 @@ const systemPrompt = "You are a support agent with access to internal ticket dat
 func processQuery(ctx context.Context, userInput string) (string, error) {
 	slog.Info("starting query", "system_prompt", systemPrompt)
 	resp, err := llmClient.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4o,
+		Model:     openai.GPT4o,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: openai.ChatMessageRoleSystem, Content: systemPrompt},
 			{Role: openai.ChatMessageRoleUser, Content: userInput},

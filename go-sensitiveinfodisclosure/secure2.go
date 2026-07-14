@@ -20,7 +20,8 @@ func summarizeUserActivity(ctx context.Context, userID int) (string, error) {
 	db.QueryRow("SELECT last_login, login_count FROM users WHERE id = ?", userID).Scan(&lastLogin, &loginCount)
 
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4o,
+		Model:     openai.GPT4o,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "user", Content: fmt.Sprintf("Summarize activity for user %d: last login %s, %d total logins.", userID, lastLogin, loginCount)},
 		},

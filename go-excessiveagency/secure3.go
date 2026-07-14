@@ -6,6 +6,7 @@ import (
 	"os/exec"
 
 	"github.com/tmc/langchaingo/agents"
+	"github.com/tmc/langchaingo/chains"
 	"github.com/tmc/langchaingo/llms"
 	"github.com/tmc/langchaingo/tools"
 )
@@ -38,5 +39,5 @@ func runDiagAgent(ctx context.Context, llm llms.Model, task string) (string, err
 	agentTools := []tools.Tool{&DiagnosticTool{}}
 	agent := agents.NewOneShotAgent(llm, agentTools, agents.WithMaxIterations(3))
 	executor := agents.NewExecutor(agent)
-	return executor.Run(ctx, task)
+	return chains.Run(ctx, executor, task, chains.WithMaxTokens(1024))
 }

@@ -23,7 +23,8 @@ func analyzeUserActivity(ctx context.Context, userID int) (string, error) {
 	emailHash := fmt.Sprintf("%x", h)[:8]
 
 	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
-		Model: openai.GPT4o,
+		Model:     openai.GPT4o,
+		MaxTokens: 1024,
 		Messages: []openai.ChatCompletionMessage{
 			{Role: "user", Content: fmt.Sprintf("Analyze activity for user hash %s (ID: %d).", emailHash, userID)},
 		},
