@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class vulnerable4 {
-    private final ChatLanguageModel model = OpenAiChatModel.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
+    private final ChatLanguageModel model = OpenAiChatModel.builder().apiKey(System.getenv("OPENAI_API_KEY")).maxTokens(1024).build();
     private final Configuration cfg;
 
     public vulnerable4(Configuration cfg) {

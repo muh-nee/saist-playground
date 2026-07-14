@@ -12,6 +12,7 @@ public class vulnerable13 {
         ).secretString();
         ChatLanguageModel model = OpenAiChatModel.builder()
                 .apiKey(System.getenv("OPENAI_API_KEY"))
+                .maxTokens(1024)
                 .build();
         return model.generate("Rotate this Stripe key: " + stripeKey);
     }

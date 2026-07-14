@@ -10,6 +10,7 @@ public class secure9 {
         creditCard = "****-****-****-" + creditCard.substring(creditCard.length() - 4);
         ChatLanguageModel model = OpenAiChatModel.builder()
                 .apiKey(System.getenv("OPENAI_API_KEY"))
+                .maxTokens(1024)
                 .build();
         return model.generate("Investigate recent charges for card " + creditCard);
     }

@@ -6,6 +6,7 @@ public class vulnerable12 {
         String pwd = System.getenv("DB_PASSWORD");
         ChatLanguageModel model = OpenAiChatModel.builder()
                 .apiKey(System.getenv("OPENAI_API_KEY"))
+                .maxTokens(1024)
                 .build();
         String prompt = String.format("Diagnose this DB connection error. password=%s", pwd);
         System.out.println(model.generate(prompt));

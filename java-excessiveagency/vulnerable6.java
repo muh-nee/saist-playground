@@ -48,6 +48,7 @@ class StorageService {
                         .model("gpt-4o")
                         .addUserMessage(userMessage)
                         .tools(List.of(tool))
+                        .maxTokens(1024)
                         .build());
 
         var choice = response.choices().get(0);

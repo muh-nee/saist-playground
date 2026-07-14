@@ -17,6 +17,7 @@ public class secure4 {
                 ChatCompletionCreateParams.builder()
                         .model("gpt-4o")
                         .addUserMessage("Analyze activity for user hash " + emailHash)
+                        .maxTokens(1024)
                         .build()
         );
         return completion.choices().get(0).message().content().orElse("");

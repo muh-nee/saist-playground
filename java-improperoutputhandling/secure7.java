@@ -16,7 +16,7 @@ public class secure9 {
         FileOperation extractCommand(String description);
     }
 
-    private final ChatLanguageModel model = OpenAiChatModel.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
+    private final ChatLanguageModel model = OpenAiChatModel.builder().apiKey(System.getenv("OPENAI_API_KEY")).maxTokens(1024).build();
     private static final Set<String> ALLOWED_ACTIONS = Set.of("list", "read");
     private static final Path BASE_DIR = Paths.get("/app/data").toAbsolutePath().normalize();
 

@@ -10,6 +10,7 @@ public class vulnerable15 {
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
                 .model("gpt-4o")
                 .addUserMessage("Return only the fully qualified class name for a handler that: " + description)
+                .maxTokens(1024)
                 .build();
         ChatCompletion completion = client.chat().completions().create(params);
         String className = completion.choices().get(0).message().content().orElse("").trim();

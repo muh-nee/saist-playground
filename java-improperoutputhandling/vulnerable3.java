@@ -13,6 +13,7 @@ public class vulnerable3 {
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
                 .model("gpt-4o")
                 .addUserMessage("Write a JavaScript snippet to: " + task)
+                .maxTokens(1024)
                 .build();
         ChatCompletion completion = client.chat().completions().create(params);
         String code = completion.choices().get(0).message().content().orElse("");

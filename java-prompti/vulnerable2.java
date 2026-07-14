@@ -19,6 +19,7 @@ public class vulnerable2 {
 
         ChatCompletionRequest request = ChatCompletionRequest.builder()
             .model("gpt-4o-mini")
+            .maxTokens(1024)
             .messages(List.of(
                 new ChatMessage("system", systemPrompt),
                 new ChatMessage("user", text)

@@ -9,6 +9,7 @@ public class secure6 {
         reqBuilder.header("Authorization", "Bearer " + config.getSecretKey());
         ChatLanguageModel model = OpenAiChatModel.builder()
                 .apiKey(System.getenv("OPENAI_API_KEY"))
+                .maxTokens(1024)
                 .build();
         return model.generate(
                 "Diagnose issue in " + config.getEnvironment() + " (" + config.getRegion() + ")."

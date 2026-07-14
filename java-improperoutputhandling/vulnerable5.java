@@ -13,6 +13,7 @@ public class vulnerable5 {
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
                 .model("gpt-4o")
                 .addUserMessage(topic)
+                .maxTokens(1024)
                 .build();
         ChatCompletion completion = client.chat().completions().create(params);
         String llmContent = completion.choices().get(0).message().content().orElse("");
