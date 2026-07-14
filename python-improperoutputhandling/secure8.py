@@ -1,7 +1,7 @@
 from langchain.agents import initialize_agent, AgentType, Tool
 from langchain_openai import ChatOpenAI
 
-llm = ChatOpenAI(model="gpt-4o-mini")
+llm = ChatOpenAI(model="gpt-4o-mini", max_tokens=1024)
 
 PRODUCT_CATALOG = {"widget": 9.99, "gadget": 19.99, "sprocket": 4.50}
 

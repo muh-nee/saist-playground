@@ -3,7 +3,7 @@ from langchain.tools import tool
 from langchain.agents import initialize_agent, AgentType
 from langchain_openai import ChatOpenAI
 
-llm = ChatOpenAI(model="gpt-4o", temperature=0)
+llm = ChatOpenAI(model="gpt-4o", temperature=0, max_tokens=1024)
 s3 = boto3.client("s3")
 iam = boto3.client("iam")
 

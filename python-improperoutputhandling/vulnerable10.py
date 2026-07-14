@@ -10,6 +10,7 @@ client = OpenAI()
 def render_bio():
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[{"role": "user", "content": "Write an HTML bio snippet for: Ada Lovelace"}],
     )
     bio_html = Markup(response.choices[0].message.content)

@@ -8,6 +8,7 @@ SYSTEM_PROMPT = "You are a helpful customer support assistant for our product."
 def chat(user_message):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_message},

@@ -2,7 +2,7 @@ import os
 from langchain.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
-llm = ChatOpenAI(model="gpt-4o")
+llm = ChatOpenAI(model="gpt-4o", max_tokens=1024)
 prompt = ChatPromptTemplate.from_template("{input}")
 chain = prompt | llm
 

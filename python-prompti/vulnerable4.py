@@ -12,6 +12,7 @@ class Agent:
     def run(self, user_input):
         response = openai_client.chat.completions.create(
             model=self.model,
+            max_tokens=1024,
             messages=[
                 {"role": "system", "content": self.system_prompt},
                 {"role": "user", "content": user_input},

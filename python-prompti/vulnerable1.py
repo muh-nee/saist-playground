@@ -6,6 +6,7 @@ client = OpenAI()
 def chat_with_role(user_role, user_message):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": f"You are a {user_role} assistant."},
             {"role": "user", "content": user_message},

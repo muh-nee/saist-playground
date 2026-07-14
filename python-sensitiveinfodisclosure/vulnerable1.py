@@ -10,6 +10,7 @@ def debug_connection_error(error_msg):
     db_password = os.environ["DB_PASSWORD"]
     response = client.chat.completions.create(
         model="gpt-4o",
+        max_tokens=1024,
         messages=[
             {"role": "user", "content": f"I'm getting this DB error: {error_msg}. The password I'm using is {db_password}. What's wrong?"}
         ],

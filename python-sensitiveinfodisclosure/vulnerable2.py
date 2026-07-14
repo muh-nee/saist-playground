@@ -11,6 +11,7 @@ def summarize_user_activity(user_id):
     ).fetchone()
     response = client.chat.completions.create(
         model="gpt-4o",
+        max_tokens=1024,
         messages=[
             {"role": "user", "content": f"Summarize recent activity for {user[0]} (email: {user[1]}, SSN: {user[2]})."}
         ],

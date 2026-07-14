@@ -2,7 +2,7 @@ import subprocess
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage
 
-llm = ChatOpenAI(model="gpt-4o-mini")
+llm = ChatOpenAI(model="gpt-4o-mini", max_tokens=1024)
 
 
 def run_llm_command():

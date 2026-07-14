@@ -3,7 +3,7 @@ from llama_index.core import VectorStoreIndex, Document
 from llama_index.llms.openai import OpenAI
 
 conn = sqlite3.connect("app.db")
-llm = OpenAI(model="gpt-4o")
+llm = OpenAI(model="gpt-4o", max_tokens=1024)
 index = VectorStoreIndex.from_documents([Document(text="Internal customer support knowledge base.")])
 
 

@@ -3,7 +3,7 @@ from langchain_community.utilities import SQLDatabase
 from langchain.agents import create_sql_agent
 from langchain_openai import ChatOpenAI
 
-llm = ChatOpenAI(model="gpt-4o", temperature=0)
+llm = ChatOpenAI(model="gpt-4o", temperature=0, max_tokens=1024)
 
 db = SQLDatabase.from_uri(
     "postgresql://app_readonly:secret@db.internal/orders",

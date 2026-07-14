@@ -11,6 +11,7 @@ def analyze():
     user_data = request.json.get("data")
     response = client.chat.completions.create(
         model="gpt-4o",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Analyze this data: {user_data}"}

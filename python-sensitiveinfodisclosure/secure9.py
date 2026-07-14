@@ -1,7 +1,7 @@
 from llama_index.core import VectorStoreIndex, Document
 from llama_index.llms.openai import OpenAI
 
-llm = OpenAI(model="gpt-4o")
+llm = OpenAI(model="gpt-4o", max_tokens=1024)
 index = VectorStoreIndex.from_documents([Document(text="Public FAQ and product help articles.")])
 
 

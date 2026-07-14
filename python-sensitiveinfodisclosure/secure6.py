@@ -3,7 +3,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
 conn = sqlite3.connect("app.db")
-llm = ChatOpenAI(model="gpt-4o-mini")
+llm = ChatOpenAI(model="gpt-4o-mini", max_tokens=1024)
 prompt = ChatPromptTemplate.from_template(
     "Summarize the following product description in one sentence: {description}"
 )

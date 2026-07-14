@@ -8,6 +8,7 @@ engine = create_engine("sqlite:///app.db")
 def query_from_natural_language(question):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": "Convert natural language to SQL for a SQLite database with a 'users' table."},
             {"role": "user", "content": question},

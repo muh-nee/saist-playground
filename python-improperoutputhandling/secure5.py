@@ -11,6 +11,7 @@ def summarize():
     text = request.args.get("text", "")
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[{"role": "user", "content": f"Summarize: {text}"}],
     )
     summary = escape(response.choices[0].message.content)

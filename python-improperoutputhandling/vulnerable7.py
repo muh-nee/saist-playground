@@ -1,6 +1,6 @@
 from langchain_openai import ChatOpenAI
 
-llm = ChatOpenAI(model="gpt-4o-mini")
+llm = ChatOpenAI(model="gpt-4o-mini", max_tokens=1024)
 
 
 def run_diagnostic():

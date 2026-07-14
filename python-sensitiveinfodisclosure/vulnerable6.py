@@ -1,7 +1,7 @@
 import os
 from langchain_openai import ChatOpenAI
 
-llm = ChatOpenAI(model="gpt-4o-mini")
+llm = ChatOpenAI(model="gpt-4o-mini", max_tokens=1024)
 
 
 def diagnose_db_error(error_detail):

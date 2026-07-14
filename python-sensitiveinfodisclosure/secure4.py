@@ -13,6 +13,7 @@ def analyze_user_activity(user_id):
     email_hash = hashlib.sha256(user[0].encode()).hexdigest()
     response = client.chat.completions.create(
         model="gpt-4o",
+        max_tokens=1024,
         messages=[
             {"role": "user", "content": f"Analyze activity for user {email_hash[:8]} (ID: {user_id})."}
         ],

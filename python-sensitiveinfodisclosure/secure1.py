@@ -7,6 +7,7 @@ client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 def summarize_document(text):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
+        max_tokens=1024,
         messages=[
             {"role": "system", "content": "Summarize the following document concisely."},
             {"role": "user", "content": text},

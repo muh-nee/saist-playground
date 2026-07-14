@@ -3,7 +3,7 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain_openai import OpenAI
 
-llm = OpenAI()
+llm = OpenAI(max_tokens=1024)
 prompt = PromptTemplate(input_variables=["input"], template="{input}")
 chain = LLMChain(llm=llm, prompt=prompt)
 
