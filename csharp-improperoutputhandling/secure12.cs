@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 var kernel = Kernel.CreateBuilder()
     .AddOpenAIChatCompletion("gpt-4o-mini", Environment.GetEnvironmentVariable("OPENAI_API_KEY"))
@@ -15,7 +16,7 @@ async Task ConvertDocument(string description)
     history.AddSystemMessage("Output only the filename to convert from the description.");
     history.AddUserMessage(description);
 
-    ChatMessageContent message = await chatService.GetChatMessageContentAsync(history);
+    ChatMessageContent message = await chatService.GetChatMessageContentAsync(history, new OpenAIPromptExecutionSettings { MaxTokens = 1024 });
     string filename = message.Content.Trim();
 
     if (!allowedFiles.Contains(filename))

@@ -11,6 +11,7 @@ public class SecureGenericUserInput
         string userQuery = _request.Form["query"].ToString();
         ChatCompletion completion = await _chatClient.CompleteChatAsync(
             new[] { new UserChatMessage(userQuery) }
+                new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
         );
         return completion.Content[0].Text;
     }

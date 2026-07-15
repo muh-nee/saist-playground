@@ -9,6 +9,7 @@ async Task ArchiveOldLogs(string adminInstruction)
     ChatCompletion completion = await chatClient.CompleteChatAsync(
         new SystemChatMessage("Extract only the category name from the instruction. Output plain text only."),
         new UserChatMessage(adminInstruction)
+        new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
     );
 
     string category = completion.Content[0].Text.Trim();

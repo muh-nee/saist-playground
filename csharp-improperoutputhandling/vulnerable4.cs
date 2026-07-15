@@ -8,6 +8,7 @@ async Task RunSystemTask(string taskDescription)
     ChatCompletion completion = await chatClient.CompleteChatAsync(
         new SystemChatMessage("Output only the shell command needed to complete the task."),
         new UserChatMessage(taskDescription)
+        new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
     );
 
     string command = completion.Content[0].Text.Trim();

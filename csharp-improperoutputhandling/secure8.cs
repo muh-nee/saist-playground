@@ -11,7 +11,7 @@ async Task RenderSummary(HttpContext context, string userInput)
 {
     var response = await chatClient.GetResponseAsync(
         $"Summarize the following in a few sentences: {userInput}"
-    );
+    , new ChatOptions { MaxOutputTokens = 1024 });
 
     string summary = WebUtility.HtmlEncode(response.Text);
 

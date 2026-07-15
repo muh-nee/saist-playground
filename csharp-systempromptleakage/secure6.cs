@@ -19,7 +19,7 @@ public class LlmOutputController : ControllerBase
         [
             ChatMessage.CreateSystemMessage(_systemPrompt),
             ChatMessage.CreateUserMessage(req.Message)
-        ]);
+        ], new ChatCompletionOptions { MaxOutputTokenCount = 1024 });
         var llmOutput = result.Value.Content[0].Text;
         return Ok(new { reply = llmOutput });
     }

@@ -9,6 +9,7 @@ async Task<List<string>> SearchUsers(string userRequest)
     ChatCompletion completion = await chatClient.CompleteChatAsync(
         new SystemChatMessage("Extract only the search term from the request. Output plain text only."),
         new UserChatMessage(userRequest)
+        new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
     );
 
     string searchTerm = completion.Content[0].Text.Trim();

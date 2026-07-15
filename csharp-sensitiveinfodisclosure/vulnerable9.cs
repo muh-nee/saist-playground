@@ -1,6 +1,7 @@
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.Extensions.Options;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 public class VulnerableSemanticKernelHistory
 {
@@ -13,7 +14,7 @@ public class VulnerableSemanticKernelHistory
         var history = new ChatHistory();
         history.AddSystemMessage("Internal API secret: " + apiSecret);
         history.AddUserMessage("Help me debug the integration.");
-        IReadOnlyList<ChatMessageContent> result = await _chatCompletionService.GetChatMessageContentsAsync(history);
+        IReadOnlyList<ChatMessageContent> result = await _chatCompletionService.GetChatMessageContentsAsync(history, new OpenAIPromptExecutionSettings { MaxTokens = 1024 });
         return result[0].Content;
     }
 }

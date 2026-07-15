@@ -13,7 +13,7 @@ app.MapGet("/config", async (HttpContext context) =>
     [
         ChatMessage.CreateSystemMessage(systemPrompt),
         ChatMessage.CreateUserMessage("ping")
-    ]);
+    ], new ChatCompletionOptions { MaxOutputTokenCount = 1024 });
     context.Response.ContentType = "text/plain";
     await context.Response.WriteAsync(systemPrompt);
 });

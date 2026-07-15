@@ -13,6 +13,7 @@ public class SecureParameterNameNotSensitive
     {
         ChatCompletion completion = await _chatClient.CompleteChatAsync(
             new[] { new UserChatMessage("Run diagnostic with mode=" + apiKey + " level=" + password) }
+                new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
         );
         return completion.Content[0].Text;
     }

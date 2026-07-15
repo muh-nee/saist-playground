@@ -8,6 +8,7 @@ async Task<List<string>> GetReportData(string userRequest)
 {
     ChatCompletion completion = await chatClient.CompleteChatAsync(
         new UserChatMessage(userRequest)
+        new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
     );
 
     string sqlQuery = completion.Content[0].Text;

@@ -10,7 +10,7 @@ async Task HandlePostAction(HttpContext context, string userRequest)
 {
     var response = await chatClient.GetResponseAsync(
         $"Return only the URL the user should be redirected to after: {userRequest}"
-    );
+    , new ChatOptions { MaxOutputTokens = 1024 });
 
     string redirectUrl = response.Text.Trim();
     context.Response.Redirect(redirectUrl);
