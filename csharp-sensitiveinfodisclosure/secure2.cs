@@ -1,5 +1,6 @@
 using Microsoft.SemanticKernel;
 using System.Data.SqlClient;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 public class SecurePIINotInPrompt
 {
@@ -12,7 +13,8 @@ public class SecurePIINotInPrompt
         string ssn = (string)_reader["ssn"];
         string userId = (string)_reader["user_id"];
         string response = await _kernel.InvokePromptAsync(
-            $"Summarize activity for user ID {userId}."
+            $"Summarize activity for user ID {userId}.",
+        new KernelArguments(new OpenAIPromptExecutionSettings { MaxTokens = 1024 })
         );
         return response;
     }

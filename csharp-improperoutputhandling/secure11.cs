@@ -10,6 +10,7 @@ async Task<string> ExecuteFileOperation(string prompt)
     ChatCompletion completion = await chatClient.CompleteChatAsync(
         new SystemChatMessage("Return a JSON object with fields: action and target."),
         new UserChatMessage(prompt)
+        new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
     );
 
     string json = completion.Content[0].Text;

@@ -12,6 +12,7 @@ public class SecurePIIHashed
         string emailHash = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(email)));
         ChatCompletion completion = await _chatClient.CompleteChatAsync(
             new[] { new UserChatMessage("Analyze activity for user hash " + emailHash) }
+                new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
         );
         return completion.Content[0].Text;
     }

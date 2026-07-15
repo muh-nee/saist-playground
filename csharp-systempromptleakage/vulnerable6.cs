@@ -20,7 +20,7 @@ public class RequestProcessor
         [
             ChatMessage.CreateSystemMessage(_systemPrompt),
             ChatMessage.CreateUserMessage(userMessage)
-        ]);
+        ], new ChatCompletionOptions { MaxOutputTokenCount = 1024 });
         return result.Value.Content[0].Text;
     }
 }

@@ -9,6 +9,7 @@ public class VulnerableJsonSerialization
     {
         ChatCompletion completion = await _chatClient.CompleteChatAsync(
             new[] { new UserChatMessage("Investigate this user: " + JsonSerializer.Serialize(user)) }
+                new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
         );
         return completion.Content[0].Text;
     }

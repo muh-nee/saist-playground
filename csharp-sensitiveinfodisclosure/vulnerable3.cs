@@ -11,6 +11,7 @@ public class VulnerableOpenAIDotNet
         string authToken = _request.Headers["Authorization"].ToString();
         ChatCompletion completion = await _chatClient.CompleteChatAsync(
             new[] { new UserChatMessage("Validate this token: " + authToken + ". List allowed endpoints.") }
+                new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
         );
         return completion.Content[0].Text;
     }

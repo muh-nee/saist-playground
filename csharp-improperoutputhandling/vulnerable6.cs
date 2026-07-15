@@ -10,7 +10,7 @@ async Task<object> EvaluateExpression(string userRequest)
 {
     var response = await chatClient.GetResponseAsync(
         $"Output only the C# expression that evaluates: {userRequest}"
-    );
+    , new ChatOptions { MaxOutputTokens = 1024 });
 
     string code = response.Text;
     return await CSharpScript.EvaluateAsync(code);

@@ -9,6 +9,7 @@ async Task RenderRichSummary(HttpContext context, string topic)
 {
     ChatCompletion completion = await chatClient.CompleteChatAsync(
         new UserChatMessage($"Write a brief HTML-formatted summary about: {topic}")
+        new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
     );
 
     string safeHtml = sanitizer.Sanitize(completion.Content[0].Text);

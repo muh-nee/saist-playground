@@ -11,6 +11,7 @@ public class VulnerableAzureOpenAI
         ChatClient chatClient = _openAIClient.GetChatClient("gpt-4o");
         ChatCompletion completion = await chatClient.CompleteChatAsync(
             new[] { new UserChatMessage("Debug DB connection error. Password in use: " + dbPassword) }
+                new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
         );
         return completion.Content[0].Text;
     }

@@ -17,7 +17,7 @@ public class SecureSecretForHttpAuthOnly
         {
             new ChatMessage(ChatRole.User, "Help diagnose the payment processing issue.")
         };
-        ChatResponse chatResponse = await _chatClient.GetResponseAsync(messages);
+        ChatResponse chatResponse = await _chatClient.GetResponseAsync(messages, new ChatOptions { MaxOutputTokens = 1024 });
         return chatResponse.Text;
     }
 }

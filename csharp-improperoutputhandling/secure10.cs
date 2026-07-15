@@ -1,6 +1,7 @@
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Newtonsoft.Json;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 var kernel = Kernel.CreateBuilder()
     .AddOpenAIChatCompletion("gpt-4o", Environment.GetEnvironmentVariable("OPENAI_API_KEY"))
@@ -14,7 +15,7 @@ async Task<FileOperation?> ParseFileOperation(string prompt)
     history.AddSystemMessage("Return a JSON object with fields: action (string) and path (string).");
     history.AddUserMessage(prompt);
 
-    ChatMessageContent message = await chatService.GetChatMessageContentAsync(history);
+    ChatMessageContent message = await chatService.GetChatMessageContentAsync(history, new OpenAIPromptExecutionSettings { MaxTokens = 1024 });
     string json = message.Content;
 
     // TypeNameHandling defaults to None — type is fixed to FileOperation, no $type discriminator accepted.

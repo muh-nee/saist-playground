@@ -14,6 +14,7 @@ public class VulnerableStringBuilder
         sb.Append(dbPassword);
         ChatCompletion completion = await _chatClient.CompleteChatAsync(
             new[] { new UserChatMessage(sb.ToString()) }
+                new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
         );
         return completion.Content[0].Text;
     }

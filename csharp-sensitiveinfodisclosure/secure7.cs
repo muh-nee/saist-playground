@@ -1,5 +1,6 @@
 using Microsoft.SemanticKernel;
 using System.Data.SqlClient;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 public class SecureNonSecretConfig
 {
@@ -10,7 +11,8 @@ public class SecureNonSecretConfig
         string region = Environment.GetEnvironmentVariable("AWS_REGION");
         string environment = Environment.GetEnvironmentVariable("APP_ENV");
         string response = await _kernel.InvokePromptAsync(
-            $"Describe the infrastructure topology for region {region} in the {environment} environment."
+            $"Describe the infrastructure topology for region {region} in the {environment} environment.",
+        new KernelArguments(new OpenAIPromptExecutionSettings { MaxTokens = 1024 })
         );
         return response;
     }

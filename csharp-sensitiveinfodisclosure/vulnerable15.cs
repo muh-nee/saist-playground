@@ -12,6 +12,7 @@ public class VulnerableKeyVaultSecret
         string signingKey = secret.Value.Value;
         ChatCompletion completion = await _chatClient.CompleteChatAsync(
             new[] { new UserChatMessage("Audit usage of signing key: " + signingKey) }
+                new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
         );
         return completion.Content[0].Text;
     }

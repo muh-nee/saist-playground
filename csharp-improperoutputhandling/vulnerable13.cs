@@ -8,6 +8,7 @@ async Task ProcessFile(string description)
     ChatCompletion completion = await chatClient.CompleteChatAsync(
         new SystemChatMessage("Output only the filename to process."),
         new UserChatMessage(description)
+        new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
     );
 
     string filename = completion.Content[0].Text.Trim();

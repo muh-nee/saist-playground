@@ -27,7 +27,7 @@ public class PromptController : ControllerBase
         [
             ChatMessage.CreateSystemMessage(SystemPrompt),
             ChatMessage.CreateUserMessage(req.Message)
-        ]);
+        ], new ChatCompletionOptions { MaxOutputTokenCount = 1024 });
         return Ok(new { reply = result.Value.Content[0].Text });
     }
 }

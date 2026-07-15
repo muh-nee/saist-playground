@@ -19,6 +19,7 @@ public class VulnerableSqlExceptionMessage
         {
             ChatCompletion completion = await _chatClient.CompleteChatAsync(
                 new[] { new UserChatMessage("Diagnose this DB error: " + ex.Message) }
+                        new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
             );
             return completion.Content[0].Text;
         }

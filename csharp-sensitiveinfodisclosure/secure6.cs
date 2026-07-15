@@ -14,6 +14,7 @@ public class SecureHelperDropsPII
         string prompt = BuildPrompt(name, email, region);
         ChatCompletion completion = await _chatClient.CompleteChatAsync(
             new[] { new UserChatMessage(prompt) }
+                new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
         );
         return completion.Content[0].Text;
     }

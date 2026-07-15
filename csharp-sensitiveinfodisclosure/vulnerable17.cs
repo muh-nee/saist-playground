@@ -11,6 +11,7 @@ public class VulnerableStringFormat
         string prompt = string.Format("Summarize rotation status. Current webhook secret: {0}", current);
         ChatCompletion completion = await _chatClient.CompleteChatAsync(
             new[] { new UserChatMessage(prompt) }
+                new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
         );
         return completion.Content[0].Text;
     }

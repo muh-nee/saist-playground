@@ -13,7 +13,7 @@ app.MapGet("/status", async () =>
     [
         ChatMessage.CreateSystemMessage(systemPrompt),
         ChatMessage.CreateUserMessage("ping")
-    ]);
+    ], new ChatCompletionOptions { MaxOutputTokenCount = 1024 });
     return new
     {
         ok = true,

@@ -1,5 +1,6 @@
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 namespace ChatApi;
 
@@ -18,7 +19,7 @@ public class SemanticKernelService
         var chatHistory = new ChatHistory();
         chatHistory.AddSystemMessage(_systemPrompt);
         chatHistory.AddUserMessage(userMessage);
-        var result = await _chatCompletionService.GetChatMessageContentsAsync(chatHistory);
+        var result = await _chatCompletionService.GetChatMessageContentsAsync(chatHistory, new OpenAIPromptExecutionSettings { MaxTokens = 1024 });
         return result[^1].Content!;
     }
 }

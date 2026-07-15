@@ -11,7 +11,7 @@ public class VulnerableMicrosoftExtensionsAI
         {
             new ChatMessage(ChatRole.User, "Webhook delivery failed. Secret used: " + webhookSecret)
         };
-        ChatResponse chatResponse = await _chatClient.GetResponseAsync(messages);
+        ChatResponse chatResponse = await _chatClient.GetResponseAsync(messages, new ChatOptions { MaxOutputTokens = 1024 });
         return chatResponse.Text;
     }
 }

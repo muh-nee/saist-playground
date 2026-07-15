@@ -11,7 +11,7 @@ async Task<string> FetchExternalData(string userRequest)
 {
     var response = await chatClient.GetResponseAsync(
         $"Return only the API endpoint URL that would best answer: {userRequest}"
-    );
+    , new ChatOptions { MaxOutputTokens = 1024 });
 
     string url = response.Text.Trim();
     var result = await httpClient.GetAsync(url);

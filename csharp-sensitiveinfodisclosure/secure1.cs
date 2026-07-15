@@ -8,6 +8,7 @@ public class SecureApiKeyAuthOnly
         ChatClient chatClient = new ChatClient("gpt-4o", new ApiKeyCredential(apiKey));
         ChatCompletion completion = await chatClient.CompleteChatAsync(
             new[] { new UserChatMessage("Summarize this document.") }
+                new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
         );
         return completion.Content[0].Text;
     }

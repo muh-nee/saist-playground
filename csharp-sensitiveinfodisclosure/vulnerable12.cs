@@ -14,6 +14,7 @@ public class VulnerableHelperMethod
         string prompt = BuildSupportContext(name, email, plan);
         ChatCompletion completion = await _chatClient.CompleteChatAsync(
             new[] { new UserChatMessage(prompt) }
+                new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
         );
         return completion.Content[0].Text;
     }
