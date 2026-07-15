@@ -17,4 +17,3 @@ public class secure1
         return result.Value.Content[0].Text;
     }
 }
-
