@@ -15,3 +15,4 @@ def ingest_document():
     collection.add(documents=[data["content"]], ids=[data["id"]])
     return jsonify({"status": "added"})
 
+
