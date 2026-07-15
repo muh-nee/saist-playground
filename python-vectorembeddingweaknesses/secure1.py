@@ -14,3 +14,4 @@ def ingest_document():
     data = request.get_json()
     collection.add(documents=[data["content"]], ids=[data["id"]])
     return jsonify({"status": "added"})
+
