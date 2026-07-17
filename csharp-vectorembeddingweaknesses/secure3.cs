@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.AI;
-using System.Security.Claims;
+using System.Collections.Generic;
 
 [ApiController]
 [Route("api/[controller]")]
 public class TenantIngestController : ControllerBase
 {
+    private static readonly HashSet<string> AllowedTopics = new() { "golang", "python", "java", "dotnet" };
     private readonly IVectorStore _vectorStore;
 
     public TenantIngestController(IVectorStore vectorStore)
@@ -16,15 +17,17 @@ public class TenantIngestController : ControllerBase
     [HttpPost("ingest")]
     public async Task<IActionResult> Ingest([FromBody] IngestRequest request)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var collection = _vectorStore.GetCollection<string, ArticleRecord>($"user_{userId}");
-        var record = new ArticleRecord { Id = Guid.NewGuid().ToString(), Content = request.Text };
+        if (!AllowedTopics.Contains(request.Topic))
+            return BadRequest("Invalid topic");
+
+        var collection = _vectorStore.GetCollection<string, ArticleRecord>("docs");
+        var record = new ArticleRecord { Id = Guid.NewGuid().ToString(), Content = request.Topic };
         await collection.UpsertAsync(record);
         return Ok();
     }
 }
 
-public record IngestRequest(string Text);
+public record IngestRequest(string Topic);
 
 public class ArticleRecord
 {

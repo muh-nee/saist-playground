@@ -5,20 +5,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Path("/ingest")
-public class NamespacedWeaviateResource {
+public class AdminWeaviateResource {
     private final WeaviateClient client;
 
-    public NamespacedWeaviateResource(WeaviateClient client) {
+    public AdminWeaviateResource(WeaviateClient client) {
         this.client = client;
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response ingest(@Context SecurityContext securityContext, @QueryParam("text") String text) {
-        String className = "User_" + securityContext.getUserPrincipal().getName().replaceAll("[^a-zA-Z0-9]", "_");
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response ingest(@FormParam("text") String text, @Context SecurityContext securityContext) {
+        if (!securityContext.isUserInRole("ADMIN")) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
         Map<String, Object> props = new HashMap<>();
         props.put("content", text);
-        client.data().creator().withClassName(className).withProperties(props).run();
+        client.data().creator().withClassName("Article").withProperties(props).run();
         return Response.ok().build();
     }
 }
