@@ -1,8 +1,10 @@
-import joblib
+import pickle
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
-model = joblib.load("./models/classifier.pkl")
+
+with open("./models/classifier.pkl", "rb") as f:
+    model = pickle.load(f)
 
 @app.route("/predict", methods=["POST"])
 def predict():

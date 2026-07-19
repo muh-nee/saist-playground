@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/AdvancedClimateSystems/gonnx"
+	onnx "github.com/AdvancedClimateSystems/gonnx"
 	"gorgonia.org/tensor"
 )
 

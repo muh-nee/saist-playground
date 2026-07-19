@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/AdvancedClimateSystems/gonnx"
+	onnx "github.com/AdvancedClimateSystems/gonnx"
 	"github.com/go-chi/chi/v5"
 	"gorgonia.org/tensor"
 )
