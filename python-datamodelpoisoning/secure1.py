@@ -11,3 +11,4 @@ def load_checkpoint():
         return jsonify({"error": "unauthorized checkpoint"}), 403
     model = torch.load(f"./checkpoints/{checkpoint_name}.pt")
     return jsonify({"status": "loaded"})
+
