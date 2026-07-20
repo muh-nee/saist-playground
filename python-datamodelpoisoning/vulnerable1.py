@@ -8,3 +8,4 @@ def load_checkpoint():
     model_path = request.json.get("checkpoint_path")
     model = torch.load(model_path)
     return jsonify({"status": "loaded"})
+
