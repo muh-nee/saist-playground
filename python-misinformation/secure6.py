@@ -4,6 +4,8 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 client = OpenAI()
 
+VALID_LABELS = {"SPAM", "HAM"}
+
 @app.route("/classify", methods=["POST"])
 def classify():
     text = request.json["text"]
@@ -15,4 +17,6 @@ def classify():
         ],
     )
     label = response.choices[0].message.content.strip().upper()
+    if label not in VALID_LABELS:
+        label = "UNKNOWN"
     return jsonify({"label": label})
