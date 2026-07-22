@@ -2,20 +2,20 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/openai/openai-go"
 	"github.com/openai/openai-go/option"
 )
 
 var client = openai.NewClient(option.WithAPIKey("key"))
 
-func medicalHandler(w http.ResponseWriter, r *http.Request) {
+func medicalHandler(c *gin.Context) {
 	var body struct {
 		Condition string `json:"condition"`
 	}
-	json.NewDecoder(r.Body).Decode(&body)
+	c.ShouldBindJSON(&body)
 
 	chatCompletion, _ := client.Chat.Completions.New(context.Background(), openai.ChatCompletionNewParams{
 		Model:     openai.ChatModelGPT4o,
@@ -25,11 +25,11 @@ func medicalHandler(w http.ResponseWriter, r *http.Request) {
 		},
 	})
 	info := chatCompletion.Choices[0].Message.Content
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"information": info})
+	c.JSON(http.StatusOK, gin.H{"information": info})
 }
 
 func main() {
-	http.HandleFunc("/medical-info", medicalHandler)
-	http.ListenAndServe(":8080", nil)
+	r := gin.Default()
+	r.POST("/medical-info", medicalHandler)
+	r.Run(":8080")
 }
