@@ -33,7 +33,7 @@ func handleAnalysis(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "error", http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprintln(w, resp.Choices[0].Message.Content)
+	fmt.Fprintln(w, "Note: AI-generated content. Verify independently.\n\n"+resp.Choices[0].Message.Content)
 }
 
 func main() {

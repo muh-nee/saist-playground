@@ -17,4 +17,4 @@ def summarize(req: SummarizeRequest):
     vs = FAISS.from_texts([req.text], embeddings)
     docs = vs.similarity_search(req.query, k=3)
     response = llm.invoke([HumanMessage(content=str(docs))])
-    return {"answer": response.content}
+    return {"answer": response.content, "disclaimer": "AI-generated content. Verify independently."}

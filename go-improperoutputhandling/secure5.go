@@ -23,7 +23,7 @@ func renderSummary(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "error", http.StatusInternalServerError)
 		return
 	}
-	output := resp.Choices[0].Message.Content
+	output := "Note: AI-generated content. Verify independently.\n\n" + resp.Choices[0].Message.Content
 	t, _ := template.New("page").Parse("<html><body><p>{{.}}</p></body></html>")
 	t.Execute(w, output)
 }

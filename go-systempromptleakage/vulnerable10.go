@@ -33,7 +33,7 @@ func chatHandler(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "llm error"})
 	}
-	return c.JSON(http.StatusOK, map[string]string{"answer": resp.Choices[0].Message.Content})
+	return c.JSON(http.StatusOK, map[string]string{"answer": resp.Choices[0].Message.Content, "disclaimer": "AI-generated content. Verify independently."})
 }
 
 func configHandler(c echo.Context) error {

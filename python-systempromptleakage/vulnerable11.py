@@ -16,4 +16,4 @@ def ask(request):
             {"role": "user", "content": message}
         ]
     )
-    return Response({"answer": response.choices[0].message.content, "prompt_used": system_prompt})
+    return Response({"answer": response.choices[0].message.content, "prompt_used": system_prompt, "disclaimer": "AI-generated content. Verify independently."})

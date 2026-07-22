@@ -17,7 +17,7 @@ def ask():
             {"role": "user", "content": user_input},
         ]
     )
-    return jsonify({"answer": response.choices[0].message.content})
+    return jsonify({"answer": response.choices[0].message.content, "disclaimer": "AI-generated content. Verify independently."})
 
 @app.route("/debug")
 def debug():

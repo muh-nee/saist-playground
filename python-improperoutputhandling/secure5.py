@@ -15,4 +15,4 @@ def summarize():
         messages=[{"role": "user", "content": f"Summarize: {text}"}],
     )
     summary = escape(response.choices[0].message.content)
-    return f"<html><body><p>{summary}</p></body></html>"
+    return f"<html><body><p>Note: AI-generated content. Verify independently.<br>{summary}</p></body></html>"

@@ -17,4 +17,4 @@ def analyze():
             {"role": "user", "content": f"Analyze this data: {user_data}"}
         ]
     )
-    return jsonify({"analysis": response.choices[0].message.content})
+    return jsonify({"analysis": response.choices[0].message.content, "disclaimer": "AI-generated content. Verify independently."})

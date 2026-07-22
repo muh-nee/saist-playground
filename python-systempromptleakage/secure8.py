@@ -18,4 +18,4 @@ def chat():
             {"role": "user", "content": user_message}
         ]
     )
-    return jsonify({"response": response.choices[0].message.content})
+    return jsonify({"response": response.choices[0].message.content, "disclaimer": "AI-generated content. Verify independently."})

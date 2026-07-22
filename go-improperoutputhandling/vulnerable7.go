@@ -26,5 +26,5 @@ func handleSummary(w http.ResponseWriter, r *http.Request) {
 	}
 	output := resp.Choices[0].Message.Content
 	w.Header().Set("Content-Type", "text/html")
-	fmt.Fprintf(w, "<div>%s</div>", output)
+	fmt.Fprintf(w, "<div>Note: AI-generated content. Verify independently.\n\n%s</div>", output)
 }

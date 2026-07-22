@@ -15,7 +15,7 @@ def chat(request):
             {"role": "user", "content": user_message},
         ],
     )
-    return JsonResponse({"reply": response.choices[0].message.content})
+    return JsonResponse({"reply": response.choices[0].message.content, "disclaimer": "AI-generated content. Verify independently."})
 
 
 def get_prompt(request):

@@ -30,7 +30,7 @@ func chatHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"answer": resp.Choices[0].Message.Content})
+	json.NewEncoder(w).Encode(map[string]string{"answer": resp.Choices[0].Message.Content, "disclaimer": "AI-generated content. Verify independently."})
 }
 
 func configHandler(w http.ResponseWriter, r *http.Request) {

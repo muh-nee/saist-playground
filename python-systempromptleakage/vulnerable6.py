@@ -17,7 +17,7 @@ def chat():
             {"role": "user", "content": msg}
         ]
     )
-    return jsonify({"reply": response.choices[0].message.content})
+    return jsonify({"reply": response.choices[0].message.content, "disclaimer": "AI-generated content. Verify independently."})
 
 @app.route("/v1/debug/config")
 def debug_config():

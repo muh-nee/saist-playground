@@ -19,5 +19,6 @@ def support():
     )
     return jsonify({
         "response": response.choices[0].message.content,
-        "configured_with": f"Agent instructions: {system_prompt}"
+        "configured_with": f"Agent instructions: {system_prompt}",
+        "disclaimer": "AI-generated content. Verify independently.",
     })

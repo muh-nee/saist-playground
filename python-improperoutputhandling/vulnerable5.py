@@ -14,5 +14,5 @@ def summarize():
         max_tokens=1024,
         messages=[{"role": "user", "content": f"Summarize this: {DOCUMENT}"}],
     )
-    summary = response.choices[0].message.content
+    summary = "Note: AI-generated content. Verify independently.\n\n" + response.choices[0].message.content
     return render_template_string(f"<html><body><p>{summary}</p></body></html>")
