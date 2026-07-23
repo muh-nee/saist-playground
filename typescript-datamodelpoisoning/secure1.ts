@@ -9,3 +9,4 @@ async function initSession(): Promise<void> {
 }
 
 initSession();
+
