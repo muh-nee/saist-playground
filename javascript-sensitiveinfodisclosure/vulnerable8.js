@@ -1,0 +1,17 @@
+const { OpenAI } = require("openai");
+
+const config = {
+  oauthClientSecret: process.env.OAUTH_CLIENT_SECRET,
+  region: "us-east-1",
+};
+
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+async function debugOAuthError() {
+  const response = await client.responses.create({
+    model: "gpt-4o",
+    max_tokens: 1024,
+    input: `OAuth authentication failing. Client secret in use: ${config.oauthClientSecret}. Debug this.`,
+  });
+  return response.output_text;
+}
