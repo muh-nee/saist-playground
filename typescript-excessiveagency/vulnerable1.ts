@@ -30,3 +30,4 @@ async function handleRequest(messages: OpenAI.ChatCompletionMessageParam[]) {
   });
   return response;
 }
+
