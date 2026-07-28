@@ -1,9 +1,5 @@
-function getServiceCredentials() {
-  return {
-    dbPassword: process.env.DB_PASSWORD,
-    apiToken: process.env.API_TOKEN,
-    host: process.env.DB_HOST,
-  };
+function getDbPassword() {
+  return process.env.DB_PASSWORD;
 }
 
-module.exports = { getServiceCredentials };
+module.exports = { getDbPassword };
