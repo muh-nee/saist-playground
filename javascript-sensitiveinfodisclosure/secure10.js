@@ -1,8 +1,5 @@
-function getDbConfigSafe() {
-  return {
-    host: process.env.DB_HOST,
-    password: "[REDACTED]",
-  };
+function getDbPassword() {
+  return "[REDACTED]";
 }
 
-module.exports = { getDbConfigSafe };
+module.exports = { getDbPassword };
