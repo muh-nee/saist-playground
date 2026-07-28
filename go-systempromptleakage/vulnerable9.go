@@ -29,7 +29,7 @@ func chatHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "llm error"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"answer": resp.Choices[0].Message.Content})
+	c.JSON(http.StatusOK, gin.H{"answer": resp.Choices[0].Message.Content, "disclaimer": "AI-generated content. Verify independently."})
 }
 
 func debugPromptHandler(c *gin.Context) {

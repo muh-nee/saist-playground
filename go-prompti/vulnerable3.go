@@ -30,7 +30,7 @@ func handlePersonaChat(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "error", http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprintln(w, msg.Content[0].Text)
+	fmt.Fprintln(w, "Note: AI-generated content. Verify independently.\n\n"+msg.Content[0].Text)
 }
 
 func main() {

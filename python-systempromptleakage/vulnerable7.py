@@ -18,6 +18,6 @@ def analyze():
                 {"role": "user", "content": data["query"]}
             ]
         )
-        return jsonify({"result": response.choices[0].message.content})
+        return jsonify({"result": response.choices[0].message.content, "disclaimer": "AI-generated content. Verify independently."})
     except Exception as e:
         return jsonify({"error": str(e), "context": system_prompt}), 500

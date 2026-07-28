@@ -26,5 +26,5 @@ func handleAnalysis(w http.ResponseWriter, r *http.Request) {
 	}
 	summary := resp.Choices[0].Message.Content
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"summary": summary})
+	json.NewEncoder(w).Encode(map[string]string{"summary": summary, "disclaimer": "AI-generated content. Verify independently."})
 }

@@ -22,4 +22,4 @@ async def query(body: dict):
             {"role": "user", "content": body["message"]}
         ]
     )
-    return {"answer": response.choices[0].message.content}
+    return {"answer": response.choices[0].message.content, "disclaimer": "AI-generated content. Verify independently."}

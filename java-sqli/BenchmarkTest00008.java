@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(value = "/sqli-00/BenchmarkTest00008")
 public class BenchmarkTest00008 extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; // OWASP Benchmark
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)

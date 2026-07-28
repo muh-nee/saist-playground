@@ -13,7 +13,8 @@ var client *openai.Client
 const systemPrompt = "You are a code review assistant. Identify bugs and suggest improvements."
 
 type ReviewResponse struct {
-	Review string `json:"review"`
+	Review     string `json:"review"`
+	Disclaimer string `json:"disclaimer"`
 }
 
 func reviewHandler(w http.ResponseWriter, r *http.Request) {
@@ -36,5 +37,5 @@ func reviewHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	llmOutput := resp.Choices[0].Message.Content
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(ReviewResponse{Review: llmOutput})
+	json.NewEncoder(w).Encode(ReviewResponse{Review: llmOutput, Disclaimer: "AI-generated content. Verify independently."})
 }

@@ -19,7 +19,7 @@ def chat():
             {"role": "user", "content": user_message},
         ],
     )
-    return jsonify({"answer": response.choices[0].message.content})
+    return jsonify({"answer": response.choices[0].message.content, "disclaimer": "AI-generated content. Verify independently."})
 
 
 @app.route("/config")

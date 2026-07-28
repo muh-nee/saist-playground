@@ -14,7 +14,8 @@ var client *openai.Client
 const systemPrompt = "You are a data analysis assistant. Summarize the provided data."
 
 type AnalysisResponse struct {
-	Analysis string `json:"analysis"`
+	Analysis   string `json:"analysis"`
+	Disclaimer string `json:"disclaimer"`
 }
 
 func analyzeHandler(w http.ResponseWriter, r *http.Request) {
@@ -36,5 +37,5 @@ func analyzeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(AnalysisResponse{Analysis: resp.Choices[0].Message.Content})
+	json.NewEncoder(w).Encode(AnalysisResponse{Analysis: resp.Choices[0].Message.Content, Disclaimer: "AI-generated content. Verify independently."})
 }

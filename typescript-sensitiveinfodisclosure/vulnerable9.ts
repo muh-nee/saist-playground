@@ -1,0 +1,21 @@
+import { generateText } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { Pool } from "pg";
+
+const pool = new Pool();
+
+function buildUserContext(name: string, email: string, accountId: string): string {
+  return `Customer name: ${name}, email: ${email}, account: ${accountId}`;
+}
+
+async function generateSupportSummary(userId: number, issue: string): Promise<string> {
+  const result = await pool.query("SELECT name, email, account_id FROM users WHERE id = $1", [userId]);
+  const { name, email, account_id } = result.rows[0];
+  const context = buildUserContext(name, email, account_id);
+  const { text } = await generateText({
+    model: openai("gpt-4o"),
+    maxTokens: 1024,
+    prompt: `${context}. Issue reported: ${issue}`,
+  });
+  return text;
+}

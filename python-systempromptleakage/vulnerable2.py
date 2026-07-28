@@ -17,7 +17,7 @@ async def chat(body: dict):
             {"role": "user", "content": body["message"]},
         ],
     )
-    return {"answer": response.choices[0].message.content}
+    return {"answer": response.choices[0].message.content, "disclaimer": "AI-generated content. Verify independently."}
 
 
 @app.get("/status")

@@ -18,4 +18,4 @@ def review():
         ]
     )
     llm_output = response.choices[0].message.content
-    return jsonify({"review": llm_output})
+    return jsonify({"review": llm_output, "disclaimer": "AI-generated content. Verify independently."})

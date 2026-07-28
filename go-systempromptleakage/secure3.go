@@ -15,6 +15,7 @@ const systemPrompt = "Internal assistant. Has access to internal pricing data."
 type ChatResponse struct {
 	Answer     string `json:"answer"`
 	TokensUsed int    `json:"tokens_used"`
+	Disclaimer string `json:"disclaimer"`
 }
 
 func chatHandler(w http.ResponseWriter, r *http.Request) {
@@ -39,5 +40,6 @@ func chatHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(ChatResponse{
 		Answer:     resp.Choices[0].Message.Content,
 		TokensUsed: resp.Usage.TotalTokens,
+		Disclaimer: "AI-generated content. Verify independently.",
 	})
 }

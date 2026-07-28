@@ -16,4 +16,4 @@ def chat():
         system=system_prompt,
         messages=[{"role": "user", "content": user_message}]
     )
-    return jsonify({"response": response.content[0].text})
+    return jsonify({"response": response.content[0].text, "disclaimer": "AI-generated content. Verify independently."})
