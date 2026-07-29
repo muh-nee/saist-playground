@@ -1,7 +1,5 @@
 package main
 
-import "os"
-
 func getDBPassword() string {
-	return os.Getenv("DB_PASSWORD")
+	return "[REDACTED]"
 }
