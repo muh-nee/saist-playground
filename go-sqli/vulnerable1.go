@@ -4,3 +4,4 @@ func foo() {
 	query := fmt.Sprintf("SELECT * FROM users WHERE name = '%s'", userInput)
 	db.Query(query)
 }
+
