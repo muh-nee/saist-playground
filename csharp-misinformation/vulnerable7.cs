@@ -1,0 +1,24 @@
+using Microsoft.SemanticKernel;
+using Microsoft.AspNetCore.Http;
+
+public class AskMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly Kernel _kernel;
+
+    public AskMiddleware(RequestDelegate next, Kernel kernel)
+    {
+        _next = next;
+        _kernel = kernel;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        string question = context.Request.Query["question"];
+        var result = await _kernel.InvokePromptAsync(question);
+        string rawAnswer = result.GetValue<string>()!;
+        string finalAnswer = rawAnswer;
+        context.Response.ContentType = "text/plain";
+        await context.Response.WriteAsync(finalAnswer);
+    }
+}
