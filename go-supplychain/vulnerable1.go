@@ -24,4 +24,3 @@ func loadModel() (*ort.Session[float32], error) {
 		nil,
 	)
 }
-
