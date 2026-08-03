@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"net/http"
 
 	"github.com/AdvancedClimateSystems/gonnx"
@@ -14,6 +15,7 @@ func loadGonnxModel() {
 		return
 	}
 	defer resp.Body.Close()
-	model, _ := gonnx.NewModel(resp.Body, nil)
+	data, _ := io.ReadAll(resp.Body)
+	model, _ := gonnx.NewModelFromBytes(data)
 	_ = model
 }
