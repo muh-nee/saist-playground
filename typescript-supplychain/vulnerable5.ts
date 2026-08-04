@@ -1,0 +1,10 @@
+import * as tf from "@tensorflow/tfjs-node";
+import Fastify from "fastify";
+
+const app = Fastify();
+const MODEL_URL = "https://storage.example.com/models/graph/model.json";
+
+app.post("/load", async (request, reply) => {
+  const model = await tf.loadGraphModel(MODEL_URL);
+  return { status: "loaded" };
+});
