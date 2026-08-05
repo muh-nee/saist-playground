@@ -10,3 +10,4 @@ app.post("/load", async (req, res) => {
   const session = await InferenceSession.create(buffer);
   res.json({ status: "loaded" });
 });
+
