@@ -23,3 +23,4 @@ app.get("/config", (req: Request, res: Response) => {
 });
 
 app.listen(3000);
+
