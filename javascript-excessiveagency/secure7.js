@@ -2,7 +2,7 @@ const { DynamicStructuredTool } = require("@langchain/core/tools");
 const { z } = require("zod");
 const { ChatOpenAI } = require("@langchain/openai");
 const { AgentExecutor, createOpenAIToolsAgent } = require("langchain/agents");
-const { pull } = require("langchain/hub");
+const { ChatPromptTemplate, MessagesPlaceholder } = require("@langchain/core/prompts");
 
 const quoteTool = new DynamicStructuredTool({
   name: "lookupStockQuote",
@@ -21,7 +21,11 @@ const quoteTool = new DynamicStructuredTool({
 async function runAgent(userInput) {
   const llm = new ChatOpenAI({ model: "gpt-4o" });
   const tools = [quoteTool];
-  const prompt = await pull("hwchase17/openai-tools-agent");
+  const prompt = ChatPromptTemplate.fromMessages([
+    ["system", "You are a helpful assistant."],
+    ["human", "{input}"],
+    new MessagesPlaceholder("agent_scratchpad"),
+  ]);
   const agent = await createOpenAIToolsAgent({ llm, tools, prompt });
   const executor = new AgentExecutor({ agent, tools });
   return executor.invoke({ input: userInput });
