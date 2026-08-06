@@ -5,8 +5,8 @@ const app = express();
 app.use(express.json());
 
 app.post("/load", async (req, res) => {
-  const modelUrl = req.body.model_url;
-  const model = await tf.loadLayersModel(modelUrl);
+  const modelId = req.body.model_id;
+  const model = await tf.loadLayersModel(`file:///opt/models/${modelId}/model.json`);
   res.json({ status: "loaded", inputs: model.inputs.map((i) => i.name) });
 });
 
