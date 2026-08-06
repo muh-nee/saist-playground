@@ -14,3 +14,4 @@ async function debugDatabaseError(): Promise<string> {
   return response.choices[0].message.content ?? "";
 }
 
+

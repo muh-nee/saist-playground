@@ -19,3 +19,4 @@ async function generateSupportSummary(userId: number, issue: string): Promise<st
   });
   return text;
 }
+

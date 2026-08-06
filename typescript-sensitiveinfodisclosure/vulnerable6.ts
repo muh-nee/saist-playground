@@ -14,3 +14,4 @@ async function validateToken(req: Request): Promise<string> {
   });
   return (response.content[0] as { text: string }).text;
 }
+

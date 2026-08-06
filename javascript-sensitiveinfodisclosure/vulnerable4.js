@@ -16,3 +16,4 @@ async function summarizeUser(userId) {
   });
   return response.choices[0].message.content;
 }
+

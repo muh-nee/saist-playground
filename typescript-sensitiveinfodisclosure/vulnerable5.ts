@@ -15,3 +15,4 @@ async function analyzeUser(userId: number): Promise<string> {
   });
   return response.choices[0].message.content ?? "";
 }
+

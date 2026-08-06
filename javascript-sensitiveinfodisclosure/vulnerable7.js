@@ -14,3 +14,4 @@ async function handleWebhookQuery(question) {
   });
   return response.content[0].text;
 }
+

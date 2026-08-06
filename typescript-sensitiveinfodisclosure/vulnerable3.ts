@@ -10,3 +10,4 @@ async function debugConnection(): Promise<string> {
   ]);
   return response.content as string;
 }
+
