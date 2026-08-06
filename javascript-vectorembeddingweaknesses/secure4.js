@@ -8,12 +8,12 @@ app.use(express.json());
 const chroma = new ChromaClient({ path: "http://localhost:8000" });
 const embedder = new OpenAIEmbeddingFunction({ openai_api_key: process.env.OPENAI_API_KEY });
 
-app.post("/ingest", async (req, res) => {
-  const userId = req.user?.id;
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
+app.post("/ingest/:tenantId", async (req, res) => {
+  if (req.user?.role !== "admin") {
+    return res.status(403).json({ error: "Forbidden" });
   }
-  const collectionName = `user_${userId}`;
+  const { tenantId } = req.params;
+  const collectionName = `tenant_${tenantId}`;
   const collection = await chroma.getOrCreateCollection({ name: collectionName, embeddingFunction: embedder });
   const { id, content } = req.body;
   await collection.add({ ids: [id], documents: [content] });
