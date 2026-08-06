@@ -24,3 +24,4 @@ fastify.get("/status", async (request, reply) => {
 });
 
 fastify.listen({ port: 3000 });
+
