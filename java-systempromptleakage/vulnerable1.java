@@ -33,7 +33,7 @@ public class DebugController {
 
     @PostMapping("/chat")
     public String chat(@RequestParam String message) {
-        return model.generate(
+        return "Note: AI-generated content. Verify independently.\n\n" + model.generate(
                 SystemMessage.from(systemPrompt),
                 UserMessage.from(message)
         ).content().text();

@@ -20,7 +20,7 @@ public class LlmMemoryController : ControllerBase
     {
         var result = await _kernel.InvokePromptAsync(request.Question);
         await _memory.SaveInformationAsync("answers", id: Guid.NewGuid().ToString(), text: result.ToString());
-        return Ok(new { answer = result.ToString() });
+        return Ok(new { answer = result.ToString(), disclaimer = "AI-generated content. Verify independently." });
     }
 }
 

@@ -29,7 +29,7 @@ public class PromptServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
-        String reply = model.generate(
+        String reply = "Note: AI-generated content. Verify independently.\n\n" + model.generate(
                 SystemMessage.from(SYSTEM_PROMPT),
                 UserMessage.from(req.getParameter("message"))
         ).content().text();

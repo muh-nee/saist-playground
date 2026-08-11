@@ -28,6 +28,6 @@ public class HelpController : ControllerBase
         };
 
         var response = await _client.GetChatCompletionsAsync(chatOptions);
-        return Ok(response.Value.Choices[0].Message.Content);
+        return Ok(new { reply = response.Value.Choices[0].Message.Content, disclaimer = "AI-generated content. Verify independently." });
     }
 }

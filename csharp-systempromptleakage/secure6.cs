@@ -21,7 +21,7 @@ public class LlmOutputController : ControllerBase
             ChatMessage.CreateUserMessage(req.Message)
         ], new ChatCompletionOptions { MaxOutputTokenCount = 1024 });
         var llmOutput = result.Value.Content[0].Text;
-        return Ok(new { reply = llmOutput });
+        return Ok(new { reply = llmOutput, disclaimer = "AI-generated content. Verify independently." });
     }
 }
 

@@ -21,7 +21,7 @@ public class LlmController {
     @GetMapping("/chat")
     public String chat(@RequestParam String message) {
         System.out.println("[DEBUG] systemInstructions=" + systemInstructions);
-        return model.generate(
+        return "Note: AI-generated content. Verify independently.\n\n" + model.generate(
                 SystemMessage.from(systemInstructions),
                 UserMessage.from(message)
         ).content().text();

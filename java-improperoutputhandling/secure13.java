@@ -18,6 +18,6 @@ public class secure15 {
         ChatResponse response = chatModel.call(new Prompt("Summarize in plain text: " + topic));
         String summary = response.getResult().getOutput().getContent();
         resp.setContentType("application/json");
-        mapper.writeValue(resp.getWriter(), Map.of("summary", summary));
+        mapper.writeValue(resp.getWriter(), Map.of("summary", summary, "disclaimer", "AI-generated content. Verify independently."));
     }
 }

@@ -25,7 +25,7 @@ public class ConfigController {
 
     @GetMapping("/chat")
     public String chat(@RequestParam String message) {
-        return model.generate(
+        return "Note: AI-generated content. Verify independently.\n\n" + model.generate(
                 SystemMessage.from(SYSTEM_PROMPT),
                 UserMessage.from(message)
         ).content().text();

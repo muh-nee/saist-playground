@@ -34,7 +34,7 @@ public class SemanticKernelController : ControllerBase
         chatHistory.AddSystemMessage(_systemPrompt);
         chatHistory.AddUserMessage(req.Message);
         var result = await _chatCompletionService.GetChatMessageContentsAsync(chatHistory, new OpenAIPromptExecutionSettings { MaxTokens = 1024 });
-        return Ok(new { reply = result[^1].Content });
+        return Ok(new { reply = result[^1].Content, disclaimer = "AI-generated content. Verify independently." });
     }
 }
 

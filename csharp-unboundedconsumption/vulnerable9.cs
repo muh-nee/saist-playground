@@ -13,7 +13,7 @@ public class vulnerable9 : ControllerBase
     {
         var result = await _client.CompleteChatAsync(
             [ChatMessage.CreateUserMessage($"Draft content about {topic}")]);
-        return Ok(result.Value.Content[0].Text);
+        return Ok(new { reply = result.Value.Content[0].Text, disclaimer = "AI-generated content. Verify independently." });
     }
 
     [HttpPost("review")]
@@ -21,6 +21,6 @@ public class vulnerable9 : ControllerBase
     {
         var result = await _client.CompleteChatAsync(
             [ChatMessage.CreateUserMessage($"Review this: {draft}")]);
-        return Ok(result.Value.Content[0].Text);
+        return Ok(new { reply = result.Value.Content[0].Text, disclaimer = "AI-generated content. Verify independently." });
     }
 }

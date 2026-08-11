@@ -13,6 +13,6 @@ public class secure10 {
         String llmContent = model.generate("Write a short article about: " + topic);
         String safe = POLICY.sanitize(llmContent);
         resp.setContentType("text/html");
-        resp.getWriter().write("<div>" + safe + "</div>");
+        resp.getWriter().write("<p><em>Note: AI-generated content. Verify independently.</em></p><div>" + safe + "</div>");
     }
 }

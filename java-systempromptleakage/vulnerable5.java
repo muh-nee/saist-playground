@@ -20,7 +20,7 @@ public class ChatController {
     }
 
     record ChatRequest(String message) {}
-    record ChatResponse(String answer, String systemPrompt) {}
+    record ChatResponse(String answer, String systemPrompt, String disclaimer) {}
 
     @PostMapping("/chat")
     public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest req) {
@@ -28,6 +28,6 @@ public class ChatController {
                 SystemMessage.from(systemPrompt),
                 UserMessage.from(req.message())
         ).content().text();
-        return ResponseEntity.ok(new ChatResponse(answer, systemPrompt));
+        return ResponseEntity.ok(new ChatResponse(answer, systemPrompt, "AI-generated content. Verify independently."));
     }
 }

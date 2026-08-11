@@ -22,7 +22,7 @@ public class LlmController : ControllerBase
             ChatMessage.CreateSystemMessage(_systemInstructions),
             ChatMessage.CreateUserMessage(req.Message)
         ], new ChatCompletionOptions { MaxOutputTokenCount = 1024 });
-        return Ok(new { reply = result.Value.Content[0].Text });
+        return Ok(new { reply = result.Value.Content[0].Text, disclaimer = "AI-generated content. Verify independently." });
     }
 }
 

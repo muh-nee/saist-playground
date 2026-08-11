@@ -11,6 +11,6 @@ public class secure4 {
         String llmContent = model.generate("Write a short summary about: " + topic);
         String safe = HtmlUtils.htmlEscape(llmContent);
         resp.setContentType("text/html");
-        resp.getWriter().write("<div>" + safe + "</div>");
+        resp.getWriter().write("<p><em>Note: AI-generated content. Verify independently.</em></p><div>" + safe + "</div>");
     }
 }

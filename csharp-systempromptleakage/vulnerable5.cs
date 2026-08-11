@@ -13,7 +13,7 @@ public class ChatController : ControllerBase
 
     public ChatController(ChatClient chatClient) => _chatClient = chatClient;
 
-    public record ChatResponse(string Answer, string SystemPrompt);
+    public record ChatResponse(string Answer, string SystemPrompt, string Disclaimer);
 
     [HttpPost("chat")]
     public async Task<ActionResult<ChatResponse>> Chat([FromBody] ChatRequest req)
@@ -23,7 +23,7 @@ public class ChatController : ControllerBase
             ChatMessage.CreateSystemMessage(_systemPrompt),
             ChatMessage.CreateUserMessage(req.Message)
         ], new ChatCompletionOptions { MaxOutputTokenCount = 1024 });
-        return Ok(new ChatResponse(result.Value.Content[0].Text, _systemPrompt));
+        return Ok(new ChatResponse(result.Value.Content[0].Text, _systemPrompt, "AI-generated content. Verify independently."));
     }
 }
 

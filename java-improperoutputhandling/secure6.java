@@ -14,7 +14,7 @@ public class secure7 {
     public String renderPage(String topic, Model model) {
         ChatResponse response = chatModel.call(new Prompt("Write a summary about: " + topic));
         String summary = response.getResult().getOutput().getContent();
-        model.addAttribute("summary", summary);
+        model.addAttribute("summary", "Note: AI-generated content. Verify independently.\n\n" + summary);
         return "summary"; // resolves to summary.html — uses th:text, not th:utext
     }
 }

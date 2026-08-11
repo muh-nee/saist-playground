@@ -16,5 +16,5 @@ async Task RenderSummary(HttpContext context, string userInput)
     string summary = WebUtility.HtmlEncode(response.Text);
 
     context.Response.ContentType = "text/html";
-    await context.Response.WriteAsync($"<div class=\"summary\">{summary}</div>");
+    await context.Response.WriteAsync($"<p><em>Note: AI-generated content. Verify independently.</em></p><div class=\"summary\">{summary}</div>");
 }

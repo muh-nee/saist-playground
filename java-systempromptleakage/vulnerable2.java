@@ -32,7 +32,7 @@ public class StatusController {
 
     @PostMapping("/chat")
     public String chat(@RequestParam String message) {
-        return model.generate(
+        return "Note: AI-generated content. Verify independently.\n\n" + model.generate(
                 SystemMessage.from(systemMessage),
                 UserMessage.from(message)
         ).content().text();
