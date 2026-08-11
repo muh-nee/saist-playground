@@ -15,7 +15,7 @@ app.post("/chat", async (req, res) => {
             { role: "user", content: req.body.message },
         ],
     });
-    res.json({ reply: completion.choices[0].message.content });
+    res.json({ reply: completion.choices[0].message.content, disclaimer: "AI-generated content. Verify independently." });
 });
 
 app.listen(3000);

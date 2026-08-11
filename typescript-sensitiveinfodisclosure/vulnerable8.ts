@@ -18,5 +18,5 @@ async function debugOAuthError(): Promise<string> {
     max_tokens: 1024,
     input: `OAuth authentication failing. Client secret in use: ${config.oauthClientSecret}. Debug this.`,
   });
-  return response.output_text;
+  return "Note: AI-generated content. Verify independently.\n\n" + response.output_text;
 }

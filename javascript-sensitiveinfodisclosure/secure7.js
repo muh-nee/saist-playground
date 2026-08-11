@@ -11,5 +11,5 @@ async function handleUserQuery(req) {
       { role: "user", content: userQuestion }
     ],
   });
-  return response.choices[0].message.content;
+  return "Note: AI-generated content. Verify independently.\n\n" + response.choices[0].message.content;
 }

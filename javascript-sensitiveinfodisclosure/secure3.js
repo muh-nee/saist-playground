@@ -13,5 +13,5 @@ async function listTables() {
       { role: "user", content: "List the available database tables and their purpose." }
     ],
   });
-  return response.choices[0].message.content;
+  return "Note: AI-generated content. Verify independently.\n\n" + response.choices[0].message.content;
 }

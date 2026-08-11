@@ -5,7 +5,7 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 async function generateContent(prompt) {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
     const result = await model.generateContent(prompt);
-    return result.response.text();
+    return "Note: AI-generated content. Verify independently.\n\n" + result.response.text();
 }
 
 module.exports = { generateContent };

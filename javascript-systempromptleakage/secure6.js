@@ -16,7 +16,7 @@ app.post("/chat", async (req, res) => {
         ],
     });
     const llmOutput = completion.choices[0].message.content;
-    res.json({ reply: llmOutput });
+    res.json({ reply: llmOutput, disclaimer: "AI-generated content. Verify independently." });
 });
 
 app.listen(3000);

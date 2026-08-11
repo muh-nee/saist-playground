@@ -17,5 +17,5 @@ async function generateSupportSummary(userId, issue) {
     maxTokens: 1024,
     prompt: `${context}. Issue reported: ${issue}`,
   });
-  return text;
+  return "Note: AI-generated content. Verify independently.\n\n" + text;
 }

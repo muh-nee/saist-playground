@@ -20,6 +20,7 @@ async function processUserRequest(userMessage, adminMessage) {
     return {
         analysis: analysisResult.choices[0].message.content,
         summary: summary.choices[0].message.content,
+        disclaimer: "AI-generated content. Verify independently.",
     };
 }
 

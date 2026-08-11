@@ -31,5 +31,5 @@ async function handleRequest(messages: OpenAI.ChatCompletionMessageParam[]) {
       },
     ],
   });
-  return response;
+  return response.choices[0].message.tool_calls;
 }

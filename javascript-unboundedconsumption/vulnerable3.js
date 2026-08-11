@@ -7,7 +7,7 @@ async function generateWithReasoning(userQuery) {
         model: "o3",
         input: userQuery,
     });
-    return response.output_text;
+    return "Note: AI-generated content. Verify independently.\n\n" + response.output_text;
 }
 
 module.exports = { generateWithReasoning };

@@ -13,7 +13,7 @@ async function processRequest(requestId: string, userMessage: string): Promise<s
         messages: [{ role: "user", content: userMessage }],
         max_tokens: 1024,
     });
-    return (message.content[0] as { text: string }).text;
+    return "Note: AI-generated content. Verify independently.\n\n" + (message.content[0] as { text: string }).text;
 }
 
 export { processRequest };

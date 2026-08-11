@@ -13,7 +13,7 @@ fastify.post("/chat", async (request, reply) => {
             { role: "user", content: request.body.message },
         ],
     });
-    return { reply: completion.choices[0].message.content };
+    return { reply: completion.choices[0].message.content, disclaimer: "AI-generated content. Verify independently." };
 });
 
 fastify.get("/debug/prompt", async (request, reply) => {

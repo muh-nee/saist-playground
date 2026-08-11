@@ -35,5 +35,5 @@ async function handleRequest(messages) {
       },
     ],
   });
-  return response;
+  return response.choices[0].message.tool_calls;
 }

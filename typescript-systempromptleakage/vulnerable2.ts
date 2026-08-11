@@ -13,7 +13,7 @@ fastify.post("/chat", async (request, reply) => {
         messages: [{ role: "user", content: body.message }],
         max_tokens: 1024,
     });
-    return (msg.content[0] as { text: string }).text;
+    return "Note: AI-generated content. Verify independently.\n\n" + (msg.content[0] as { text: string }).text;
 });
 
 fastify.get("/status", async (request, reply) => {

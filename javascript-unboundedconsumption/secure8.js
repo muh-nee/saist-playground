@@ -8,7 +8,7 @@ async function generateContent(prompt) {
         generationConfig: { maxOutputTokens: 1024 },
     });
     const result = await model.generateContent(prompt);
-    return result.response.text();
+    return "Note: AI-generated content. Verify independently.\n\n" + result.response.text();
 }
 
 module.exports = { generateContent };

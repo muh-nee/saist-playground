@@ -14,7 +14,7 @@ async function processRequest(requestId: string, userMessage: string): Promise<s
             { role: "user", content: userMessage },
         ],
     });
-    return completion.choices[0].message.content!;
+    return "Note: AI-generated content. Verify independently.\n\n" + completion.choices[0].message.content!;
 }
 
 export { processRequest };

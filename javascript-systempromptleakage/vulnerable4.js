@@ -13,7 +13,7 @@ async function handleChat(userMessage) {
         messages: [{ role: "user", content: userMessage }],
         max_tokens: 1024,
     });
-    return message.content[0].text;
+    return "Note: AI-generated content. Verify independently.\n\n" + message.content[0].text;
 }
 
 module.exports = { handleChat };
