@@ -6,7 +6,7 @@ var chatClient = new ChatClient("gpt-4o", Environment.GetEnvironmentVariable("OP
 async Task RenderSummary(HttpContext context, string userInput)
 {
     ChatCompletion completion = await chatClient.CompleteChatAsync(
-        new UserChatMessage($"Summarize the following in a few sentences: {userInput}")
+        new UserChatMessage($"Summarize the following in a few sentences: {userInput}"),
         new ChatCompletionOptions { MaxOutputTokenCount = 1024 }
     );
 
