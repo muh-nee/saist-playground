@@ -17,6 +17,7 @@ fun Application.configureSummaryRoutes() {
 			)
 			val completion = openAiClient.chatCompletion(request)
 			val content = completion.choices.first().message.content.orEmpty()
+			call.response.headers.append("Content-Security-Policy", "default-src 'self'; img-src *")
 			call.respond(mapOf("content" to content))
 		}
 	}
