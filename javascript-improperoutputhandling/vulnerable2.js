@@ -11,6 +11,7 @@ app.get("/summary", async (req, res) => {
 		messages: [{ role: "user", content: "Summarize the latest AI news in Markdown." }],
 	});
 	const content = completion.choices[0].message.content;
+	res.setHeader("Content-Security-Policy", "default-src 'self'; img-src *");
 	res.json({ content });
 });
 
