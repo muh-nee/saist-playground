@@ -12,7 +12,7 @@ public class TaskProcessor {
 
 	public String processTask(String task) {
 		String output = model.generate(task);
-		String clean = output.replaceAll("\\[[0-9;]*m", "");
+		String clean = output.replaceAll("\u001B(?:\\[[0-9;]*m|\\][^\u0007]*\u0007)", "");
 		System.out.println(clean);
 		return clean;
 	}
