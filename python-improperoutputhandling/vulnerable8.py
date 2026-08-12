@@ -1,4 +1,4 @@
-from jinja2 import Template
+from jinja2 import Environment
 from openai import OpenAI
 
 client = OpenAI()
@@ -11,7 +11,8 @@ def render_llm_response():
         messages=[{"role": "user", "content": "Write a short HTML snippet about: the history of the internet"}],
     )
     llm_html = response.choices[0].message.content
-    template = Template("<div class='content'>{{ content }}</div>")
+    env = Environment(autoescape=False)
+    template = env.from_string("<div class='content'>{{ content }}</div>")
     return template.render(content=llm_html)
 
 
