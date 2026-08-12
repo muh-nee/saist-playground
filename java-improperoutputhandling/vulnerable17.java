@@ -1,4 +1,5 @@
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,8 +13,10 @@ public class SummaryController {
 		.build();
 
 	@GetMapping("/summary")
-	public Map<String, String> getSummary() {
+	public ResponseEntity<Map<String, String>> getSummary() {
 		String content = model.generate("Summarize the latest AI news in Markdown.");
-		return Map.of("content", content);
+		return ResponseEntity.ok()
+			.header("Content-Security-Policy", "default-src 'self'; img-src *")
+			.body(Map.of("content", content));
 	}
 }

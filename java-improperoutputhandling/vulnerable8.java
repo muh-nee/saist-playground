@@ -1,29 +1,28 @@
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatModel;
 
+import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Map;
 
 public class vulnerable8 {
-    private final OpenAiChatModel chatModel;
-    private final VelocityEngine velocityEngine;
+	private final OpenAiChatModel chatModel;
+	private final Configuration cfg;
 
-    public vulnerable8(OpenAiChatModel chatModel, VelocityEngine velocityEngine) {
-        this.chatModel = chatModel;
-        this.velocityEngine = velocityEngine;
-    }
+	public vulnerable8(OpenAiChatModel chatModel, Configuration cfg) {
+		this.chatModel = chatModel;
+		this.cfg = cfg;
+	}
 
-    public String renderSummary(String topic) {
-        ChatResponse response = chatModel.call(new Prompt("Write a summary about: " + topic));
-        String llmContent = response.getResult().getOutput().getContent();
-        VelocityContext context = new VelocityContext();
-        context.put("summary", llmContent);
-        Template template = velocityEngine.getTemplate("summary.vm"); // template uses $summary — no escaping
-        StringWriter writer = new StringWriter();
-        template.merge(context, writer); // sink: Velocity renders LLM output unescaped — XSS if HTML context
-        return writer.toString();
-    }
+	public String renderSummary(String topic) throws Exception {
+		ChatResponse response = chatModel.call(new Prompt("Write a summary about: " + topic));
+		String llmContent = response.getResult().getOutput().getContent();
+		Template template = new Template("summary", new StringReader("<div>${summary}</div>"), cfg);
+		StringWriter writer = new StringWriter();
+		template.process(Map.of("summary", llmContent), writer);
+		return writer.toString();
+	}
 }
