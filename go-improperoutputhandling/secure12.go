@@ -4,9 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"regexp"
 
 	openai "github.com/sashabaranov/go-openai"
 )
+
+var mdImage = regexp.MustCompile(`!\[.*?\]\(.*?\)`)
 
 func handleSummary(client *openai.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -20,8 +23,8 @@ func handleSummary(client *openai.Client) http.HandlerFunc {
 			},
 		)
 		output := resp.Choices[0].Message.Content
-		w.Header().Set("Content-Security-Policy", "img-src 'self'")
+		sanitized := mdImage.ReplaceAllString(output, "")
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]string{"content": output})
+		json.NewEncoder(w).Encode(map[string]string{"content": sanitized})
 	}
 }

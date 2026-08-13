@@ -11,8 +11,8 @@ app.get("/summary", async (req, res) => {
 		messages: [{ role: "user", content: "Summarize the latest AI news in Markdown." }],
 	});
 	const content: string = completion.choices[0].message.content ?? "";
-	res.setHeader("Content-Security-Policy", "img-src 'self'");
-	res.json({ content });
+	const sanitized = content.replace(/!\[.*?\]\(.*?\)/gs, "");
+	res.json({ content: sanitized });
 });
 
 app.listen(3000);

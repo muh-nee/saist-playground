@@ -1,3 +1,4 @@
+import re
 from flask import Flask, jsonify, make_response
 from openai import OpenAI
 
@@ -13,6 +14,5 @@ def get_summary():
         messages=[{"role": "user", "content": "Summarize the latest AI news in Markdown."}],
     )
     content = response.choices[0].message.content
-    resp = make_response(jsonify({"content": content}))
-    resp.headers["Content-Security-Policy"] = "img-src 'self'"
-    return resp
+    sanitized = re.sub(r'!\[.*?\]\(.*?\)', '', content)
+    return make_response(jsonify({"content": sanitized}))

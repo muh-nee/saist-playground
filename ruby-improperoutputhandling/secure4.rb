@@ -10,7 +10,7 @@ class SummaryController < ApplicationController
       }
     )
     content = response.dig('choices', 0, 'message', 'content')
-    headers['Content-Security-Policy'] = "img-src 'self'"
-    render json: { content: content }
+    sanitized = content.gsub(/!\[.*?\]\(.*?\)/, '')
+    render json: { content: sanitized }
   end
 end
