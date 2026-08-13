@@ -1,17 +1,17 @@
 use async_openai::{Client, types::{CreateChatCompletionRequestArgs, ChatCompletionRequestUserMessageArgs}};
 use axum::Json;
-use pulldown_cmark::{Event, Options, Parser, Tag, TagEnd};
+use pulldown_cmark::{html, Event, Options, Parser, Tag, TagEnd};
 
 fn sanitize_markdown(input: &str) -> String {
     let parser = Parser::new_ext(input, Options::empty());
-    parser
-        .filter_map(|event| match event {
-            Event::Start(Tag::Image { .. }) | Event::End(TagEnd::Image) => None,
-            Event::Html(_) | Event::InlineHtml(_) => None,
-            other => Some(other),
-        })
-        .map(|event| format!("{event}"))
-        .collect()
+    let filtered = parser.filter_map(|event| match event {
+        Event::Start(Tag::Image { .. }) | Event::End(TagEnd::Image) => None,
+        Event::Html(_) | Event::InlineHtml(_) => None,
+        other => Some(other),
+    });
+    let mut output = String::new();
+    html::push_html(&mut output, filtered);
+    output
 }
 
 async fn get_summary() -> Result<Json<serde_json::Value>, Box<dyn std::error::Error>> {
