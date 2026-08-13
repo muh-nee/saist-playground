@@ -9,7 +9,7 @@ async function processTask(task: string): Promise<string> {
 		messages: [{ role: "user", content: task }],
 	});
 	const output: string = completion.choices[0].message.content ?? "";
-	const clean = output.replace(/\x1b(?:\[[0-9;]*m|\][^\x07]*\x07)/g, "");
+	const clean = output.replace(/\x1b(?:\[[0-9;]*[A-Za-z]|\][^\x07\x1b]*(?:\x07|\x1b\\))/g, "");
 	process.stdout.write(clean + "\n");
 	return clean;
 }

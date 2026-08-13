@@ -10,7 +10,7 @@ def process_task(client, task)
     }
   )
   output = response.dig('choices', 0, 'message', 'content')
-  clean = output.gsub(/\e(?:\[[0-9;]*m|\][^\a]*\a)/, '')
+  clean = output.gsub(/\e(?:\[[0-9;]*[A-Za-z]|\][^\a\e]*(?:\a|\e\\))/, '')
   puts clean
 end
 

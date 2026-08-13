@@ -9,7 +9,7 @@ import (
 	openai "github.com/sashabaranov/go-openai"
 )
 
-var ansiEscape = regexp.MustCompile(`\x1b\[[0-9;]*m`)
+var ansiEscape = regexp.MustCompile(`\x1b(?:\[[0-9;]*[A-Za-z]|\][^\x07\x1b]*(?:\x07|\x1b\\))`)
 
 func processTask(client *openai.Client, task string) string {
 	resp, _ := client.CreateChatCompletion(
