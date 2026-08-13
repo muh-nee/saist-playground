@@ -1,7 +1,18 @@
 use async_openai::{Client, types::{CreateChatCompletionRequestArgs, ChatCompletionRequestUserMessageArgs}};
 use axum::Json;
-use regex::Regex;
-use serde_json::json;
+use pulldown_cmark::{Event, Options, Parser, Tag, TagEnd};
+
+fn sanitize_markdown(input: &str) -> String {
+    let parser = Parser::new_ext(input, Options::empty());
+    parser
+        .filter_map(|event| match event {
+            Event::Start(Tag::Image { .. }) | Event::End(TagEnd::Image) => None,
+            Event::Html(_) | Event::InlineHtml(_) => None,
+            other => Some(other),
+        })
+        .map(|event| format!("{event}"))
+        .collect()
+}
 
 async fn get_summary() -> Result<Json<serde_json::Value>, Box<dyn std::error::Error>> {
     let client = Client::new();
@@ -13,11 +24,6 @@ async fn get_summary() -> Result<Json<serde_json::Value>, Box<dyn std::error::Er
         .build()?;
     let response = client.chat().create(request).await?;
     let content = response.choices[0].message.content.clone().unwrap_or_default();
-    let inline = Regex::new(r"!\[[^\]]*\]\([^)]*\)").unwrap();
-    let refstyle = Regex::new(r"!\[[^\]]*\]\[[^\]]*\]").unwrap();
-    let imgtag = Regex::new(r"(?i)<img\b[^>]*/?>").unwrap();
-    let sanitized = inline.replace_all(&content, "");
-    let sanitized = refstyle.replace_all(&sanitized, "");
-    let sanitized = imgtag.replace_all(&sanitized, "").into_owned();
-    Ok(Json(json!({ "content": sanitized })))
+    let sanitized = sanitize_markdown(&content);
+    Ok(Json(serde_json::json!({ "content": sanitized })))
 }
