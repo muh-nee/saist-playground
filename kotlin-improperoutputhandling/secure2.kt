@@ -17,7 +17,10 @@ fun Application.configureSummaryRoutes() {
 			)
 			val completion = openAiClient.chatCompletion(request)
 			val content = completion.choices.first().message.content.orEmpty()
-			val sanitized = content.replace(Regex("!\\[.*?\\]\\(.*?\\)", RegexOption.DOT_MATCHES_ALL), "")
+			val sanitized = content
+				.replace(Regex("!\\[[^\\]]*\\]\\([^)]*\\)"), "")
+				.replace(Regex("!\\[[^\\]]*\\]\\[[^\\]]*\\]"), "")
+				.replace(Regex("<img\\b[^>]*/?>\\s*", RegexOption.IGNORE_CASE), "")
 			call.respond(mapOf("content" to sanitized))
 		}
 	}

@@ -12,7 +12,9 @@ public class SummaryController : ControllerBase
 		var client = new ChatClient(model: "gpt-4o-mini", apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
 		var completion = await client.CompleteChatAsync(ChatMessage.CreateUserMessage("Summarize the latest AI news in Markdown."));
 		string content = completion.Value.Content[0].Text;
-		string sanitized = Regex.Replace(content, @"!\[.*?\]\(.*?\)", "", RegexOptions.Singleline);
+		string sanitized = Regex.Replace(content, @"!\[[^\]]*\]\([^)]*\)", "");
+		sanitized = Regex.Replace(sanitized, @"!\[[^\]]*\]\[[^\]]*\]", "");
+		sanitized = Regex.Replace(sanitized, @"<img\b[^>]*/?>\s*", "", RegexOptions.IgnoreCase);
 		return Ok(new { content = sanitized });
 	}
 }

@@ -15,7 +15,10 @@ public class SummaryController {
 	@GetMapping("/summary")
 	public ResponseEntity<Map<String, String>> getSummary() {
 		String content = model.generate("Summarize the latest AI news in Markdown.");
-		String sanitized = content.replaceAll("!\\[.*?\\]\\(.*?\\)", "");
+		String sanitized = content
+			.replaceAll("!\\[[^\\]]*\\]\\([^)]*\\)", "")
+			.replaceAll("!\\[[^\\]]*\\]\\[[^\\]]*\\]", "")
+			.replaceAll("(?i)<img\\b[^>]*/?>\\s*", "");
 		return ResponseEntity.ok(Map.of("content", sanitized));
 	}
 }

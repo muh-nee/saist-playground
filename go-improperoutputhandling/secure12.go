@@ -9,7 +9,11 @@ import (
 	openai "github.com/sashabaranov/go-openai"
 )
 
-var mdImage = regexp.MustCompile(`!\[.*?\]\(.*?\)`)
+var (
+	mdInline    = regexp.MustCompile(`!\[[^\]]*\]\([^)]*\)`)
+	mdRefStyle  = regexp.MustCompile(`!\[[^\]]*\]\[[^\]]*\]`)
+	mdImgTag    = regexp.MustCompile(`(?i)<img\b[^>]*/?>\s*`)
+)
 
 func handleSummary(client *openai.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -23,7 +27,9 @@ func handleSummary(client *openai.Client) http.HandlerFunc {
 			},
 		)
 		output := resp.Choices[0].Message.Content
-		sanitized := mdImage.ReplaceAllString(output, "")
+		sanitized := mdInline.ReplaceAllString(output, "")
+		sanitized = mdRefStyle.ReplaceAllString(sanitized, "")
+		sanitized = mdImgTag.ReplaceAllString(sanitized, "")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{"content": sanitized})
 	}

@@ -10,7 +10,10 @@ class SummaryController < ApplicationController
       }
     )
     content = response.dig('choices', 0, 'message', 'content')
-    sanitized = content.gsub(/!\[.*?\]\(.*?\)/, '')
+    sanitized = content
+      .gsub(/!\[[^\]]*\]\([^)]*\)/, '')
+      .gsub(/!\[[^\]]*\]\[[^\]]*\]/, '')
+      .gsub(/<img\b[^>]*\/?>\s*/i, '')
     render json: { content: sanitized }
   end
 end

@@ -14,5 +14,7 @@ def get_summary():
         messages=[{"role": "user", "content": "Summarize the latest AI news in Markdown."}],
     )
     content = response.choices[0].message.content
-    sanitized = re.sub(r'!\[.*?\]\(.*?\)', '', content)
+    sanitized = re.sub(r'!\[[^\]]*\]\([^)]*\)', '', content)
+    sanitized = re.sub(r'!\[[^\]]*\]\[[^\]]*\]', '', sanitized)
+    sanitized = re.sub(r'<img\b[^>]*/?>\s*', '', sanitized, flags=re.IGNORECASE)
     return make_response(jsonify({"content": sanitized}))
