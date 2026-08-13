@@ -6,6 +6,6 @@ func encryptProfile(_ plaintext: Data, key: Data) -> Data? {
     var written = 0
     CCCrypt(CCOperation(kCCEncrypt), CCAlgorithm(kCCAlgorithmAES), CCOptions(kCCOptionPKCS7Padding),
             [UInt8](key), key.count, [UInt8](staticIV), [UInt8](plaintext), plaintext.count,
-            &output, output.count, &written) // VULNERABLE: reused IV
+            &output, output.count, &written)
     return Data(output.prefix(written))
 }

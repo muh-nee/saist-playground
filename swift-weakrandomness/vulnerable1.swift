@@ -1,5 +1,5 @@
 import Darwin
 
 func resetCode() -> Int {
-    Int(drand48() * 900_000) + 100_000 // VULNERABLE: predictable PRNG used for a reset code
+    Int(drand48() * 900_000) + 100_000
 }
