@@ -14,7 +14,7 @@ def process_task(task):
         messages=[{"role": "user", "content": task}],
     )
     output = response.content[0].text
-    clean = re.sub(r'\x1b(?:\[[0-9;]*[A-Za-z]|\][^\x07\x1b]*(?:\x07|\x1b\\))', '', output)
+    clean = re.sub(r'\x1b(?:\[[0-?]*[ -/]*[@-~]|\][^\x07\x1b]*(?:\x07|\x1b\\))', '', output)
     logger.info(clean)
     return clean
 

@@ -12,7 +12,7 @@ suspend fun processTask(task: String): String {
 	)
 	val completion = client.chatCompletion(request)
 	val output = completion.choices.first().message.content.orEmpty()
-	val clean = output.replace(Regex("\\x1B(?:\\[[0-9;]*[A-Za-z]|\\][^\\x07\\x1B]*(?:\\x07|\\x1B\\\\))"), "")
+	val clean = output.replace(Regex("\\x1B(?:\\[[0-?]*[ -/]*[@-~]|\\][^\\x07\\x1B]*(?:\\x07|\\x1B\\\\))"), "")
 	println(clean)
 	return clean
 }

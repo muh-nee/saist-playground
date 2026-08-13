@@ -10,5 +10,5 @@ var messages = new List<ChatMessage>
 
 var completion = await client.CompleteChatAsync(messages);
 string output = completion.Value.Content[0].Text;
-string clean = Regex.Replace(output, @"\x1b(?:\[[0-9;]*[A-Za-z]|\][^\x07\x1b]*(?:\x07|\x1b\\))", "");
+string clean = Regex.Replace(output, @"\x1b(?:\[[0-?]*[ -/]*[@-~]|\][^\x07\x1b]*(?:\x07|\x1b\\))", "");
 Console.WriteLine(clean);
