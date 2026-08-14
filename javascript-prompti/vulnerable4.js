@@ -1,13 +1,18 @@
 const OpenAI = require("openai");
-const openai = new OpenAI();
+const express = require("express");
 
-async function agentLoop(toolOutput) {
-	return openai.chat.completions.create({
+const openai = new OpenAI();
+const app = express();
+app.use(express.json());
+
+app.post("/agent", async (req, res) => {
+	const toolOutput = req.body.toolOutput;
+	const result = await openai.chat.completions.create({
 		model: "gpt-4",
 		messages: [
 			{ role: "system", content: "Continue the task." },
 			{ role: "user", content: `Tool result: ${toolOutput}. Decide next step.` },
 		],
 	});
-}
-
+	res.json({ decision: result.choices[0].message.content });
+});

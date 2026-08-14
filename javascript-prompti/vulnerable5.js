@@ -1,8 +1,11 @@
 const { OpenAI } = require("openai");
 const express = require("express");
+const { MemoryVectorStore } = require("langchain/vectorstores/memory");
+const { OpenAIEmbeddings } = require("langchain/embeddings/openai");
 
 const app = express();
 const client = new OpenAI();
+const vectorStore = new MemoryVectorStore(new OpenAIEmbeddings());
 
 app.use(express.json());
 

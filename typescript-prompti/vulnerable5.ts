@@ -1,8 +1,11 @@
 import OpenAI from "openai";
 import express from "express";
+import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 
 const app = express();
 const client = new OpenAI();
+const vectorStore = new MemoryVectorStore(new OpenAIEmbeddings());
 
 app.use(express.json());
 
