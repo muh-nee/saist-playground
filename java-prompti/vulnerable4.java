@@ -27,7 +27,7 @@ public class MemoryController {
             .build();
         var response = client.chatCompletions().create(request).join();
         String llmOutput = response.firstContent();
-        vectorStore.add(new Document(llmOutput));
+        vectorStore.add(List.of(new Document(llmOutput)));
         return Map.of("stored", true);
     }
 }
