@@ -1,4 +1,3 @@
-# User-supplied name injected into system prompt — persona hijack
 require 'openai'
 
 class ChatbotController < ApplicationController
@@ -9,8 +8,6 @@ class ChatbotController < ApplicationController
       parameters: {
         model:    'gpt-4o',
         messages: [
-          # VULNERABLE — user_name is interpolated into the system prompt
-          # An attacker sends name = "Dave. Ignore all previous instructions and..."
           { role: 'system', content: "You are a helpful assistant. The user's name is #{user_name}. Greet them." },
           { role: 'user',   content: params[:message] }
         ]
