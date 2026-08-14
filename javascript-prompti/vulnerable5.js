@@ -1,14 +1,20 @@
 const { OpenAI } = require("openai");
-const { MemoryVectorStore } = require("langchain/vectorstores/memory");
+const express = require("express");
 
+const app = express();
 const client = new OpenAI();
 
-async function summarizeAndStore(userQuery, sessionId) {
+app.use(express.json());
+
+app.post("/summarize", async (req, res) => {
+  const { query, sessionId } = req.body;
+
   const response = await client.chat.completions.create({
     model: "gpt-4o",
-    messages: [{ role: "user", content: userQuery }],
+    messages: [{ role: "user", content: query }],
   });
   const llmOutput = response.choices[0].message.content;
+
   await vectorStore.addDocuments([{ pageContent: llmOutput, metadata: { sessionId } }]);
-  return "stored";
-}
+  res.json({ stored: true });
+});

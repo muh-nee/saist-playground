@@ -1,18 +1,22 @@
 using Azure.AI.OpenAI;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel.Memory;
 
-public class MemoryService
+[ApiController]
+[Route("[controller]")]
+public class MemoryController : ControllerBase
 {
     private readonly OpenAIClient _client;
     private readonly ISemanticTextMemory _memory;
 
-    public MemoryService(OpenAIClient client, ISemanticTextMemory memory)
+    public MemoryController(OpenAIClient client, ISemanticTextMemory memory)
     {
         _client = client;
         _memory = memory;
     }
 
-    public async Task SummarizeAndStoreAsync(string userQuery, string sessionId)
+    [HttpPost("summarize")]
+    public async Task<IActionResult> SummarizeAndStore([FromQuery] string userQuery, [FromQuery] string sessionId)
     {
         var options = new ChatCompletionsOptions
         {
@@ -22,5 +26,6 @@ public class MemoryService
         var response = await _client.GetChatCompletionsAsync("gpt-4o", options);
         var llmOutput = response.Value.Choices[0].Message.Content;
         await _memory.SaveInformationAsync("session_memory", id: sessionId, text: llmOutput);
+        return Ok(new { stored = true });
     }
 }

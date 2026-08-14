@@ -2,20 +2,28 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"net/http"
 
 	openai "github.com/sashabaranov/go-openai"
 )
 
-func summarizeAndStore(ctx context.Context, client *openai.Client, userQuery, sessionID string) error {
-	resp, err := client.CreateChatCompletion(ctx, openai.ChatCompletionRequest{
+func summarizeHandler(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		Query     string `json:"query"`
+		SessionID string `json:"session_id"`
+	}
+	json.NewDecoder(r.Body).Decode(&req)
+
+	client := openai.NewClient("")
+	resp, _ := client.CreateChatCompletion(context.Background(), openai.ChatCompletionRequest{
 		Model: openai.GPT4o,
 		Messages: []openai.ChatCompletionMessage{
-			{Role: openai.ChatMessageRoleUser, Content: userQuery},
+			{Role: openai.ChatMessageRoleUser, Content: req.Query},
 		},
 	})
-	if err != nil {
-		return err
-	}
 	llmOutput := resp.Choices[0].Message.Content
-	return vectorStore.AddDocuments(ctx, []Document{{ID: sessionID, Content: llmOutput}})
+	vectorStore.AddDocuments(context.Background(), []Document{{ID: req.SessionID, Content: llmOutput}})
+
+	json.NewEncoder(w).Encode(map[string]bool{"stored": true})
 }
