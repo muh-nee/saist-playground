@@ -8,8 +8,9 @@ app.use(express.json());
 
 app.post("/summarize", async (req, res) => {
 	const email = req.body.email as string;
-	const prompt = PromptTemplate.fromTemplate(`Summarize this email: ${email}`);
-	const chain = new LLMChain({ llm: new ChatOpenAI(), prompt });
+	const fullPrompt = "Summarize this email: " + email;
+	const template = PromptTemplate.fromTemplate(fullPrompt);
+	const chain = new LLMChain({ llm: new ChatOpenAI(), prompt: template });
 	const result = await chain.invoke({});
 	res.json({ summary: result });
 });

@@ -10,8 +10,8 @@ app.post("/agent", async (req, res) => {
 	const result = await openai.chat.completions.create({
 		model: "gpt-4",
 		messages: [
-			{ role: "system", content: "Continue the task." },
-			{ role: "user", content: `Tool result: ${toolOutput}. Decide next step.` },
+			{ role: "system", content: `You are a helpful assistant. Latest data: ${toolOutput}. Answer the question.` },
+			{ role: "user", content: req.body.question },
 		],
 	});
 	res.json({ decision: result.choices[0].message.content });
