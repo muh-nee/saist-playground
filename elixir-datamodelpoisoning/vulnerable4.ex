@@ -1,8 +1,8 @@
 defmodule AppWeb.ModelController do
   use AppWeb, :controller
 
-  def load_tokenizer(conn, %{"tokenizer" => tokenizer_name}) do
-    {:ok, tokenizer} = Bumblebee.load_tokenizer({:hf, tokenizer_name})
+  def load_onnx(conn, %{"model_path" => path}) do
+    {:ok, model} = Ortex.load(path)
     json(conn, %{status: "loaded"})
   end
 end
