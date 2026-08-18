@@ -7,10 +7,13 @@ defmodule AppWeb.TrainingController do
   def train_from_trusted_url(conn, _params) do
     %{body: body} = Req.get!(@trusted_url)
     actual = :crypto.hash(:sha256, body) |> Base.encode16(case: :lower)
-    if actual != @expected_hash, do: send_resp(conn, 403, "integrity check failed")
-    dataset = Jason.decode!(body)
-    Axon.Loop.run(model(), dataset, optimizer())
-    json(conn, %{status: "trained"})
+    if actual == @expected_hash do
+      dataset = Jason.decode!(body)
+      Axon.Loop.run(model(), dataset, optimizer())
+      json(conn, %{status: "trained"})
+    else
+      send_resp(conn, 403, "integrity check failed")
+    end
   end
 
   defp model, do: Axon.input("data", shape: {nil, 10})
