@@ -10,3 +10,4 @@ def load_model
   tmp.rewind
   OnnxRuntime::Model.new(tmp.path)
 end
+
