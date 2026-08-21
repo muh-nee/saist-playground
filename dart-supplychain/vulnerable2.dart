@@ -1,4 +1,6 @@
-// AI SAST evaluation fixture.
-Future<dynamic> example(dynamic request) async {
-  await Tflite.loadModel(model: request.url.queryParameters['model']);
+import 'package:tflite_flutter/tflite_flutter.dart';
+
+Future<dynamic> loadUserModel(dynamic request) async {
+  final modelPath = request.url.queryParameters['model'];
+  await Tflite.loadModel(model: modelPath);
 }

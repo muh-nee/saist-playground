@@ -1,4 +1,8 @@
-// AI SAST evaluation fixture.
-Future<dynamic> example(dynamic request) async {
-  final interpreter = Interpreter.fromBuffer((await http.get(Uri.parse(modelUrl))).bodyBytes);
+import 'package:http/http.dart' as http;
+import 'package:tflite_flutter/tflite_flutter.dart';
+
+Future<dynamic> loadModel(String modelUrl) async {
+  final response = await http.get(Uri.parse(modelUrl));
+  final interpreter = Interpreter.fromBuffer(response.bodyBytes);
+  return interpreter;
 }
