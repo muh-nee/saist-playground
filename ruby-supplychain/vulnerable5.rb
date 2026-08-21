@@ -10,3 +10,4 @@ def load_weights
   tmp.rewind
   Torch.load(tmp.path)
 end
+

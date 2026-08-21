@@ -12,3 +12,4 @@ fn load_pinned(device: &Device) -> Result<(), Box<dyn std::error::Error>> {
     let _tensors = safetensors::load(&path, device)?;
     Ok(())
 }
+

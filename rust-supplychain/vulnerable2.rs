@@ -9,3 +9,4 @@ async fn load_model() -> Result<Session, Box<dyn std::error::Error>> {
     let session = Session::builder()?.commit_from_file(path)?;
     Ok(session)
 }
+

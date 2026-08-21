@@ -13,3 +13,4 @@ def load_module
   raise "integrity check failed" if Digest::SHA256.file(tmp.path).hexdigest != EXPECTED_SHA256
   Torch::JIT.load(tmp.path)
 end
+

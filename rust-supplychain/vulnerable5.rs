@@ -9,3 +9,4 @@ async fn load_checkpoint(device: &Device) -> Result<(), Box<dyn std::error::Erro
     let _tensors = safetensors::load(path, device)?;
     Ok(())
 }
+

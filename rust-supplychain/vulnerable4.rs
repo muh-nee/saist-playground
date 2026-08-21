@@ -8,3 +8,4 @@ async fn load_weights(device: &Device) -> Result<(), Box<dyn std::error::Error>>
     Ok(())
 }
 
+

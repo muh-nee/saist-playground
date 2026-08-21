@@ -13,3 +13,4 @@ async fn load_verified(device: &Device) -> Result<(), Box<dyn std::error::Error>
     let _tensors = safetensors::load_buffer(bytes.as_ref(), device)?;
     Ok(())
 }
+
