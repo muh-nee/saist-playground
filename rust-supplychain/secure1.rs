@@ -12,3 +12,4 @@ async fn load_verified() -> Result<Session, Box<dyn std::error::Error>> {
     }
     Ok(Session::builder()?.commit_from_memory(bytes.as_ref())?)
 }
+

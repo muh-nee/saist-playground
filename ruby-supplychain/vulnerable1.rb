@@ -7,3 +7,4 @@ def load_model
   response = Net::HTTP.get(URI(MODEL_URL))
   OnnxRuntime::Model.new(StringIO.new(response))
 end
+

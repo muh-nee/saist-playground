@@ -10,3 +10,4 @@ def load_model
   raise "integrity check failed" if Digest::SHA256.hexdigest(response) != EXPECTED_SHA256
   OnnxRuntime::Model.new(StringIO.new(response))
 end
+

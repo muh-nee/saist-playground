@@ -7,3 +7,4 @@ async fn load_model() -> Result<Session, Box<dyn std::error::Error>> {
     let session = Session::builder()?.commit_from_memory(bytes.as_ref())?;
     Ok(session)
 }
+
