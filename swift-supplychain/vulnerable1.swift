@@ -1,9 +1,10 @@
 import Foundation
+import CoreML
 import OpenAI
 
 let client = OpenAI(apiToken: ProcessInfo.processInfo.environment["OPENAI_API_KEY"]!)
 
-func installSuggestedPackage(task: String) async throws {
+func installSuggestedPackageAndLoadModel(task: String, modelURL: URL) async throws -> MLModel {
     let query = ChatQuery(
         messages: [.user(.init(content: .string("What Swift package should I use for: \(task)? Reply with only the GitHub URL.")))],
         model: .gpt4_o
@@ -15,4 +16,7 @@ func installSuggestedPackage(task: String) async throws {
     process.arguments = ["package", "add", packageURL]
     try process.run()
     process.waitUntilExit()
+
+    let (localURL, _) = try await URLSession.shared.download(from: modelURL)
+    return try MLModel(contentsOf: localURL)
 }
