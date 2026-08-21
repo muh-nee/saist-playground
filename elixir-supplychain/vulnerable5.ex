@@ -1,5 +1,8 @@
 defmodule SetupController do
-  def setup_deps(feature) do
+  def setup(feature, model_url) do
+    {:ok, %{body: bytes}} = Req.get(model_url)
+    model = Nx.deserialize(bytes)
+
     {:ok, response} = ExOpenAI.Chat.create_chat_completion(
       [%{role: "user", content: "List Hex packages for: #{feature}. One per line."}],
       "gpt-4"
@@ -9,6 +12,7 @@ defmodule SetupController do
       {String.to_atom(String.trim(pkg)), "~> 1.0"}
     end)
     Mix.install(package_specs)
-    {:ok, packages}
+
+    {:ok, model, packages}
   end
 end
