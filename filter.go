@@ -38,6 +38,14 @@ var htmlData = `<!DOCTYPE html>
 </body>
 </html>`
 
+func main() {
+	http.HandleFunc("/users", searchUsers)
+	fmt.Println("Server starting on :8082")
+	fmt.Println("Example vulnerable api request: /users?role=admin'%20or%20'1'='1")
+	fmt.Println("This bypasses role filtering and exposes all user secrets")
+	http.ListenAndServe(":8082", nil)
+}
+
 func searchUsers(w http.ResponseWriter, r *http.Request) {
 	role := r.URL.Query().Get("role")
 
@@ -77,12 +85,4 @@ func searchUsers(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "\n")
 		}
 	}
-}
-
-func main() {
-	http.HandleFunc("/users", searchUsers)
-	fmt.Println("Server starting on :8082")
-	fmt.Println("Example vulnerable api request: /users?role=admin'%20or%20'1'='1")
-	fmt.Println("This bypasses role filtering and exposes all user secrets")
-	http.ListenAndServe(":8082", nil)
 }
