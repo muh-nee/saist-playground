@@ -15,3 +15,4 @@ public class ChatController : ControllerBase
         return Content(completion.Content[0].Text, "text/plain");
     }
 }
+

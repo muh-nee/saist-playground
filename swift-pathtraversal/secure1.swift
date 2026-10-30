@@ -6,3 +6,4 @@ func readUpload(named name: String) throws -> Data {
     guard file.path.hasPrefix(base.path + "/") else { throw CocoaError(.fileNoSuchFile) }
     return try Data(contentsOf: file)
 }
+

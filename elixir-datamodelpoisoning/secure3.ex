@@ -8,3 +8,4 @@ defmodule AppWeb.TokenizerController do
     json(conn, %{status: "loaded"})
   end
 end
+

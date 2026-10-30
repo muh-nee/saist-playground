@@ -21,3 +21,4 @@ class FeedbackIngest(
         call.respondText("stored")
     }
 }
+

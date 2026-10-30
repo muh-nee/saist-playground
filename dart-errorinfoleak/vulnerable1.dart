@@ -2,3 +2,4 @@
 Future<dynamic> example(dynamic request) async {
   return Response.internalServerError(body: error.toString());
 }
+

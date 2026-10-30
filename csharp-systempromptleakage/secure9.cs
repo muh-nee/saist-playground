@@ -28,3 +28,4 @@ public class secure9 : ControllerBase
         return Ok(new { reply = response.Value.Content[0].Text });
     }
 }
+

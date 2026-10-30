@@ -29,3 +29,4 @@ public class ConfigIngestController : ControllerBase
         return Ok();
     }
 }
+

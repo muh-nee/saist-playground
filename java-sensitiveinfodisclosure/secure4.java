@@ -23,3 +23,4 @@ public class secure4 {
         return completion.choices().get(0).message().content().orElse("");
     }
 }
+

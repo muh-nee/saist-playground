@@ -21,3 +21,4 @@ def decrypt_data(payload, key)
   cipher.auth_tag = Base64.strict_decode64(payload[:tag])
   cipher.update(Base64.strict_decode64(payload[:ct])) + cipher.final
 end
+

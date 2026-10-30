@@ -5,3 +5,4 @@ func allocationSize(count: UInt, elementSize: UInt) throws -> UInt {
     guard !overflow else { throw CocoaError(.fileWriteOutOfSpace) }
     return size
 }
+

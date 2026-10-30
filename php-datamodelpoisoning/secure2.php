@@ -26,3 +26,4 @@ final class ModelRegistry
         return PersistentModel::load(new Filesystem($meta['path']));
     }
 }
+

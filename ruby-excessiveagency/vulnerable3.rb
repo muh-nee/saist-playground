@@ -26,3 +26,4 @@ def run_agent(user_query)
   args = JSON.parse(tool_call.dig('function', 'arguments'))
   run_db_query(args['sql']) # VULNERABLE
 end
+

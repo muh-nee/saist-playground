@@ -11,3 +11,4 @@ def get_account(xml_doc, account_id)
   result = xml_doc.xpath("//account[@id='#{account_id}']") # VULNERABLE
   result.first
 end
+

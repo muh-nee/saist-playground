@@ -11,3 +11,4 @@ def verify_password(user, input)
   # SAFE — constant-time comparison built into BCrypt::Password
   BCrypt::Password.new(user.password_digest) == input
 end
+

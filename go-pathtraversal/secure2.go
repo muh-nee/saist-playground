@@ -22,3 +22,4 @@ func main() {
 	cacheDir, _ := os.UserCacheDir()
 	_ = os.MkdirAll(filepath.Join(cacheDir, "review", workspaceID), 0o755)
 }
+

@@ -5,3 +5,4 @@ func verifyUpdateIntegrity(_ payload: Data, expectedDigest: Data) -> Bool {
     CC_SHA1([UInt8](payload), CC_LONG(payload.count), &digest)
     return Data(digest) == expectedDigest
 }
+

@@ -20,3 +20,4 @@ class ModelLoaderController {
         return "loaded ${model.name}"
     }
 }
+

@@ -19,3 +19,4 @@ public class vulnerable2 {
         return ctx.lookup(name); // sink: LLM-controlled JNDI name — remote class loading / RCE
     }
 }
+

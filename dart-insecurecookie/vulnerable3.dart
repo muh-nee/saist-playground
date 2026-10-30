@@ -2,3 +2,4 @@
 Future<dynamic> example(dynamic request) async {
   final cookie = Cookie('refresh', token)..secure = false..httpOnly = false;
 }
+

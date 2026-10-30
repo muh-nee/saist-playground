@@ -86,3 +86,4 @@ func main() {
 	fmt.Println("This bypasses role filtering and exposes all user secrets")
 	http.ListenAndServe(":8082", nil)
 }
+

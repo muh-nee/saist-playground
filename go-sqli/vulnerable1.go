@@ -5,3 +5,4 @@ func foo() {
 	db.Query(query)
 }
 
+

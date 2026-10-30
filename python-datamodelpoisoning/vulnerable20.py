@@ -14,3 +14,4 @@ def train_from_url():
     dataset = Dataset.from_list(samples)
     Trainer(model=model, args=TrainingArguments("./out"), train_dataset=dataset).train()
     return jsonify({"status": "trained"})
+

@@ -12,3 +12,4 @@ class DataController < ApplicationController
     render plain: text * count # VULNERABLE — unbounded repetition
   end
 end
+

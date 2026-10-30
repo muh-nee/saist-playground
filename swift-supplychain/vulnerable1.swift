@@ -20,3 +20,4 @@ func installSuggestedPackageAndLoadModel(task: String, modelURL: URL) async thro
     let (localURL, _) = try await URLSession.shared.download(from: modelURL)
     return try MLModel(contentsOf: localURL)
 }
+

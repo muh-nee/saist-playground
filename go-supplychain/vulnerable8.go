@@ -34,3 +34,4 @@ func chiLoadHandler(w http.ResponseWriter, r *http.Request) {
 	defer session.Destroy()
 	w.Write([]byte("loaded"))
 }
+

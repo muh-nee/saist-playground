@@ -16,3 +16,4 @@ function indexForumPost(PDO $pdo, int $postId): void {
         ],
     ]);
 }
+

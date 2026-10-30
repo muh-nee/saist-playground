@@ -6,3 +6,4 @@ Future<dynamic> example(dynamic request) async {
     ['cn'],
   );
 }
+

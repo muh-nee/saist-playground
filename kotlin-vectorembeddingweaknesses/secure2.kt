@@ -37,3 +37,4 @@ class TrustedSourceIngest(
         store.add(embedder.embed(segment).content(), segment)
     }
 }
+
