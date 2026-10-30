@@ -19,3 +19,4 @@ public class ShellPlugin
         return await process.StandardOutput.ReadToEndAsync();
     }
 }
+

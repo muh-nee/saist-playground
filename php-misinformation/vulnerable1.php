@@ -20,3 +20,4 @@ class DiagnosisController
         return new JsonResponse(['diagnosis' => $resp->choices[0]->message->content]);
     }
 }
+

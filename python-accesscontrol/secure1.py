@@ -16,3 +16,4 @@ def collection_exists(vector_client, collection_id):
             ]
         },
     ) > 0
+

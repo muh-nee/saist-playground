@@ -19,3 +19,4 @@ def process(user_input: str) -> str:
         ]
     )
     return response.choices[0].message.content
+

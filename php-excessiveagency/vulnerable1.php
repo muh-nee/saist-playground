@@ -38,3 +38,4 @@ foreach ($response->choices[0]->message->toolCalls as $toolCall) {
     $args = json_decode($toolCall->function->arguments, true, flags: JSON_THROW_ON_ERROR);
     (new DeleteUserTool())->handle($args);
 }
+

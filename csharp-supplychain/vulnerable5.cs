@@ -17,3 +17,4 @@ public class ModelController : ControllerBase
         return Ok("loaded");
     }
 }
+

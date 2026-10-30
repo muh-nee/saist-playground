@@ -20,3 +20,4 @@ function search(PDO $pdo, string $question): array {
     $stmt->execute([$parsed['status'], $parsed['min_total']]);
     return $stmt->fetchAll();
 }
+

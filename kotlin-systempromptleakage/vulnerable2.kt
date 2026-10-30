@@ -21,3 +21,4 @@ class ChatService(private val model: ChatLanguageModel) {
             .content().text()
     }
 }
+

@@ -8,3 +8,4 @@ def load_model():
     model = pickle.loads(resp.content)
     return model
 
+

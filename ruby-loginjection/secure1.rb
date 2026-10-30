@@ -15,3 +15,4 @@ end
 def log_request(logger, ip, path)
   logger.warn("Request from #{sanitize_log(ip)} to #{sanitize_log(path)}") # SAFE
 end
+

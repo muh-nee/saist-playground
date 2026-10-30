@@ -24,3 +24,4 @@ function logLlmFailure(\Throwable $e): void {
         'exception' => $e->getMessage(), // message only, no trace / env
     ]);
 }
+

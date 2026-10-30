@@ -27,3 +27,4 @@ class QueryBot
     raise ArgumentError, "Model returned invalid JSON"
   end
 end
+

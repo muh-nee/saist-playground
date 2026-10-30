@@ -22,3 +22,4 @@ public class InferenceController {
         return result.toString();
     }
 }
+

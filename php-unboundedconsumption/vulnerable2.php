@@ -15,3 +15,4 @@ function streamAnswer(string $prompt): string {
     }
     return $buf;
 }
+

@@ -14,3 +14,4 @@ class StaticController < ApplicationController
     render plain: content
   end
 end
+

@@ -23,3 +23,4 @@ function indexCuratedDoc(QdrantClient $qdrant, string $source, string $raw): voi
     $store = new QdrantVectorStore($qdrant, 'kb');
     $store->addDocuments($gen->embedDocuments([$doc]));
 }
+

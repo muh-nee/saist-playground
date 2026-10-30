@@ -33,3 +33,4 @@ func handleIngest(store vectorstores.VectorStore, oai *openai.Client) http.Handl
 		w.WriteHeader(http.StatusOK)
 	}
 }
+

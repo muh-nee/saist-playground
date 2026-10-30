@@ -16,3 +16,4 @@ object SummarizerModule {
 
     fun summarize(doc: String): String = model.generate("Summarize:\n$doc")
 }
+

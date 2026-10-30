@@ -9,3 +9,4 @@ func emitSpan() {
 }
 
 func emitAPMSpan(uint64, uint64) {}
+

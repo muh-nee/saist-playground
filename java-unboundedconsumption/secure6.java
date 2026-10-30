@@ -18,3 +18,4 @@ public class secure6 {
         return model.generate(UserMessage.from(message)).content().text();
     }
 }
+

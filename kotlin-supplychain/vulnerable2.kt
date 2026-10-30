@@ -19,3 +19,4 @@ object CdnModelLoader {
         return env.createSession(bytes, OrtSession.SessionOptions())
     }
 }
+

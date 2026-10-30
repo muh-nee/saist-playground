@@ -11,3 +11,4 @@ public class FilesController : ControllerBase
         return Ok(File.ReadAllText(path));
     }
 }
+
