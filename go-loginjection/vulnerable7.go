@@ -1,12 +1,16 @@
-// import "github.com/sirupsen/logrus"
-// import "fmt"
+package main
 
-func processUser(username string) error {
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/sirupsen/logrus"
+)
+
+func processUser(w http.ResponseWriter, r *http.Request) {
+	username := r.URL.Query().Get("username")
 	logger := logrus.New()
-	err := doWork(username)
-	if err != nil {
-		logger.Error(fmt.Sprintf("failed for user: %s", username))
-		return err
-	}
-	return nil
+	logger.SetFormatter(&logrus.TextFormatter{DisableColors: true, DisableQuote: true})
+	logger.Error(fmt.Sprintf("failed for user: %s", username))
+	w.WriteHeader(http.StatusBadRequest)
 }

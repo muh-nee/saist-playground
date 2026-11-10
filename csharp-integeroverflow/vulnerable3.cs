@@ -11,5 +11,7 @@ public class PaginationController : ControllerBase
         return Ok(FetchItems(offset));
     }
 
-    private string FetchItems(int offset) => $"offset={offset}";
+    private static readonly string[] Items = new string[1000];
+
+    private string FetchItems(int offset) => Items[offset];
 }

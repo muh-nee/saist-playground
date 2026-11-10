@@ -1,5 +1,5 @@
 import * as crypto from "crypto";
 
-export function checksum(data: string | Buffer): string {
-	return crypto.createHash("sha1").update(data).digest("hex");
+export function hashPassword(password: string): string {
+	return crypto.createHash("sha1").update(password).digest("hex");
 }

@@ -1,4 +1,4 @@
-import { Catch, ExceptionFilter, ArgumentsHost } from '@nestjs/common';
+import { Catch, ExceptionFilter, ArgumentsHost, Controller, Get, Module } from '@nestjs/common';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -10,3 +10,23 @@ export class AllExceptionsFilter implements ExceptionFilter {
     });
   }
 }
+
+import { NestFactory } from '@nestjs/core';
+
+@Controller('records')
+class RecordsController {
+  @Get()
+  getRecords() {
+    throw new Error('Connection failed for postgres://service:password@internal-db:5432/records');
+  }
+}
+
+@Module({ controllers: [RecordsController] })
+class AppModule {}
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalFilters(new AllExceptionsFilter());
+  await app.listen(3000, '0.0.0.0');
+}
+void bootstrap();
