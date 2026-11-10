@@ -17,6 +17,8 @@ func paginate(w http.ResponseWriter, r *http.Request) {
 	fetchRows(w, offset)
 }
 
+var rows [1000][]byte
+
 func fetchRows(w http.ResponseWriter, offset int) {
-	w.Write([]byte(strconv.Itoa(offset)))
+	w.Write(rows[offset])
 }

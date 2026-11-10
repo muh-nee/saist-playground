@@ -12,7 +12,7 @@ server.get<{ Params: { id: string } }>('/users/:id', async (request, reply) => {
 });
 
 async function fetchUser(id: string) {
-  return { id };
+  throw new Error('Database connection failed at db.internal:5432 for user ' + id);
 }
 
 export default server;

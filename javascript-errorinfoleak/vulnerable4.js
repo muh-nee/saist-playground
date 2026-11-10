@@ -14,7 +14,7 @@ router.get('/items', async (ctx) => {
 });
 
 async function fetchItems(filter) {
-  return [];
+  throw new Error('Database connection failed at db.internal:5432 for filter ' + filter);
 }
 
 app.use(router.routes());

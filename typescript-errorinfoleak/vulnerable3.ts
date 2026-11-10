@@ -12,6 +12,6 @@ export class UserController {
   }
 
   private async fetchUser(id: string): Promise<object> {
-    return { id };
+    throw new Error('Database connection failed at db.internal:5432 for user ' + id);
   }
 }

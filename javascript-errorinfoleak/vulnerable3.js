@@ -10,7 +10,7 @@ fastify.get('/data', async (request, reply) => {
 });
 
 async function fetchData(source) {
-  return { source };
+  throw new Error('Database connection failed at db.internal:5432 for source ' + source);
 }
 
 module.exports = fastify;

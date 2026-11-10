@@ -1,11 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"context"
-	"encoding/json"
 	"net/http"
 
 	openai "github.com/sashabaranov/go-openai"
+	"github.com/yuin/goldmark"
 )
 
 func handleSummary(client *openai.Client) http.HandlerFunc {
@@ -20,7 +21,12 @@ func handleSummary(client *openai.Client) http.HandlerFunc {
 			},
 		)
 		output := resp.Choices[0].Message.Content
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]string{"content": output})
+		var rendered bytes.Buffer
+		if err := goldmark.Convert([]byte(output), &rendered); err != nil {
+			http.Error(w, "render failed", http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "text/html")
+		w.Write(rendered.Bytes())
 	}
 }
